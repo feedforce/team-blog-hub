@@ -17,6 +17,20 @@ export const members: Member[] = [
   //   websiteUrl: "オプション",
   // },
   {
+    name: "masutaka",
+    role: "LookML Developer",
+    bio: "カレー大好き！",
+    avatarSrc: "https://www.gravatar.com/avatar/b7a93b5c3bcfa8f2f8047584cc16bf13?size=256",
+    sources: [
+      "https://developer.feedforce.jp/feed/author/masutaka26",
+      "https://masutaka.net/chalow/cl.rss",
+    ],
+    includeUrlRegex: "developer.feedforce.jp|masutaka.net",
+    twitterUsername: "masutaka",
+    githubUsername: "masutaka",
+    websiteUrl: "https://masutaka.net",
+  },
+  {
     name: "tmd45",
     role: "SocialPLUS CS & Sr.Developer",
     bio: "散財部風紀取り乱し委員わいわい係",
