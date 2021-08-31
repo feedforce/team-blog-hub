@@ -1,8 +1,8 @@
 export const config = {
   siteMeta: {
-    title: "Team Blog Hub",
-    teamName: "catnose Inc.",
-    description: "RSS based blog starter kit for teams.",
+    title: "Feedforce Engineers' Blogs",
+    teamName: "Feedforce Inc.",
+    description: "株式会社フィードフォースに所属するエンジニアのブログ記事をまとめています。",
   },
   siteRoot:
     process.env.NODE_ENV === "production"
@@ -15,11 +15,15 @@ export const config = {
     },
     {
       title: "Company",
-      href: "https://zenn.dev/catnose99/articles/cb72a73368a547756862",
+      href: "https://www.feedforce.jp",
     },
     {
       title: "GitHub",
-      href: "https://github.com/catnose99/team-blog-hub",
+      href: "https://github.com/feedforce",
     },
+    {
+      title: "Recruit",
+      href: "https://engineers.recruit.feedforce.jp"
+    }
   ],
 };
