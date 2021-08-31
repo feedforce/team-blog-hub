@@ -1,4 +1,5 @@
 import { NextPage, GetStaticProps, GetStaticPaths } from "next";
+import { config } from "@site.config";
 import { members } from "@members";
 import { PostItem, Member } from "@src/types";
 import { PostList } from "@src/components/PostList";
@@ -49,7 +50,7 @@ const Page: NextPage<Props> = (props) => {
                   className="member-header__link"
                 >
                   <img
-                    src="/icons/twitter.svg"
+                    src={`${config.siteRoot}/icons/twitter.svg`}
                     alt={`Twitterのユーザー@${twitterUsername}`}
                     width={22}
                     height={22}
@@ -62,7 +63,7 @@ const Page: NextPage<Props> = (props) => {
                   className="member-header__link"
                 >
                   <img
-                    src="/icons/github.svg"
+                    src={`${config.siteRoot}/icons/github.svg`}
                     alt={`GitHubのユーザー@${githubUsername}`}
                     width={22}
                     height={22}
@@ -72,7 +73,7 @@ const Page: NextPage<Props> = (props) => {
               {websiteUrl && (
                 <a href={websiteUrl} className="member-header__link">
                   <img
-                    src="/icons/link.svg"
+                    src={`${config.siteRoot}/icons/link.svg`}
                     alt={`ウェブサイトのリンク`}
                     width={22}
                     height={22}
