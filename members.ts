@@ -1,18 +1,20 @@
 import { Member } from "@src/types";
 
 export const members: Member[] = [
+  // 設定のテンプレート。コピペして使ってください
   // {
-  //   name: "required",
-  //   role: "optional",
-  //   bio: "required",
-  //   avatarSrc: "required",
+  //   name: "必須",
+  //   role: "オプション",
+  //   bio: "必須",
+  //   avatarSrc: "必須 (画像の URL もしくは public/avatars/ 以下にある画像への相対パス)",
   //   sources: [
-  //     "required",
+  //     "https://developer.feedforce.jp/feed/author/はてなID"
+  //     "個人ブログ, Qiita, Zenn などの RSS フィードの URL",
   //   ],
-  //   includeUrlRegex: "required",
-  //   twitterUsername: "optional",
-  //   githubUsername: "optional",
-  //   websiteUrl: "optional",
+  //   includeUrlRegex: "developer.feedforce.jp|ドメイン名を正規表現で記述する",
+  //   twitterUsername: "オプション",
+  //   githubUsername: "オプション",
+  //   websiteUrl: "オプション",
   // },
   {
     name: "tmd45",
