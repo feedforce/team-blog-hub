@@ -17,6 +17,18 @@ export const members: Member[] = [
   //   websiteUrl: "オプション",
   // },
   {
+    name: "daido1976",
+    bio: "京都在住のフルリモートワーカーです",
+    avatarSrc: "https://www.gravatar.com/avatar/d6717b12844bf915d4555cf7869532ec?size=256",
+    sources: [
+      "https://developer.feedforce.jp/feed/author/daido1976",
+    ],
+    includeUrlRegex: "developer.feedforce.jp",
+    twitterUsername: "daido1976",
+    githubUsername: "daido1976",
+    websiteUrl: "https://daido1976.github.io",
+  },
+  {
     name: "masutaka",
     role: "LookML Developer",
     bio: "カレー大好き！",
