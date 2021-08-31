@@ -6,7 +6,7 @@ export const config = {
   },
   siteRoot:
     process.env.NODE_ENV === "production"
-      ? "https://team-blog-hub.vercel.app"
+      ? "https://feedforce.github.io/team-blog-hub"
       : "http://localhost:3000",
   headerLinks: [
     {
