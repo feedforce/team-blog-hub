@@ -12,6 +12,7 @@ $side-padding-sm: 1rem;
   flex-flow: column;
   position: relative;
   background: var(--color-base-background-lighter);
+  border-left: 4px solid var(--color-primary-background); // customized
 }
 .post-link__author {
   padding: 1.6rem $side-padding 0;

@@ -7,6 +7,7 @@
   @include mq(xs) {
     font-size: 2.6rem;
   }
+  color: var(--color-primary-text); // customized
 }
 .home-hero__description {
   margin-top: 0.4rem;
@@ -26,7 +27,7 @@
 }
 .home-section-link {
   font-size: 1.1rem;
-  color: var(--color-primary-text);
+  color: var(--color-base-text-lighter); // customized
 }
 .home-members {
   padding: 3rem 0;
