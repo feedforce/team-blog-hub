@@ -8,7 +8,7 @@ export const members: Member[] = [
   //   bio: "必須",
   //   avatarSrc: "必須 (画像の URL もしくは public/avatars/ 以下にある画像への相対パス)",
   //   sources: [
-  //     "https://developer.feedforce.jp/feed/author/はてなID"
+  //     "https://developer.feedforce.jp/feed/author/はてなID",
   //     "個人ブログ, Qiita, Zenn などの RSS フィードの URL",
   //   ],
   //   includeUrlRegex: "developer.feedforce.jp|ドメイン名を正規表現で記述する",
