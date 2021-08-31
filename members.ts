@@ -8,7 +8,7 @@ export const members: Member[] = [
   //   bio: "必須",
   //   avatarSrc: "必須 (画像の URL もしくは public/avatars/ 以下にある画像への相対パス)",
   //   sources: [
-  //     "https://developer.feedforce.jp/feed/author/はてなID"
+  //     "https://developer.feedforce.jp/feed/author/はてなID",
   //     "個人ブログ, Qiita, Zenn などの RSS フィードの URL",
   //   ],
   //   includeUrlRegex: "developer.feedforce.jp|ドメイン名を正規表現で記述する",
@@ -16,6 +16,20 @@ export const members: Member[] = [
   //   githubUsername: "オプション",
   //   websiteUrl: "オプション",
   // },
+  {
+    name: "masutaka",
+    role: "LookML Developer",
+    bio: "カレー大好き！",
+    avatarSrc: "https://www.gravatar.com/avatar/b7a93b5c3bcfa8f2f8047584cc16bf13?size=256",
+    sources: [
+      "https://developer.feedforce.jp/feed/author/masutaka26",
+      "https://masutaka.net/chalow/cl.rss",
+    ],
+    includeUrlRegex: "developer.feedforce.jp|masutaka.net",
+    twitterUsername: "masutaka",
+    githubUsername: "masutaka",
+    websiteUrl: "https://masutaka.net",
+  },
   {
     name: "tmd45",
     role: "SocialPLUS CS & Sr.Developer",
