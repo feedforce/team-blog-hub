@@ -1,5 +1,7 @@
 # Feedforce Engineers' Blogs
 
+![CI workflow status](https://github.com/feedforce/team-blog-hub/actions/workflows/ci.yml/badge.svg)
+
 https://feedforce.github.io/team-blog-hub
 
 フィードフォースグループに所属するエンジニアのブログ記事をまとめています。
