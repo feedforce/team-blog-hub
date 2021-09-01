@@ -44,11 +44,13 @@ export const members: Member[] = [
   },
   {
     name: "tmd45",
-    role: "SocialPLUS CS & Sr.Developer",
+    role: "CSE",
     bio: "散財部風紀取り乱し委員わいわい係",
     avatarSrc: "https://www.gravatar.com/avatar/f58db7375362f804258f3cb3476b1586?size=256",
     sources: [
       "https://developer.feedforce.jp/feed/author/tmd45",
+      "https://zenn.dev/tmd45/feed",
+      "https://blog.tmd45.jp/feed/category/AdventCalendar",
     ],
     includeUrlRegex: "developer.feedforce.jp|blog.tmd45.jp",
     twitterUsername: "tmd45",
