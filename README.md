@@ -2,7 +2,7 @@
 
 https://feedforce.github.io/team-blog-hub
 
-株式会社フィードフォースに所属するエンジニアのブログ記事をまとめています。
+フィードフォースグループに所属するエンジニアのブログ記事をまとめています。
 
 ## Development
 

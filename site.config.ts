@@ -1,8 +1,8 @@
 export const config = {
   siteMeta: {
     title: "Feedforce Engineers' Blogs",
-    teamName: "Feedforce Inc.",
-    description: "株式会社フィードフォースに所属するエンジニアのブログ記事をまとめています。",
+    teamName: "Feedforce Group Inc.",
+    description: "フィードフォースグループに所属するエンジニアのブログ記事をまとめています。",
   },
   siteRoot:
     process.env.NODE_ENV === "production"
@@ -11,7 +11,7 @@ export const config = {
   headerLinks: [
     {
       title: "Company",
-      href: "https://www.feedforce.jp",
+      href: "https://feedforcegroup.jp",
     },
     {
       title: "GitHub",
