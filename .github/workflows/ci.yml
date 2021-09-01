@@ -1,13 +1,14 @@
-name: deploy
+name: CI
 
 on:
   push:
     branches: [feedforce]
+  pull_request:
   schedule:
     - cron: '0 1 * * *' # at 10:00am everyday (JST)
 
 jobs:
-  deploy:
+  build_and_deploy:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
@@ -25,6 +26,7 @@ jobs:
 
       - name: Deploy to GitHub Pages
         uses: peaceiris/actions-gh-pages@v3
+        if: ${{ github.ref == 'refs/heads/feedforce' }}
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
           publish_dir: ./out
