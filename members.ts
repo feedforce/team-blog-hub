@@ -18,6 +18,14 @@ export const members: Member[] = [
   //   websiteUrl: "オプション",
   // },
   {
+    name: "feedforce",
+    bio: "Feedforce Developer Blog",
+    avatarSrc: "/avatars/feedforce.jpg",
+    sources: [
+      "https://developer.feedforce.jp/feed",
+    ],
+  },
+  {
     name: "daido1976",
     bio: "京都在住のフルリモートワーカーです",
     avatarSrc: "https://www.gravatar.com/avatar/d6717b12844bf915d4555cf7869532ec?size=256",
