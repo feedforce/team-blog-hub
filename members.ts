@@ -12,6 +12,7 @@ export const members: Member[] = [
   //     "個人ブログ, Qiita, Zenn などの RSS フィードの URL",
   //   ],
   //   includeUrlRegex: "オプション (RSS フィードの記事で特定の記事のみ掲載したい場合にマッチ条件を正規表現で記述する)",
+  //   excludeUrlRegex: "オプション (RSS フィードの記事で特定の記事のみ除外したい場合にマッチ条件を正規表現で記述する)",
   //   twitterUsername: "オプション",
   //   githubUsername: "オプション",
   //   websiteUrl: "オプション",
