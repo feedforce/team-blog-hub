@@ -18,6 +18,8 @@ export const members: Member[] = [
   //   websiteUrl: "オプション",
   // },
   {
+    // 技術ブログの記事のみ、他のメンバーのフィードと同一記事があった場合、他のメンバーが優先される
+    // see distinctFeedItemsOnlyFeedforceDeveloperBlog func in src/builder/posts.ts
     name: "feedforce",
     bio: "Feedforce Developer Blog",
     avatarSrc: "/avatars/feedforce.jpg",
