@@ -11,7 +11,7 @@ export const members: Member[] = [
   //     "https://developer.feedforce.jp/feed/author/はてなID",
   //     "個人ブログ, Qiita, Zenn などの RSS フィードの URL",
   //   ],
-  //   includeUrlRegex: "developer.feedforce.jp|ドメイン名を正規表現で記述する",
+  //   includeUrlRegex: "オプション (RSS フィードの記事で特定の記事のみ掲載したい場合にマッチ条件を正規表現で記述する)",
   //   twitterUsername: "オプション",
   //   githubUsername: "オプション",
   //   websiteUrl: "オプション",
