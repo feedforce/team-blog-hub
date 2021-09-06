@@ -35,3 +35,5 @@ yarn-error.log*
 
 # generated data
 /.contents
+/public/rss.xml
+/public/atom.xml
