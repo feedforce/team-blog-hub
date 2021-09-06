@@ -1,5 +1,6 @@
 import fs from "fs-extra";
 import Parser from "rss-parser";
+import _ from "lodash";
 import { members } from "../../members";
 import { PostItem, Member } from "../types";
 export default {};
@@ -70,12 +71,33 @@ async function getMemberFeedItems(member: Member): Promise<PostItem[]> {
   return postItems;
 }
 
-(async function () {
+// 技術ブログの記事のみ重複を排除する
+function distinctFeedItemsOnlyFeedforceDeveloperBlog(items: PostItem[]): PostItem[] {
+  const groupedByLink = _.groupBy(items, 'link');
+
+  return _.flatMap(groupedByLink, (sameLinkItems, link) => {
+    // 技術ブログ以外の記事には何もしない
+    if (!link.startsWith('https://developer.feedforce.jp')) {
+      return sameLinkItems;
+    }
+
+    // 記事が 1 つしかない場合は何もしない
+    if (sameLinkItems.length < 2) {
+      return sameLinkItems;
+    }
+
+    // feedforce 以外のメンバーを執筆者として優先する
+    return _.reject(sameLinkItems, item => item.authorName === 'feedforce');
+  });
+}
+
+(async function() {
   for (const member of members) {
     const items = await getMemberFeedItems(member);
     if (items) allPostItems = [...allPostItems, ...items];
   }
-  allPostItems.sort((a, b) => b.dateMiliSeconds - a.dateMiliSeconds);
+  const distinctAllPostItems = distinctFeedItemsOnlyFeedforceDeveloperBlog(allPostItems);
+  distinctAllPostItems.sort((a, b) => b.dateMiliSeconds - a.dateMiliSeconds);
   fs.ensureDirSync(".contents");
-  fs.writeJsonSync(".contents/posts.json", allPostItems);
+  fs.writeJsonSync(".contents/posts.json", distinctAllPostItems);
 })();
