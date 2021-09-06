@@ -3,6 +3,7 @@ export const config = {
     title: "Feedforce Engineers' Blogs",
     teamName: "Feedforce Group Inc.",
     description: "フィードフォースグループに所属するエンジニアのブログ記事をまとめています。",
+    copyright: "© Feedforce Inc.",
   },
   siteRoot:
     process.env.NODE_ENV === "production"
