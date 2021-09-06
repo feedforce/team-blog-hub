@@ -46,6 +46,8 @@ export const PageSEO: React.FC<Props> = (props) => {
       )}
       {path && <link rel="canonical" href={pageUrl} />}
       {noindex && <meta name="robots" content="noindex" />}
+      <link rel="alternate" type="application/rss+xml" title={config.siteMeta.title} href={`${config.siteRoot}/rss.xml`} />
+      <link rel="alternate" type="application/atom+xml" title={config.siteMeta.title} href={`${config.siteRoot}/atom.xml`} />
     </Head>
   );
 };
