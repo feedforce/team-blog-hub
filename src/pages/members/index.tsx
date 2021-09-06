@@ -6,7 +6,7 @@ import { config } from "@site.config";
 import { members } from "@members";
 import { ContentWrapper } from "@src/components/ContentWrapper";
 import { PageSEO } from "@src/components/PageSEO";
-import { getMemberPath } from "@src/utils/helper";
+import { getMemberPath, expandAvatarSrcPath } from "@src/utils/helper";
 import { Member } from "@src/types";
 
 const MemberCard: React.FC<{ member: Member }> = ({ member }) => {
@@ -15,7 +15,7 @@ const MemberCard: React.FC<{ member: Member }> = ({ member }) => {
       <a className="member-card">
         <div className="member-card__avatar">
           <img
-            src={member.avatarSrc}
+            src={expandAvatarSrcPath(member.avatarSrc)}
             alt={member.name}
             width={80}
             height={80}

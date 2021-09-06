@@ -1,5 +1,6 @@
 import { PostItem } from "@src/types";
 import { members } from "@members";
+import { config } from "@site.config";
 import posts from "@.contents/posts.json";
 
 export function getMemberByName(name: string) {
@@ -17,4 +18,7 @@ export function getFaviconSrcFromHostname(hostname: string) {
 }
 export function getMemberPath(name: string) {
   return `/members/${encodeURIComponent(name)}`;
+}
+export function expandAvatarSrcPath(avatarSrc: string) {
+  return avatarSrc.startsWith("/") ? `${config.siteRoot}${avatarSrc}` : avatarSrc
 }

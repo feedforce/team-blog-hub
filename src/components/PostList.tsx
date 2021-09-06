@@ -2,6 +2,7 @@ import { useState } from "react";
 import Link from "next/link";
 import dayjs from "dayjs";
 import relativeTime from "dayjs/plugin/relativeTime";
+import { expandAvatarSrcPath } from "@src/utils/helper";
 
 import { PostItem } from "@src/types";
 import {
@@ -25,7 +26,7 @@ const PostLink: React.FC<{ item: PostItem }> = (props) => {
       <Link href={getMemberPath(member.name)} passHref>
         <a className="post-link__author">
           <img
-            src={member.avatarSrc}
+            src={expandAvatarSrcPath(member.avatarSrc)}
             className="post-link__author-img"
             width={35}
             height={35}

@@ -9,6 +9,7 @@ import {
   getMemberByName,
   getMemberPostsByName,
   getMemberPath,
+  expandAvatarSrcPath,
 } from "@src/utils/helper";
 
 type Props = {
@@ -34,7 +35,7 @@ const Page: NextPage<Props> = (props) => {
           <header className="member-header">
             <div className="member-header__avatar">
               <img
-                src={avatarSrc}
+                src={expandAvatarSrcPath(avatarSrc)}
                 alt={name}
                 width={100}
                 height={100}
