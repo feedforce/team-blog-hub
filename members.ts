@@ -52,6 +52,18 @@ export const members: Member[] = [
     websiteUrl: "https://masutaka.net",
   },
   {
+    name: "ryz310",
+    bio: "バックエンドエンジニア。クラロワ好き⚔️",
+    avatarSrc: "https://www.gravatar.com/userimage/47883079/b6f69b2794a96e21e5a037f511603d43?size=256",
+    sources: [
+      "https://developer.feedforce.jp/feed/author/ryz310",
+      "https://ryz310.hateblo.jp/rss",
+    ],
+    twitterUsername: "ryosuke_sato",
+    githubUsername: "ryz310",
+    websiteUrl: "https://rubygems.org/profiles/ryz310",
+  },
+  {
     name: "tmd45",
     role: "CSE",
     bio: "散財部風紀取り乱し委員わいわい係",
