@@ -4,7 +4,7 @@
         <title>Feedforce Engineers' Blogs</title>
         <link>http://localhost:3000</link>
         <description>フィードフォースグループに所属するエンジニアのブログ記事をまとめています。</description>
-        <lastBuildDate>Tue, 07 Sep 2021 04:36:11 GMT</lastBuildDate>
+        <lastBuildDate>Tue, 07 Sep 2021 13:52:37 GMT</lastBuildDate>
         <docs>https://validator.w3.org/feed/docs/rss2.html</docs>
         <generator>https://github.com/jpmonette/feed</generator>
         <copyright>© Feedforce Inc.</copyright>
@@ -165,6 +165,12 @@
             <pubDate>Thu, 11 Mar 2021 01:12:44 GMT</pubDate>
         </item>
         <item>
+            <title><![CDATA[自作の gem の名前を考えるのは難しい]]></title>
+            <link>https://ryz310.hateblo.jp/entry/2021/03/07/202519</link>
+            <guid>https://ryz310.hateblo.jp/entry/2021/03/07/202519</guid>
+            <pubDate>Sun, 07 Mar 2021 11:25:19 GMT</pubDate>
+        </item>
+        <item>
             <title><![CDATA[データ指向アプリケーションデザイン 第三章 旅行記]]></title>
             <link>https://developer.feedforce.jp/entry/2021/03/04/180304</link>
             <guid>https://developer.feedforce.jp/entry/2021/03/04/180304</guid>
@@ -175,6 +181,18 @@
             <link>https://developer.feedforce.jp/entry/2021/03/02/172959</link>
             <guid>https://developer.feedforce.jp/entry/2021/03/02/172959</guid>
             <pubDate>Tue, 02 Mar 2021 08:29:59 GMT</pubDate>
+        </item>
+        <item>
+            <title><![CDATA[ActiveJob の retry_on に jitter というオプションがあるの知ってますか？]]></title>
+            <link>https://ryz310.hateblo.jp/entry/2021/03/02/113927</link>
+            <guid>https://ryz310.hateblo.jp/entry/2021/03/02/113927</guid>
+            <pubDate>Tue, 02 Mar 2021 02:39:27 GMT</pubDate>
+        </item>
+        <item>
+            <title><![CDATA[RuboCop で違反してるコードを自動的に修正する PR 作ってくれたら嬉しいやろ。できるでそれ。]]></title>
+            <link>https://ryz310.hateblo.jp/entry/2021/02/23/222720</link>
+            <guid>https://ryz310.hateblo.jp/entry/2021/02/23/222720</guid>
+            <pubDate>Tue, 23 Feb 2021 13:27:20 GMT</pubDate>
         </item>
         <item>
             <title><![CDATA[CircleCI で docker build するときの Empty continuation lines will become errors in a future release. という warning への対処方法]]></title>
@@ -291,10 +309,28 @@
             <pubDate>Mon, 06 Apr 2020 08:37:01 GMT</pubDate>
         </item>
         <item>
+            <title><![CDATA[my_api_client v0.16.0 をリリースしました🚀]]></title>
+            <link>https://ryz310.hateblo.jp/entry/2020/03/29/220805</link>
+            <guid>https://ryz310.hateblo.jp/entry/2020/03/29/220805</guid>
+            <pubDate>Sun, 29 Mar 2020 13:08:05 GMT</pubDate>
+        </item>
+        <item>
+            <title><![CDATA[my_api_client v0.15.0 をリリースしました🚀]]></title>
+            <link>https://ryz310.hateblo.jp/entry/2020/03/21/163849</link>
+            <guid>https://ryz310.hateblo.jp/entry/2020/03/21/163849</guid>
+            <pubDate>Sat, 21 Mar 2020 07:38:49 GMT</pubDate>
+        </item>
+        <item>
             <title><![CDATA[『HerokuでSidekiqを監視する方法を確立した』という発表をした]]></title>
             <link>https://developer.feedforce.jp/entry/2020/03/02/140000</link>
             <guid>https://developer.feedforce.jp/entry/2020/03/02/140000</guid>
             <pubDate>Mon, 02 Mar 2020 05:00:00 GMT</pubDate>
+        </item>
+        <item>
+            <title><![CDATA[駆け込みで Chrome 80 の SameSite=None; Secure の対応をやった🍪]]></title>
+            <link>https://ryz310.hateblo.jp/entry/2020/02/20/235548</link>
+            <guid>https://ryz310.hateblo.jp/entry/2020/02/20/235548</guid>
+            <pubDate>Thu, 20 Feb 2020 14:55:48 GMT</pubDate>
         </item>
         <item>
             <title><![CDATA[Heroku Ruby Language Metrics のメトリクス収集の仕組みを調べた]]></title>
@@ -309,10 +345,28 @@
             <pubDate>Wed, 05 Feb 2020 08:29:27 GMT</pubDate>
         </item>
         <item>
+            <title><![CDATA[my_api_client v0.13.0 をリリースしました🚀]]></title>
+            <link>https://ryz310.hateblo.jp/entry/2020/01/21/230012</link>
+            <guid>https://ryz310.hateblo.jp/entry/2020/01/21/230012</guid>
+            <pubDate>Tue, 21 Jan 2020 14:00:12 GMT</pubDate>
+        </item>
+        <item>
+            <title><![CDATA[my_api_client v0.12.0 をリリースしました🚀]]></title>
+            <link>https://ryz310.hateblo.jp/entry/2020/01/19/152826</link>
+            <guid>https://ryz310.hateblo.jp/entry/2020/01/19/152826</guid>
+            <pubDate>Sun, 19 Jan 2020 06:28:26 GMT</pubDate>
+        </item>
+        <item>
             <title><![CDATA[認証認可の情報の追い方みたいな]]></title>
             <link>https://developer.feedforce.jp/entry/2020/01/10/185250</link>
             <guid>https://developer.feedforce.jp/entry/2020/01/10/185250</guid>
             <pubDate>Fri, 10 Jan 2020 09:52:50 GMT</pubDate>
+        </item>
+        <item>
+            <title><![CDATA[私と gem]]></title>
+            <link>https://ryz310.hateblo.jp/entry/2019/12/15/224312</link>
+            <guid>https://ryz310.hateblo.jp/entry/2019/12/15/224312</guid>
+            <pubDate>Sun, 15 Dec 2019 13:43:12 GMT</pubDate>
         </item>
         <item>
             <title><![CDATA[Heroku Meetup #27 で『デプロイで止まらないバッチ処理を求めて』という話をしてきた #herokujp]]></title>
@@ -411,6 +465,12 @@
             <pubDate>Wed, 12 Dec 2018 03:00:00 GMT</pubDate>
         </item>
         <item>
+            <title><![CDATA[まだ .rubocop_todo.yml で消耗してるの？]]></title>
+            <link>https://developer.feedforce.jp/entry/2018/12/05/140000</link>
+            <guid>https://developer.feedforce.jp/entry/2018/12/05/140000</guid>
+            <pubDate>Wed, 05 Dec 2018 05:00:00 GMT</pubDate>
+        </item>
+        <item>
             <title><![CDATA[社内では開発チームマネージャーを名乗っています]]></title>
             <link>https://developer.feedforce.jp/entry/2018/12/05/110000</link>
             <guid>https://developer.feedforce.jp/entry/2018/12/05/110000</guid>
@@ -477,6 +537,12 @@
             <pubDate>Wed, 18 Jul 2018 15:00:00 GMT</pubDate>
         </item>
         <item>
+            <title><![CDATA[10 分でわかる Ruby Guild]]></title>
+            <link>https://developer.feedforce.jp/entry/2018/06/25/100000</link>
+            <guid>https://developer.feedforce.jp/entry/2018/06/25/100000</guid>
+            <pubDate>Mon, 25 Jun 2018 01:00:00 GMT</pubDate>
+        </item>
+        <item>
             <title><![CDATA[先期の MVP に選ばれた]]></title>
             <link>https://developer.feedforce.jp/entry/2018/06/15/130000</link>
             <guid>https://developer.feedforce.jp/entry/2018/06/15/130000</guid>
@@ -507,16 +573,34 @@
             <pubDate>Fri, 02 Mar 2018 06:50:20 GMT</pubDate>
         </item>
         <item>
+            <title><![CDATA[続・Rails 5.2 開発環境を Docker で構築する]]></title>
+            <link>https://developer.feedforce.jp/entry/2018/02/25/234556</link>
+            <guid>https://developer.feedforce.jp/entry/2018/02/25/234556</guid>
+            <pubDate>Sun, 25 Feb 2018 14:45:56 GMT</pubDate>
+        </item>
+        <item>
             <title><![CDATA[201802 Twitter ポリシー変更]]></title>
             <link>https://developer.feedforce.jp/entry/2018/02/22/210931</link>
             <guid>https://developer.feedforce.jp/entry/2018/02/22/210931</guid>
             <pubDate>Thu, 22 Feb 2018 12:09:31 GMT</pubDate>
         </item>
         <item>
+            <title><![CDATA[Rails 5.2 開発環境を Docker で構築する]]></title>
+            <link>https://developer.feedforce.jp/entry/2018/02/11/140012</link>
+            <guid>https://developer.feedforce.jp/entry/2018/02/11/140012</guid>
+            <pubDate>Sun, 11 Feb 2018 05:00:12 GMT</pubDate>
+        </item>
+        <item>
             <title><![CDATA[AWS Lambda with Golang と SAM に入門した]]></title>
             <link>https://blog.tsub.me/post/introduce-aws-lambda-with-golang-and-sam/</link>
             <guid>https://blog.tsub.me/post/introduce-aws-lambda-with-golang-and-sam/</guid>
             <pubDate>Wed, 31 Jan 2018 14:15:00 GMT</pubDate>
+        </item>
+        <item>
+            <title><![CDATA[mackerel のカスタムメトリックを echo でワンライナーしたった]]></title>
+            <link>https://developer.feedforce.jp/entry/2017/12/31/143611</link>
+            <guid>https://developer.feedforce.jp/entry/2017/12/31/143611</guid>
+            <pubDate>Sun, 31 Dec 2017 05:36:11 GMT</pubDate>
         </item>
         <item>
             <title><![CDATA[GitHub 上でコミットハッシュにもとづく URL を得る]]></title>
@@ -543,6 +627,12 @@
             <pubDate>Thu, 30 Nov 2017 04:35:25 GMT</pubDate>
         </item>
         <item>
+            <title><![CDATA[Dynamoid の使い方【global_secondary_index 編】]]></title>
+            <link>https://developer.feedforce.jp/entry/2017/11/26/195509</link>
+            <guid>https://developer.feedforce.jp/entry/2017/11/26/195509</guid>
+            <pubDate>Sun, 26 Nov 2017 10:55:09 GMT</pubDate>
+        </item>
+        <item>
             <title><![CDATA[Go で Datadog の Alfred Workflow を作った]]></title>
             <link>https://blog.tsub.me/post/create-alfred-workflow/</link>
             <guid>https://blog.tsub.me/post/create-alfred-workflow/</guid>
@@ -565,6 +655,18 @@
             <link>https://developer.feedforce.jp/entry/2017/11/13/183623</link>
             <guid>https://developer.feedforce.jp/entry/2017/11/13/183623</guid>
             <pubDate>Mon, 13 Nov 2017 09:36:23 GMT</pubDate>
+        </item>
+        <item>
+            <title><![CDATA[Serverlessconf Tokyo 2017 に参加してきました]]></title>
+            <link>https://developer.feedforce.jp/entry/2017/11/05/111553</link>
+            <guid>https://developer.feedforce.jp/entry/2017/11/05/111553</guid>
+            <pubDate>Sun, 05 Nov 2017 02:15:53 GMT</pubDate>
+        </item>
+        <item>
+            <title><![CDATA[Dynamoid の使い方【range 編】]]></title>
+            <link>https://developer.feedforce.jp/entry/2017/11/04/235323</link>
+            <guid>https://developer.feedforce.jp/entry/2017/11/04/235323</guid>
+            <pubDate>Sat, 04 Nov 2017 14:53:23 GMT</pubDate>
         </item>
         <item>
             <title><![CDATA[github-nippou という gem を golang で書き直したという発表をした]]></title>
