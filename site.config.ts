@@ -7,7 +7,7 @@ export const config = {
   },
   siteRoot:
     process.env.NODE_ENV === "production"
-      ? "https://feedforce.github.io/team-blog-hub"
+      ? "https://engineers.feedforce.jp"
       : "http://localhost:3000",
   headerLinks: [
     {
