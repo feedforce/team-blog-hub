@@ -8,7 +8,7 @@ export const members: Member[] = [
   //   bio: "必須",
   //   avatarSrc: "必須 (画像の URL もしくは public/avatars/ 以下にある画像への相対パス)",
   //   sources: [
-  //     "https://developer.feedforce.jp/feed/author/はてなID",
+  //     "https://developer.feedforce.jp/rss/author/はてなID",
   //     "個人ブログ, Qiita, Zenn などの RSS フィードの URL",
   //   ],
   //   includeUrlRegex: "オプション (RSS フィードの記事で特定の記事のみ掲載したい場合にマッチ条件を正規表現で記述する)",
@@ -24,7 +24,7 @@ export const members: Member[] = [
     bio: "Feedforce Developer Blog",
     avatarSrc: "/avatars/feedforce.jpg",
     sources: [
-      "https://developer.feedforce.jp/feed",
+      "https://developer.feedforce.jp/rss",
     ],
   },
   {
@@ -32,7 +32,7 @@ export const members: Member[] = [
     bio: "京都在住のフルリモートワーカーです",
     avatarSrc: "https://www.gravatar.com/avatar/d6717b12844bf915d4555cf7869532ec?size=256",
     sources: [
-      "https://developer.feedforce.jp/feed/author/daido1976",
+      "https://developer.feedforce.jp/rss/author/daido1976",
     ],
     twitterUsername: "daido1976",
     githubUsername: "daido1976",
@@ -44,7 +44,7 @@ export const members: Member[] = [
     bio: "カレー大好き！",
     avatarSrc: "https://www.gravatar.com/avatar/b7a93b5c3bcfa8f2f8047584cc16bf13?size=256",
     sources: [
-      "https://developer.feedforce.jp/feed/author/masutaka26",
+      "https://developer.feedforce.jp/rss/author/masutaka26",
       "https://masutaka.net/chalow/cl.rss",
     ],
     twitterUsername: "masutaka",
@@ -56,7 +56,7 @@ export const members: Member[] = [
     bio: "バックエンドエンジニア。クラロワ好き⚔️",
     avatarSrc: "https://www.gravatar.com/userimage/47883079/b6f69b2794a96e21e5a037f511603d43?size=256",
     sources: [
-      "https://developer.feedforce.jp/feed/author/ryz310",
+      "https://developer.feedforce.jp/rss/author/ryz310",
       "https://ryz310.hateblo.jp/rss",
     ],
     twitterUsername: "ryosuke_sato",
@@ -69,9 +69,9 @@ export const members: Member[] = [
     bio: "散財部風紀取り乱し委員わいわい係",
     avatarSrc: "https://www.gravatar.com/avatar/f58db7375362f804258f3cb3476b1586?size=256",
     sources: [
-      "https://developer.feedforce.jp/feed/author/tmd45",
+      "https://developer.feedforce.jp/rss/author/tmd45",
       "https://zenn.dev/tmd45/feed",
-      "https://blog.tmd45.jp/feed/category/AdventCalendar",
+      "https://blog.tmd45.jp/rss/category/AdventCalendar",
     ],
     twitterUsername: "tmd45",
     githubUsername: "tmd45",
@@ -82,7 +82,7 @@ export const members: Member[] = [
     bio: "コンテナが好きです",
     avatarSrc: "https://www.gravatar.com/avatar/cb16e623d2ac0c0d10440745d4525f04?size=256",
     sources: [
-      "https://developer.feedforce.jp/feed/author/tsub511",
+      "https://developer.feedforce.jp/rss/author/tsub511",
       "https://blog.tsub.me/index.xml",
     ],
     twitterUsername: "_tsub_",
