@@ -4,9 +4,14 @@
         <title>Feedforce Engineers' Blogs</title>
         <link>http://localhost:3000</link>
         <description>フィードフォースグループに所属するエンジニアのブログ記事をまとめています。</description>
-        <lastBuildDate>Wed, 08 Sep 2021 00:23:21 GMT</lastBuildDate>
+        <lastBuildDate>Wed, 08 Sep 2021 00:29:25 GMT</lastBuildDate>
         <docs>https://validator.w3.org/feed/docs/rss2.html</docs>
         <generator>https://github.com/jpmonette/feed</generator>
+        <image>
+            <title>Feedforce Engineers' Blogs</title>
+            <url>http://localhost:3000/logo.png</url>
+            <link>http://localhost:3000</link>
+        </image>
         <copyright>© Feedforce Inc.</copyright>
         <item>
             <title><![CDATA[Amazon EKS で高負荷時に CoreDNS が原因で稀にネットワークエラーが発生していた時のトラブルシュート]]></title>
