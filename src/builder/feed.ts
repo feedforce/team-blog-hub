@@ -11,6 +11,7 @@ const generateFeed: () => Feed = () => {
     id: config.siteRoot,
     link: config.siteRoot,
     copyright: config.siteMeta.copyright,
+    image: `${config.siteRoot}/logo.png`,
   });
 
   posts.forEach((post: PostItem) => {
