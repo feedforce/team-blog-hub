@@ -8,6 +8,7 @@ export default {};
 type FeedItem = {
   title: string;
   link: string;
+  content?: string;
   contentSnippet?: string;
   isoDate?: string;
   dateMiliSeconds: number;
@@ -22,9 +23,10 @@ async function fetchFeedItems(url: string) {
 
   // return item which has title and link
   return feed.items
-    .map(({ title, contentSnippet, link, isoDate }) => {
+    .map(({ title, content, contentSnippet, link, isoDate }) => {
       return {
         title,
+        content,
         contentSnippet: contentSnippet?.replace(/\n/g, ""),
         link,
         isoDate,
