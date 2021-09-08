@@ -19,6 +19,7 @@ const generateFeed: () => Feed = () => {
       date: new Date(post.dateMiliSeconds),
       link: post.link,
       description: post.content,
+      image: post.imageUrl,
     });
   })
 

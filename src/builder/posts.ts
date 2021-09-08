@@ -12,6 +12,7 @@ type FeedItem = {
   contentSnippet?: string;
   isoDate?: string;
   dateMiliSeconds: number;
+  imageUrl?: string;
 };
 
 const parser = new Parser();
@@ -23,7 +24,7 @@ async function fetchFeedItems(url: string) {
 
   // return item which has title and link
   return feed.items
-    .map(({ title, content, contentSnippet, link, isoDate }) => {
+    .map(({ title, content, contentSnippet, link, isoDate, enclosure }) => {
       return {
         title,
         content,
@@ -31,6 +32,7 @@ async function fetchFeedItems(url: string) {
         link,
         isoDate,
         dateMiliSeconds: isoDate ? new Date(isoDate).getTime() : 0,
+        imageUrl: enclosure && enclosure.url,
       };
     })
     .filter(({ title, link }) => title && link) as FeedItem[];
