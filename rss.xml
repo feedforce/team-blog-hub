@@ -4,7 +4,7 @@
         <title>Feedforce Engineers' Blogs</title>
         <link>http://localhost:3000</link>
         <description>フィードフォースグループに所属するエンジニアのブログ記事をまとめています。</description>
-        <lastBuildDate>Wed, 08 Sep 2021 00:29:25 GMT</lastBuildDate>
+        <lastBuildDate>Wed, 08 Sep 2021 00:37:58 GMT</lastBuildDate>
         <docs>https://validator.w3.org/feed/docs/rss2.html</docs>
         <generator>https://github.com/jpmonette/feed</generator>
         <image>
@@ -4746,6 +4746,7 @@ DF PLUSという、これまでの歴史や文脈が積み重なった、会社�
 
 <p>では、皆様良いお年を。</p>
 ]]></description>
+            <enclosure url="https://cdn-ak.f.st-hatena.com/images/fotolife/t/tmd45/20201215/20201215133418.png" length="0" type="image/png"/>
         </item>
         <item>
             <title><![CDATA[私の好きなプログラミング動画 10 選]]></title>
@@ -6938,6 +6939,7 @@ Web 開発はインターネット特有の課題が多いですが、 gem の�
 
 <p><iframe src="https://hatenablog-parts.com/embed?url=https%3A%2F%2Fblog.tmd45.jp%2Fentry%2F2019%2F12%2F10%2F134115" title="『シングルサインオンのひとことで片付けない』を書いて - TMD45&#39;β&#39;LOG!!!" class="embed-card embed-blogcard" scrolling="no" frameborder="0" style="display: block; width: 100%; height: 190px; max-width: 500px; margin: 10px 0px;"></iframe><cite class="hatena-citation"><a href="https://blog.tmd45.jp/entry/2019/12/10/134115">blog.tmd45.jp</a></cite></p>
 ]]></description>
+            <enclosure url="https://cdn-ak.f.st-hatena.com/images/fotolife/t/tmd45/20191208/20191208200500.jpg" length="0" type="image/jpg"/>
         </item>
         <item>
             <title><![CDATA[月末に起動したいバッチを sidekiq-cron で指定し、healthchecks.io で監視する]]></title>
@@ -8763,6 +8765,7 @@ $ curl https://s3.amazonaws.com/quotaguard/quotaguard-socksify-latest.tar.gz | t
 
 <p>そろそろ社会人のみなさまはボーナスなんてものの支給もあったのではないかとご推察いたします。楽しい沼クリスマスを。</p>
 ]]></description>
+            <enclosure url="https://cdn-ak.f.st-hatena.com/images/fotolife/t/tmd45/20181225/20181225135311.png" length="0" type="image/png"/>
         </item>
         <item>
             <title><![CDATA[『オブジェクト指向設計実践ガイド』の読書会をやっています]]></title>
@@ -9723,6 +9726,7 @@ Ignore リストに追加されたルールは次回以降、 RubocopChallenger 
 
 <p>引き続き <a href="https://adventar.org/calendars/2946">沼 Advent Calendar 2018</a> をよろしくおねがいします☺</p>
 ]]></description>
+            <enclosure url="https://cdn-ak.f.st-hatena.com/images/fotolife/t/tmd45/20181129/20181129235754.jpg" length="0" type="image/jpg"/>
         </item>
         <item>
             <title><![CDATA[『Heroku と EC Booster と私』と『Heroku ちょこっと Deep Dive』という発表をした]]></title>
@@ -13685,6 +13689,7 @@ Dynamoid を利用した場合は migration を明示的に実行する訳では
 <p class="footnote"><a href="#fn-f5eed0df" name="f-f5eed0df" class="footnote-number">*1</a><span class="footnote-delimiter">:</span><span class="footnote-text">ちなみにカロリー記録は <a class="keyword" href="http://d.hatena.ne.jp/keyword/iOS">iOS</a> アプリの『MyFitnessPal』を使っていました。</span></p>
 <p class="footnote"><a href="#fn-377be23b" name="f-377be23b" class="footnote-number">*2</a><span class="footnote-delimiter">:</span><span class="footnote-text">その前は『fitbit one』ユーザでした。</span></p>
 </div>]]></description>
+            <enclosure url="https://c4.staticflickr.com/4/3290/2808759067_de40a54f47_b.jpg" length="0" type="image/jpg"/>
         </item>
         <item>
             <title><![CDATA[Blox Introduction]]></title>
@@ -13855,6 +13860,7 @@ Dynamoid を利用した場合は migration を明示的に実行する訳では
 
 <p>ではでは。</p>
 ]]></description>
+            <enclosure url="http://cdn-ak.f.st-hatena.com/images/fotolife/t/tmd45/20151223/20151223143245.jpg" length="0" type="image/jpg"/>
         </item>
         <item>
             <title><![CDATA[さらに3ヶ月経過]]></title>
@@ -13931,6 +13937,7 @@ Dynamoid を利用した場合は migration を明示的に実行する訳では
 <p class="footnote"><a href="#fn-f4a8f135" name="f-f4a8f135" class="footnote-number">*1</a><span class="footnote-delimiter">:</span><span class="footnote-text">主にじゃがいもとパスタと菓子類。あと白米の常食はやめましたけど、たまに食べてます。</span></p>
 <p class="footnote"><a href="#fn-6f9a1c45" name="f-6f9a1c45" class="footnote-number">*2</a><span class="footnote-delimiter">:</span><span class="footnote-text">以前、人様からいただいたものに「糖質だ糖質だ」と言ってましたが大変失礼だったと反省しております。まぁいまも言うだけは言うんですが（大変失礼）</span></p>
 </div>]]></description>
+            <enclosure url="http://cdn-ak.f.st-hatena.com/images/fotolife/t/tmd45/20151223/20151223130027.png" length="0" type="image/png"/>
         </item>
         <item>
             <title><![CDATA[受付システムつくってみた（仮）]]></title>
@@ -14014,6 +14021,7 @@ Dynamoid を利用した場合は migration を明示的に実行する訳では
 <p class="footnote"><a href="#fn-82d5bb38" name="f-82d5bb38" class="footnote-number">*1</a><span class="footnote-delimiter">:</span><span class="footnote-text"><a href="http://tech.feedforce.jp/ff-mokumoku.html">“FFもくもく会” のご紹介！ | feedforce Engineers' blog</a></span></p>
 <p class="footnote"><a href="#fn-5a8c428f" name="f-5a8c428f" class="footnote-number">*2</a><span class="footnote-delimiter">:</span><span class="footnote-text">ちなみに弊社もβ応募中だったと思う…運用のこと考えたら自前で作るより外部サービス利用したほうが後が楽なんですよねー。私もその後のメンテのこと考えると、こっち使いたい（ぇ</span></p>
 </div>]]></description>
+            <enclosure url="http://cdn-ak.f.st-hatena.com/images/fotolife/t/tmd45/20151223/20151223103923.png" length="0" type="image/png"/>
         </item>
         <item>
             <title><![CDATA[ドラ娘論]]></title>
@@ -14061,6 +14069,7 @@ Dynamoid を利用した場合は migration を明示的に実行する訳では
 <p class="footnote"><a href="#fn-008eb7d8" name="f-008eb7d8" class="footnote-number">*1</a><span class="footnote-delimiter">:</span><span class="footnote-text">参考記事:「ドラ娘」て知ってる？ | <a class="keyword" href="http://d.hatena.ne.jp/keyword/%C8%F3%A5%E2%A5%C6">非モテ</a>タイムズ <a href="http://himo2.jp/4338000">http://himo2.jp/4338000</a> まだこの記事残ってる(^q^) 山本ユウカ先生その節は記事ありがとうございましたフヒヒ</span></p>
 <p class="footnote"><a href="#fn-84b535d7" name="f-84b535d7" class="footnote-number">*2</a><span class="footnote-delimiter">:</span><span class="footnote-text">一部界隈で「ドラ娘」の存在がハラスメント問題として取り沙汰されているようですが、本記事では「LT（ライトニングトーク）の制限時間が来たら大きな音を出してトークを終了させる係のひと」という意味で伝わりやすい名詞として「ドラ娘」と表記しているとご認識ください。「ドラ娘」という存在が気に入らない場合はそっとブラウザを閉じるか、適宜お好きな表現に脳内変換してお読みください。っていうか<a class="keyword" href="http://d.hatena.ne.jp/keyword/%A5%A2%A5%C9%A5%D9%A5%F3%A5%C8%A5%AB%A5%EC%A5%F3%A5%C0%A1%BC">アドベントカレンダー</a>にそんなヘビーな世論持ちだされても困るでござるよニンニン。</span></p>
 </div>]]></description>
+            <enclosure url="https://cdn.blog.st-hatena.com/images/theme/og-image-1500.png" length="0" type="image/png"/>
         </item>
         <item>
             <title><![CDATA[Sphero と遊ぼう！にゃんこ編～僕にペットはいないけど #sphero #gosphero]]></title>
@@ -14145,6 +14154,7 @@ Dynamoid を利用した場合は migration を明示的に実行する訳では
 
 
 <p>さて次回は、1日空いて() kenji.horie さん、かな？</p>]]></description>
+            <enclosure url="https://cdn.blog.st-hatena.com/images/theme/og-image-1500.png" length="0" type="image/png"/>
         </item>
         <item>
             <title><![CDATA[ころころ可愛い♡なのに高性能！Orbotix Sphero 2.0 が面白い #sphero #gosphero]]></title>
@@ -14236,6 +14246,7 @@ Dynamoid を利用した場合は migration を明示的に実行する訳では
 ひとりで一個だけ持ってても楽しくないので、みなさんいっぱい買って持ち寄って遊べたらいいですね。持ち寄って遊べたらいいですね。</p>
 
 <p><a href="http://qiita.com/kano-e/items/876bf0cadc3056f7588f">2日目の記事は kano-e さんの『Ruby - Sphero gem で Sphero を操作してみる』</a>です。おたのしみに。</p>]]></description>
+            <enclosure url="http://cdn-ak.f.st-hatena.com/images/fotolife/t/tmd45/20131130/20131130181312.png" length="0" type="image/png"/>
         </item>
         <item>
             <title><![CDATA[超速！『FuelPHP Advent Calender 2012』が電子書籍化されました！ #FuelPHP]]></title>
@@ -14279,6 +14290,7 @@ Dynamoid を利用した場合は migration を明示的に実行する訳では
 <div class="footnote">
 <p class="footnote"><a href="#fn1" name="f1" class="footnote-number">*1</a><span class="footnote-delimiter">:</span><span class="footnote-text">参考：『書籍制作フローを変える。「ReVIEW」という解。〜マークアップと自動組版と、時々、電子書籍〜』 <a href="http://kmuto.jp/events/page2012/page2012.pdf">http://kmuto.jp/events/page2012/page2012.pdf</a></span></p>
 </div>]]></description>
+            <enclosure url="https://cdn-ak.f.st-hatena.com/images/fotolife/t/tmd45/20191212/20191212124744.jpg" length="0" type="image/jpg"/>
         </item>
         <item>
             <title><![CDATA[さくらのレンタルサーバで FuelPHP を使ってはてなハイクブログを作る－ViewModel を使ってみる編 #FuelPHPAdvent2012]]></title>
@@ -14833,6 +14845,7 @@ Web API を使用する際にはタイムスタンプなどが重要になって
 </div><div class="footnote">
 <p class="footnote"><a href="#fn1" name="f1" class="footnote-number">*1</a><span class="footnote-delimiter">:</span><span class="footnote-text">自分の環境では、他のディレクトリのレベルと合わせて 755 にしました。</span></p>
 </div>]]></description>
+            <enclosure url="http://cdn-ak.f.st-hatena.com/images/fotolife/t/tmd45/20121214/20121214170600.png" length="0" type="image/png"/>
         </item>
     </channel>
 </rss>
