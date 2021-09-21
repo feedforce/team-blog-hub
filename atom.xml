@@ -2,12 +2,187 @@
 <feed xmlns="http://www.w3.org/2005/Atom">
     <id>https://engineers.feedforce.jp</id>
     <title>Feedforce Engineers' Blogs</title>
-    <updated>2021-09-20T01:26:46.976Z</updated>
+    <updated>2021-09-21T01:26:36.615Z</updated>
     <generator>https://github.com/jpmonette/feed</generator>
     <link rel="alternate" href="https://engineers.feedforce.jp"/>
     <subtitle>フィードフォースグループに所属するエンジニアのブログ記事をまとめています。</subtitle>
     <logo>https://engineers.feedforce.jp/logo.png</logo>
     <rights>© Feedforce Inc.</rights>
+    <entry>
+        <title type="html"><![CDATA[Redis::Objects を使ったサービス改善と新しい gem を作ったお話]]></title>
+        <id>https://ryz310.hateblo.jp/entry/2021/09/20/172054</id>
+        <link href="https://ryz310.hateblo.jp/entry/2021/09/20/172054"/>
+        <updated>2021-09-20T08:20:54.000Z</updated>
+        <summary type="html"><![CDATA[<p>半年ぶりくらいに会社の勉強会で発表しました。</p>
+
+<iframe class="speakerdeck-iframe" frameborder="0" src="https://speakerdeck.com/player/58bb74a90a8b444e8607850fc76d8eb7" title="Redis::Objects で遊んでみよう" allowfullscreen="true" mozallowfullscreen="true" webkitallowfullscreen="true" style="border: 0px; background: padding-box padding-box rgba(0, 0, 0, 0.1); margin: 0px; padding: 0px; border-radius: 6px; box-shadow: rgba(0, 0, 0, 0.2) 0px 5px 40px; width: 560px; height: 314px;"></iframe>
+
+
+<p>Redis::Objects という gem を使って RDS にかかっていた IO 負荷を改善した、という話と、 Redis::Objects を拡張する gem を作ったという話（後述）です。</p>
+
+<p><iframe src="https://hatenablog-parts.com/embed?url=https%3A%2F%2Fgithub.com%2Fryz310%2Fredis-objects-daily-counter" title="GitHub - ryz310/redis-objects-daily-counter: Daily counter within Redis::Objects. Works with any class or ORM." class="embed-card embed-webcard" scrolling="no" frameborder="0" style="display: block; width: 100%; height: 155px; max-width: 500px; margin: 10px 0px;"></iframe><cite class="hatena-citation"><a href="https://github.com/ryz310/redis-objects-daily-counter">github.com</a></cite></p>
+
+<p>Redis を使って DB の負荷を下げる系のお話って 2010 年代にされ尽くした感があって、今更な気もするんですが、一周回って最近聞かない話だなーと思ってます。
+フロントエンドエンジニアで最近サーバーサイドも触る機会が増えたような方々にウケが良かった感じがありますね。</p>
+
+<hr />
+
+<p>一方で社内のインフラエンジニアからは Redis ってメンテナンスの手間が掛かって評判悪いですね。
+使うだけなら手軽で楽なんですが、<a class="keyword" href="http://d.hatena.ne.jp/keyword/AWS">AWS</a> のアップデートでダウンタイムが発生する時に利用者向けにアナウンスしないといけなかったり。
+ダウンタイムと言っても深夜に数秒〜数分なので影響は少ないと思うんですが、<a class="keyword" href="http://d.hatena.ne.jp/keyword/%A5%A8%A5%F3%A5%BF%A1%BC%A5%D7%A5%E9%A5%A4%A5%BA">エンタープライズ</a>向けのサービスとかやってるとこの辺は厳しいですね。</p>
+
+<p><a href="https://cloud.google.com/blog/ja/products/management-tools/sre-error-budgets-and-maintenance-windows">SRE のエラーバジェットの概念</a> が日本全体に浸透すればソフトウェア開発の生産性は底上げされるんじゃないかと思うのですが、この辺は時間を掛けて少しずつ啓蒙していくしか無いですね。例えば日本の生活インフラ（電気・水道・ガスとか電車とか）ってめっちゃ高水準なので、ソフトウェアの世界でも100％稼働することが当たり前という価値観になってしまうんじゃないかな、と思うのですが、この辺の価値観は表裏一体というか、当たり前と感じているから高品質になる一方で、生産性は下がってしまうという構図だと思っています。</p>
+
+<p><a href="https://www.nic.ad.jp/ja/materials/iw/2017/proceedings/s15/s15-fujisaki.pdf">https://www.nic.ad.jp/ja/materials/iw/2017/proceedings/s15/s15-fujisaki.pdf</a>
+<figure class="figure-image figure-image-fotolife" title="SREの信条 (Google)"><span itemscope itemtype="http://schema.org/Photograph"><img src="https://cdn-ak.f.st-hatena.com/images/fotolife/r/ryz310/20210920/20210920165304.png" alt="f:id:ryz310:20210920165304p:plain" width="963" height="527" loading="lazy" title="" class="hatena-fotolife" itemprop="image"></span><figcaption>SREの信条 (<a class="keyword" href="http://d.hatena.ne.jp/keyword/Google">Google</a>)</figcaption></figure></p>
+
+<p>一応メンテナンスの手間、という点では夏頃に <a class="keyword" href="http://d.hatena.ne.jp/keyword/AWS">AWS</a> から <a class="keyword" href="http://d.hatena.ne.jp/keyword/Amazon">Amazon</a> MemoryDB for Redis というフルマネージドな Redis が発表されています。
+東京リージョンは未対応で、書き込み速度が遅くなっていたり、料金も若干高くなっていたりしますが、気になるサービスではありますね。</p>
+
+<p><iframe src="https://hatenablog-parts.com/embed?url=https%3A%2F%2Fdev.classmethod.jp%2Farticles%2Faws-release-durable-redis-amazon-memorydb-for-redis%2F" title="Redisに耐久性が加わったAmazon MemoryDB for Redisが登場 | DevelopersIO" class="embed-card embed-webcard" scrolling="no" frameborder="0" style="display: block; width: 100%; height: 155px; max-width: 500px; margin: 10px 0px;"></iframe><cite class="hatena-citation"><a href="https://dev.classmethod.jp/articles/aws-release-durable-redis-amazon-memorydb-for-redis/">dev.classmethod.jp</a></cite></p>
+
+<hr />
+
+<p>さて、この記事のメインは冒頭で触れた Redis::Objects を拡張する gem を作ったよ、という話です。</p>
+
+<p><iframe src="https://hatenablog-parts.com/embed?url=https%3A%2F%2Fgithub.com%2Fryz310%2Fredis-objects-daily-counter" title="GitHub - ryz310/redis-objects-daily-counter: Daily counter within Redis::Objects. Works with any class or ORM." class="embed-card embed-webcard" scrolling="no" frameborder="0" style="display: block; width: 100%; height: 155px; max-width: 500px; margin: 10px 0px;"></iframe><cite class="hatena-citation"><a href="https://github.com/ryz310/redis-objects-daily-counter">github.com</a></cite></p>
+
+<p>発端は Redis::Objects の <code>counter</code> を使ってサービスの効果測定（メール配信数、CV 数、ログイン数など）をしたいなーと考えたことなんですが、効果測定って一定の期間毎に集計して改善した・していないの指標にしたいやつじゃないですか？
+<code>counter</code> でカウントアップしつつ、日次の<a class="keyword" href="http://d.hatena.ne.jp/keyword/%A5%D0%A5%C3%A5%C1%BD%E8%CD%FD">バッチ処理</a>で集計すれば良いんですが、それだとあまり気軽じゃないというか、測定対象となるサービス開発の後、測定ロジックと<a class="keyword" href="http://d.hatena.ne.jp/keyword/%A5%D0%A5%C3%A5%C1%BD%E8%CD%FD">バッチ処理</a>、保存先の DB テーブル作成までセットで実装しないと実現できないですよね。</p>
+
+<p>これはサクッと実装するには <code>counter</code> が自動で日次で保存先を切り替えてくれれば良さそう、ということで、 <code>redis-objects-daily-counter</code> という gem は <code>daily_counter</code> という日次で保存先を切り替えるカウンター機能を提供します。
+Redis::Objects を拡張して作ってあるので、使い方はほぼ同じで、対象としたい Class に <code>include Redis::Objects</code> を追加すると使えるようになります。</p>
+
+<pre class="code lang-ruby" data-lang="ruby" data-unlink><span class="synComment"># Gemfile</span>
+gem <span class="synSpecial">'</span><span class="synConstant">redis-objects-daily-counter</span><span class="synSpecial">'</span>
+</pre>
+
+
+
+
+<pre class="code lang-ruby" data-lang="ruby" data-unlink><span class="synPreProc">class</span> <span class="synType">Homepage</span>
+  <span class="synPreProc">include</span> <span class="synType">Redis</span>::<span class="synType">Objects</span>
+
+  daily_counter <span class="synConstant">:pv</span>, <span class="synConstant">expireat</span>: -&gt; { <span class="synType">Time</span>.now + <span class="synConstant">2_678_400</span> } <span class="synComment"># about a month</span>
+
+  <span class="synPreProc">def</span> <span class="synIdentifier">id</span>
+    <span class="synConstant">1</span>
+  <span class="synPreProc">end</span>
+<span class="synPreProc">end</span>
+
+<span class="synComment"># 2021-04-01</span>
+homepage = <span class="synType">Homepage</span>.new
+homepage.id <span class="synComment"># 1</span>
+
+homepage.pv.increment
+homepage.pv.increment
+homepage.pv.increment
+puts homepage.pv.value <span class="synComment"># 3</span>
+
+<span class="synComment"># 2021-04-02 (next day)</span>
+puts homepage.pv.value <span class="synComment"># 0</span>
+homepage.pv.increment
+homepage.pv.increment
+puts homepage.pv.value <span class="synComment"># 2</span>
+
+start_date = <span class="synType">Date</span>.new(<span class="synConstant">2021</span>, <span class="synConstant">4</span>, <span class="synConstant">1</span>)
+end_date = <span class="synType">Date</span>.new(<span class="synConstant">2021</span>, <span class="synConstant">4</span>, <span class="synConstant">2</span>)
+homepage.pv.range(start_date, end_date) <span class="synComment"># [3, 2]</span>
+</pre>
+
+
+<p><code>#increment</code> <code>#decrement</code> は <code>counter</code> と同じ使い勝手です。ただ、日付が変わると自動的に保存先が切り替わります。
+これは Redis で保存している Key 名が以下のフォーマットになっているためです。</p>
+
+<pre class="code" data-lang="" data-unlink>model_name:id:field_name:yyyy-mm-dd</pre>
+
+
+<p>日付が変わった後も過去のレコードは削除されていないので、以下のコードでアクセス出来ます。この使い方は同じく Redis::Objects の <code>list</code> と似たような使い勝手になっています。</p>
+
+<pre class="code lang-ruby" data-lang="ruby" data-unlink><span class="synComment"># 2021-04-01</span>
+homepage.pv.increment(<span class="synConstant">3</span>)
+
+<span class="synComment"># 2021-04-02 (next day)</span>
+homepage.pv.increment(<span class="synConstant">2</span>)
+
+<span class="synComment"># 2021-04-03 (next day)</span>
+homepage.pv.increment(<span class="synConstant">5</span>)
+
+homepage.pv[<span class="synType">Date</span>.new(<span class="synConstant">2021</span>, <span class="synConstant">4</span>, <span class="synConstant">1</span>)] <span class="synComment"># =&gt; 3</span>
+homepage.pv[<span class="synType">Date</span>.new(<span class="synConstant">2021</span>, <span class="synConstant">4</span>, <span class="synConstant">1</span>), <span class="synConstant">3</span>] <span class="synComment"># =&gt; [3, 2, 5]</span>
+homepage.pv[<span class="synType">Date</span>.new(<span class="synConstant">2021</span>, <span class="synConstant">4</span>, <span class="synConstant">1</span>)..<span class="synType">Date</span>.new(<span class="synConstant">2021</span>, <span class="synConstant">4</span>, <span class="synConstant">2</span>)] <span class="synComment"># =&gt; [3, 2]</span>
+
+homepage.pv.delete(<span class="synType">Date</span>.new(<span class="synConstant">2021</span>, <span class="synConstant">4</span>, <span class="synConstant">1</span>))
+homepage.pv.range(<span class="synType">Date</span>.new(<span class="synConstant">2021</span>, <span class="synConstant">4</span>, <span class="synConstant">1</span>), <span class="synType">Date</span>.new(<span class="synConstant">2021</span>, <span class="synConstant">4</span>, <span class="synConstant">3</span>)) <span class="synComment"># =&gt; [0, 2, 5]</span>
+homepage.pv.at(<span class="synType">Date</span>.new(<span class="synConstant">2021</span>, <span class="synConstant">4</span>, <span class="synConstant">2</span>)) <span class="synComment"># =&gt; 2</span>
+</pre>
+
+
+<p>これで測定対象となるサービスを開発した後、 <code>daily_counter</code> で測定処理を実装しておくだけで OK。
+この状態でリリースすればデータは溜まっていくので、週次や月次で集計する<a class="keyword" href="http://d.hatena.ne.jp/keyword/%A5%D0%A5%C3%A5%C1%BD%E8%CD%FD">バッチ処理</a>を後でゆっくり実装すれば良いです。
+<a class="keyword" href="http://d.hatena.ne.jp/keyword/%A5%D0%A5%C3%A5%C1%BD%E8%CD%FD">バッチ処理</a>実装前にサーバー内で <code>$ bin/rails console</code> を実行して <code>daily_counter</code> の値を確認しながら<a class="keyword" href="http://d.hatena.ne.jp/keyword/%A5%D0%A5%C3%A5%C1%BD%E8%CD%FD">バッチ処理</a>の実装を考える、とかも出来ますね。
+具体的なデータを見ながらの方が開発難易度は下がります。</p>
+
+<p>ちなみにですが、 <strong><code>expireat</code> オプションを指定しておくことをオススメします。</strong>
+gem の仕様上、どんどん Redis 上のメモリを圧迫していくので、一定期間後に自動的に削除するようにしましょう。</p>
+
+<hr />
+
+<p><code>daily_counter</code> があるなら週次、月次、年次カウンターがあっても良いよね、なんだったら毎時、毎分カウンターもあったって良いじゃないか、という事で <code>v0.2.0</code> ではそれらが追加されています。</p>
+
+<p>毎時・毎分のカウンターは <a class="keyword" href="http://d.hatena.ne.jp/keyword/API">API</a> rate limit 機能の実装にも良いかもしれないですね。</p>
+
+<ul>
+<li><code>annual_counter</code>
+
+<ul>
+<li>Key format: <code>model_name:id:field_name:yyyy</code></li>
+<li>Redis is a highly volatile key-<a class="keyword" href="http://d.hatena.ne.jp/keyword/value">value</a> store, so I don't recommend using it.</li>
+</ul>
+</li>
+<li><code>monthly_counter</code>
+
+<ul>
+<li>Key format: <code>model_name:id:field_name:yyyy-mm</code></li>
+</ul>
+</li>
+<li><code>weekly_counter</code>
+
+<ul>
+<li>Key format: <code>model_name:id:field_name:yyyyWw</code></li>
+</ul>
+</li>
+<li><code>daily_counter</code>
+
+<ul>
+<li>Key format: <code>model_name:id:field_name:yyyy-mm-dd</code></li>
+</ul>
+</li>
+<li><code>hourly_counter</code>
+
+<ul>
+<li>Key format: <code>model_name:id:field_name:yyyy-mm-ddThh</code></li>
+</ul>
+</li>
+<li><code>minutely_counter</code>
+
+<ul>
+<li>Key format: <code>model_name:id:field_name:yyyy-mm-ddThh:mi</code></li>
+</ul>
+</li>
+</ul>
+
+
+<p>一応実装はしましたが、 <code>annual_counter</code> のように期間の長いカウンターの利用はあまりオススメしません。
+Redis ってふとした拍子にデータが飛んでしまう可能性があるので、あくまでキャッシュ的な位置付けで利用するのが良いと思います。
+<code>daily_counter</code> も週次・月次で RDS に集計結果を保存する運用を想定していますので。</p>
+
+<hr />
+
+<p>というわけで久々のブログ更新では新しく作った <code>redis-objects-daily-counter</code> という gem の紹介をさせて頂きました。
+これから弊社プロダクトでも利用していく予定ですし、色々なサービスでも活用頂けると嬉しいです。</p>
+]]></summary>
+    </entry>
     <entry>
         <title type="html"><![CDATA[Amazon EKS で高負荷時に CoreDNS が原因で稀にネットワークエラーが発生していた時のトラブルシュート]]></title>
         <id>https://developer.feedforce.jp/entry/2021/09/02/134725</id>
