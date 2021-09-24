@@ -2,12 +2,212 @@
 <feed xmlns="http://www.w3.org/2005/Atom">
     <id>https://engineers.feedforce.jp</id>
     <title>Feedforce Engineers' Blogs</title>
-    <updated>2021-09-23T01:27:41.395Z</updated>
+    <updated>2021-09-24T01:26:10.423Z</updated>
     <generator>https://github.com/jpmonette/feed</generator>
     <link rel="alternate" href="https://engineers.feedforce.jp"/>
     <subtitle>フィードフォースグループに所属するエンジニアのブログ記事をまとめています。</subtitle>
     <logo>https://engineers.feedforce.jp/logo.png</logo>
     <rights>© Feedforce Inc.</rights>
+    <entry>
+        <title type="html"><![CDATA[MAU, DAU も計測できるようになった redis-objects-daily-counter v0.3.0]]></title>
+        <id>https://ryz310.hateblo.jp/entry/2021/09/23/203804</id>
+        <link href="https://ryz310.hateblo.jp/entry/2021/09/23/203804"/>
+        <updated>2021-09-23T11:38:04.000Z</updated>
+        <summary type="html"><![CDATA[<p>前回のブログで <a href="https://github.com/ryz310/redis-objects-daily-counter">redis-objects-daily-counter</a> という gem を作ったという話をしました。</p>
+
+<p><iframe src="https://hatenablog-parts.com/embed?url=https%3A%2F%2Fryz310.hateblo.jp%2Fentry%2F2021%2F09%2F20%2F172054" title="Redis::Objects を使ったサービス改善と新しい gem を作ったお話 - 逃げる8回で会心の一撃" class="embed-card embed-blogcard" scrolling="no" frameborder="0" style="display: block; width: 100%; height: 190px; max-width: 500px; margin: 10px 0px;"></iframe><cite class="hatena-citation"><a href="https://ryz310.hateblo.jp/entry/2021/09/20/172054">ryz310.hateblo.jp</a></cite></p>
+
+<p>今回は <code>v0.3.0</code> をリリースしたのでそちらのご紹介です。</p>
+
+<h2>【おさらい】redis-objects-daily-counter はどういう gem なのか</h2>
+
+<p><a href="https://github.com/nateware/redis-objects">redis-objects</a> gem の拡張として作られており、日付の変更毎に新しい  counter を定義してくれる <code>daily_counter</code> 機能を提供する gem です。</p>
+
+<p>例えば以下のような <code>Homepage</code> という class で <code>daily_counter :pv</code> という定義をします。</p>
+
+<pre class="code lang-ruby" data-lang="ruby" data-unlink><span class="synPreProc">class</span> <span class="synType">Homepage</span>
+  <span class="synPreProc">include</span> <span class="synType">Redis</span>::<span class="synType">Objects</span>
+
+  daily_counter <span class="synConstant">:pv</span>, <span class="synConstant">expireat</span>: -&gt; { <span class="synType">Time</span>.now + <span class="synConstant">2_678_400</span> } <span class="synComment"># about a month</span>
+
+  <span class="synPreProc">def</span> <span class="synIdentifier">id</span>
+    <span class="synConstant">1</span>
+  <span class="synPreProc">end</span>
+<span class="synPreProc">end</span>
+</pre>
+
+
+<p>すると以下のように <code>#pv</code> という<a class="keyword" href="http://d.hatena.ne.jp/keyword/%A5%A4%A5%F3%A5%B9%A5%BF%A5%F3%A5%B9">インスタンス</a>メソッドが使えるようになります。
+これは <code>redis-objects</code> gem の <code>counter</code> の拡張であり、 <code>#increment</code> や <code>#decrement</code> というメソッドで Redis 上の値を更新することが可能です。</p>
+
+<pre class="code lang-ruby" data-lang="ruby" data-unlink><span class="synComment"># 2021-04-01</span>
+homepage = <span class="synType">Homepage</span>.new
+homepage.id <span class="synComment"># 1</span>
+
+homepage.pv.increment
+homepage.pv.increment
+homepage.pv.increment
+puts homepage.pv.value <span class="synComment"># 3</span>
+</pre>
+
+
+<p><code>daily_counter</code> が <code>counter</code> とどのように違うかというと、日付が変わるとRedis 上の Key が変化するという点です。</p>
+
+<pre class="code lang-ruby" data-lang="ruby" data-unlink><span class="synComment"># 2021-04-02 (next day)</span>
+puts homepage.pv.value <span class="synComment"># 0</span>
+homepage.pv.increment
+homepage.pv.increment
+puts homepage.pv.value <span class="synComment"># 2</span>
+</pre>
+
+
+<p>これは、 <code>daily_counter</code> が以下のようなルールに則って Redis の Key にアクセスするように振る舞うためです。</p>
+
+<pre class="code" data-lang="" data-unlink>model_name:id:field_name:yyyy-mm-dd</pre>
+
+
+<p>なお、この時の<a class="keyword" href="http://d.hatena.ne.jp/keyword/%A5%BF%A5%A4%A5%E0%A5%BE%A1%BC%A5%F3">タイムゾーン</a>は実行中の <a class="keyword" href="http://d.hatena.ne.jp/keyword/Ruby">Ruby</a> プロセスの標準<a class="keyword" href="http://d.hatena.ne.jp/keyword/%A5%BF%A5%A4%A5%E0%A5%BE%A1%BC%A5%F3">タイムゾーン</a>に従いますが、 <a class="keyword" href="http://d.hatena.ne.jp/keyword/Rails">Rails</a> 上で実行した場合は <code>application.rb</code> で指定した<a class="keyword" href="http://d.hatena.ne.jp/keyword/%A5%BF%A5%A4%A5%E0%A5%BE%A1%BC%A5%F3">タイムゾーン</a>に従います。</p>
+
+<p>日付が変わった後も、前日までの Key-<a class="keyword" href="http://d.hatena.ne.jp/keyword/Value">Value</a> は削除していないので、 <code>#range</code> や <code>#[]</code> や <code>#at</code> というメソッドでアクセスすることが可能です。
+ちなみに <code>#range</code> や <code>#[]</code> では値が返却されますが、 <code>#at</code> では <code>Redis::Counter</code> <a class="keyword" href="http://d.hatena.ne.jp/keyword/%A5%A4%A5%F3%A5%B9%A5%BF%A5%F3%A5%B9">インスタンス</a>が返却されます。
+<code>v0.2.0</code> までは <code>#[]</code> と <code>#at</code> は同じ挙動でしたが、 <code>v0.3.0</code> からそういう実装に変わりました 🙏</p>
+
+<pre class="code lang-ruby" data-lang="ruby" data-unlink><span class="synComment"># 2021-04-01</span>
+homepage.pv.increment(<span class="synConstant">3</span>)
+
+<span class="synComment"># 2021-04-02 (next day)</span>
+homepage.pv.increment(<span class="synConstant">2</span>)
+
+<span class="synComment"># 2021-04-03 (next day)</span>
+homepage.pv.increment(<span class="synConstant">5</span>)
+
+homepage.pv[<span class="synType">Date</span>.new(<span class="synConstant">2021</span>, <span class="synConstant">4</span>, <span class="synConstant">1</span>)] <span class="synComment"># =&gt; 3</span>
+homepage.pv[<span class="synType">Date</span>.new(<span class="synConstant">2021</span>, <span class="synConstant">4</span>, <span class="synConstant">1</span>), <span class="synConstant">3</span>] <span class="synComment"># =&gt; [3, 2, 5]</span>
+homepage.pv[<span class="synType">Date</span>.new(<span class="synConstant">2021</span>, <span class="synConstant">4</span>, <span class="synConstant">1</span>)..<span class="synType">Date</span>.new(<span class="synConstant">2021</span>, <span class="synConstant">4</span>, <span class="synConstant">2</span>)] <span class="synComment"># =&gt; [3, 2]</span>
+
+homepage.pv.delete_at(<span class="synType">Date</span>.new(<span class="synConstant">2021</span>, <span class="synConstant">4</span>, <span class="synConstant">1</span>))
+homepage.pv.range(<span class="synType">Date</span>.new(<span class="synConstant">2021</span>, <span class="synConstant">4</span>, <span class="synConstant">1</span>), <span class="synType">Date</span>.new(<span class="synConstant">2021</span>, <span class="synConstant">4</span>, <span class="synConstant">3</span>)) <span class="synComment"># =&gt; [0, 2, 5]</span>
+homepage.pv.at(<span class="synType">Date</span>.new(<span class="synConstant">2021</span>, <span class="synConstant">4</span>, <span class="synConstant">2</span>)) <span class="synComment"># =&gt; #&lt;Redis::Counter key=&quot;homepage:1:pv:2021-04-02&quot;&gt;</span>
+homepage.pv.at(<span class="synType">Date</span>.new(<span class="synConstant">2021</span>, <span class="synConstant">4</span>, <span class="synConstant">2</span>)).value <span class="synComment"># 2</span>
+</pre>
+
+
+<h2>v0.3.0 で追加された機能とは</h2>
+
+<p><code>daily_counter</code> に加えて <code>daily_set</code> が追加されました。
+こちらは <code>redis-objects</code> gem の <code>set</code>に <code>daily-</code> 機能を追加したものになります。</p>
+
+<pre class="code lang-ruby" data-lang="ruby" data-unlink><span class="synPreProc">class</span> <span class="synType">Homepage</span>
+  <span class="synPreProc">include</span> <span class="synType">Redis</span>::<span class="synType">Objects</span>
+
+  daily_set <span class="synConstant">:dau</span>, <span class="synConstant">expireat</span>: -&gt; { <span class="synType">Time</span>.now + <span class="synConstant">2_678_400</span> } <span class="synComment"># about a month</span>
+
+  <span class="synPreProc">def</span> <span class="synIdentifier">id</span>
+    <span class="synConstant">1</span>
+  <span class="synPreProc">end</span>
+<span class="synPreProc">end</span>
+
+homepage.dau &lt;&lt; <span class="synSpecial">'</span><span class="synConstant">user1</span><span class="synSpecial">'</span>
+homepage.dau &lt;&lt; <span class="synSpecial">'</span><span class="synConstant">user2</span><span class="synSpecial">'</span>
+homepage.dau &lt;&lt; <span class="synSpecial">'</span><span class="synConstant">user1</span><span class="synSpecial">'</span> <span class="synComment"># dup ignored</span>
+puts homepage.dau.members <span class="synComment"># ['user1', 'user2']</span>
+puts homepage.dau.length <span class="synComment"># 2</span>
+puts homepage.dau.count <span class="synComment"># alias of #length</span>
+</pre>
+
+
+<p><code>set</code> は重複を受け付けない <code>Array</code> と考えて良いと思います。
+上記の例を見てもらうと分かりますが <code>user1</code> を 2 回追加しても <code>#members</code> による取得結果には 1 つしか含まれていません。</p>
+
+<p>これを使って何が実現できるかというと、 DAU (Daily Active User) の計測です。
+ログインしたユーザーの ID を <code>daily_set</code> で定義した変数に追加していくことで、その日アクティブだったユーザー一覧とその数を知ることが出来ます。</p>
+
+<pre class="code lang-ruby" data-lang="ruby" data-unlink><span class="synComment"># 2021-04-01</span>
+homepage.dau.merge(<span class="synSpecial">'</span><span class="synConstant">user1</span><span class="synSpecial">'</span>, <span class="synSpecial">'</span><span class="synConstant">user2</span><span class="synSpecial">'</span>)
+puts homepage.dau.members <span class="synComment"># ['user1', 'user2']</span>
+
+<span class="synComment"># 2021-04-02 (next day)</span>
+puts homepage.dau.members <span class="synComment"># []</span>
+
+homepage.dau.merge(<span class="synSpecial">'</span><span class="synConstant">user2</span><span class="synSpecial">'</span>, <span class="synSpecial">'</span><span class="synConstant">user3</span><span class="synSpecial">'</span>)
+puts homepage.dau.members <span class="synComment"># ['user2', 'user3']</span>
+
+<span class="synComment"># 2021-04-03 (next day)</span>
+homepage.dau.merge(<span class="synSpecial">'</span><span class="synConstant">user4</span><span class="synSpecial">'</span>)
+
+homepage.dau.at(<span class="synType">Date</span>.new(<span class="synConstant">2021</span>, <span class="synConstant">4</span>, <span class="synConstant">2</span>)) <span class="synComment"># =&gt; #&lt;Redis::Set key=&quot;homepage:1:dau:2021-04-02&quot;&gt;</span>
+homepage.dau.at(<span class="synType">Date</span>.new(<span class="synConstant">2021</span>, <span class="synConstant">4</span>, <span class="synConstant">2</span>)).members <span class="synComment"># =&gt; ['user2', 'user3']</span>
+homepage.dau.at(<span class="synType">Date</span>.new(<span class="synConstant">2021</span>, <span class="synConstant">4</span>, <span class="synConstant">2</span>)).length <span class="synComment"># =&gt; 2</span>
+</pre>
+
+
+<p><code>#range</code> や <code>#[]</code> を使う事で指定した期間内の値を結合することも出来ます。
+これによって DAU 目的で記録した値から MAU を求めることも可能です。</p>
+
+<pre class="code lang-ruby" data-lang="ruby" data-unlink>homepage.dau[<span class="synType">Date</span>.new(<span class="synConstant">2021</span>, <span class="synConstant">4</span>, <span class="synConstant">1</span>)] <span class="synComment"># =&gt; ['user1', 'user2']</span>
+homepage.dau[<span class="synType">Date</span>.new(<span class="synConstant">2021</span>, <span class="synConstant">4</span>, <span class="synConstant">1</span>), <span class="synConstant">3</span>] <span class="synComment"># =&gt; ['user1', 'user2', 'user3', 'user4']</span>
+homepage.dau[<span class="synType">Date</span>.new(<span class="synConstant">2021</span>, <span class="synConstant">4</span>, <span class="synConstant">1</span>)..<span class="synType">Date</span>.new(<span class="synConstant">2021</span>, <span class="synConstant">4</span>, <span class="synConstant">2</span>)] <span class="synComment"># =&gt; ['user1', 'user2', 'user3']</span>
+
+homepage.dau.delete_at(<span class="synType">Date</span>.new(<span class="synConstant">2021</span>, <span class="synConstant">4</span>, <span class="synConstant">1</span>))
+homepage.dau.range(<span class="synType">Date</span>.new(<span class="synConstant">2021</span>, <span class="synConstant">4</span>, <span class="synConstant">1</span>), <span class="synType">Date</span>.new(<span class="synConstant">2021</span>, <span class="synConstant">4</span>, <span class="synConstant">3</span>)) <span class="synComment"># =&gt; ['user2', 'user3', 'user4']</span>
+</pre>
+
+
+<p><code>#at</code> で一日ずつ値を取得して <a class="keyword" href="http://d.hatena.ne.jp/keyword/Ruby">Ruby</a> の <code>Array#uniq</code> を使っても同じ結果が得られますが、 <code>#range</code> や <code>#[]</code> の方が内部で <a href="https://redis.io/commands/sunion">Redis の <code>SUNION</code></a> を利用するため高速だと思います。</p>
+
+<p>ちなみに <code>#range</code> や <code>#[]</code> の結果は <a class="keyword" href="http://d.hatena.ne.jp/keyword/Ruby">Ruby</a> の Array なので、 <code>#length</code> を使って長さを求める際は実行中のマシンリソースを消費します。
+一方 <code>#at</code> では <code>Redis::Set</code> を返しており、 <code>Redis::Set#length</code> は内部で <a href="https://redis.io/commands/scard">Redis の <code>SCARD</code></a> を実行するため、 <code>#length</code> は <code>#at</code> からの方が高速だと思います。
+ただし一定期間の値の結合は <code>#range</code> や <code>#[]</code> を使う必要があるので、結局マシンリソースの消費は避けられないですね。。</p>
+
+<p>この辺りの仕様は実装していてかなり頭を悩ませました。なので今後のアップデートで破壊的な変更が入るかも知れません。</p>
+
+<h2><code>monthly_set</code> なども実装してあります</h2>
+
+<p>前回の記事でも紹介したような <code>monthly_counter</code> に相当する <code>monthly_set</code> なども使えます。
+MAU, WAU, DAU で使い分けると良いかと思います。</p>
+
+<ul>
+<li><code>annual_set</code>
+
+<ul>
+<li>Key format: <code>model_name:id:field_name:yyyy</code></li>
+<li>Redis is a highly volatile key-<a class="keyword" href="http://d.hatena.ne.jp/keyword/value">value</a> store, so I don't recommend using it.</li>
+</ul>
+</li>
+<li><code>monthly_set</code>
+
+<ul>
+<li>Key format: <code>model_name:id:field_name:yyyy-mm</code></li>
+</ul>
+</li>
+<li><code>weekly_set</code>
+
+<ul>
+<li>Key format: <code>model_name:id:field_name:yyyyWw</code></li>
+</ul>
+</li>
+<li><code>daily_set</code>
+
+<ul>
+<li>Key format: <code>model_name:id:field_name:yyyy-mm-dd</code></li>
+</ul>
+</li>
+<li><code>hourly_set</code>
+
+<ul>
+<li>Key format: <code>model_name:id:field_name:yyyy-mm-ddThh</code></li>
+</ul>
+</li>
+<li><code>minutely_set</code>
+
+<ul>
+<li>Key format: <code>model_name:id:field_name:yyyy-mm-ddThh:mi</code></li>
+</ul>
+</li>
+</ul>
+
+]]></summary>
+    </entry>
     <entry>
         <title type="html"><![CDATA[Redis::Objects を使ったサービス改善と新しい gem を作ったお話]]></title>
         <id>https://ryz310.hateblo.jp/entry/2021/09/20/172054</id>
@@ -9316,7 +9516,7 @@ Nov 30 12:05:14 heroku[web] notice Process exited with status 143</pre>
 
 <p>若干釣り臭いタイトルですが、先日 <a href="https://github.com/ryz310/rubocop_challenger">RubocopChallenger</a> という gem の <code>v1.0.0</code> をリリースしたので紹介させて頂きます 🙏</p>
 
-<p><iframe src="https://hatenablog-parts.com/embed?url=https%3A%2F%2Fgithub.com%2Fryz310%2Frubocop_challenger" title="ryz310/rubocop_challenger" class="embed-card embed-webcard" scrolling="no" frameborder="0" style="display: block; width: 100%; height: 155px; max-width: 500px; margin: 10px 0px;"></iframe><cite class="hatena-citation"><a href="https://github.com/ryz310/rubocop_challenger">github.com</a></cite></p>
+<p><iframe src="https://hatenablog-parts.com/embed?url=https%3A%2F%2Fgithub.com%2Fryz310%2Frubocop_challenger" title="GitHub - ryz310/rubocop_challenger: Make a clean your rubocop_todo.yml with CI" class="embed-card embed-webcard" scrolling="no" frameborder="0" style="display: block; width: 100%; height: 155px; max-width: 500px; margin: 10px 0px;"></iframe><cite class="hatena-citation"><a href="https://github.com/ryz310/rubocop_challenger">github.com</a></cite></p>
 
 <h2>経緯</h2>
 
@@ -9331,36 +9531,15 @@ Nov 30 12:05:14 heroku[web] notice Process exited with status 143</pre>
 
 <p>ところで、弊社エンジニアの <a href="http://blog.hatena.ne.jp/masutaka26/" class="hatena-id-icon"><img src="https://cdn.profile-image.st-hatena.com/users/masutaka26/profile.png" width="16" height="16" alt="" class="hatena-id-icon">id:masutaka26</a> が circleci-bundle-update-pr という CI を利用した Bundle Update の自動更新 gem を作成しています。</p>
 
-<p><iframe src="https://hatenablog-parts.com/embed?url=https%3A%2F%2Fgithub.com%2Fmasutaka%2Fcircleci-bundle-update-pr" title="masutaka/circleci-bundle-update-pr" class="embed-card embed-webcard" scrolling="no" frameborder="0" style="display: block; width: 100%; height: 155px; max-width: 500px; margin: 10px 0px;"></iframe><cite class="hatena-citation"><a href="https://github.com/masutaka/circleci-bundle-update-pr">github.com</a></cite></p>
+<p><iframe src="https://hatenablog-parts.com/embed?url=https%3A%2F%2Fgithub.com%2Fmasutaka%2Fcircleci-bundle-update-pr" title="GitHub - masutaka/circleci-bundle-update-pr: Provide continues bundle update using CircleCI" class="embed-card embed-webcard" scrolling="no" frameborder="0" style="display: block; width: 100%; height: 155px; max-width: 500px; margin: 10px 0px;"></iframe><cite class="hatena-citation"><a href="https://github.com/masutaka/circleci-bundle-update-pr">github.com</a></cite></p>
 
 <p>これに感銘を受けて (？) 自分の RubocopChallenger も CI から<code>$ rubocop --auto-correct</code> を実行した結果が PR として届くような仕組みになっています。</p>
 
 <h2>使い方</h2>
 
-<h3>1. Gemfile に <code>rubocop_challenger</code> を追加</h3>
+<p><strong>2021-09-23 修正</strong></p>
 
-<pre class="code lang-ruby" data-lang="ruby" data-unlink>gem <span class="synSpecial">'</span><span class="synConstant">rubocop_challenger</span><span class="synSpecial">'</span>, <span class="synConstant">group</span>: <span class="synConstant">:development</span>, <span class="synConstant">require</span>: <span class="synConstant">false</span>
-</pre>
-
-
-<h3>2. GitHub personal access token の作成</h3>
-
-<p>RubocopChallenger が PR を作成するために GitHub personal access token が必要になります。
-<a href="https://github.com/settings/tokens">Settings</a> から <a href="https://github.com/settings/tokens/new">Generate new token</a> をクリックして access token を作成します。
-<strong>Select Scopes</strong> では <code>repo</code> にチェック ✅ を入れて下さい。</p>
-
-<p><img src="https://github.com/ryz310/rubocop_challenger/raw/master/images/generate_token.png" alt="Generate new token" /></p>
-
-<h3>3. CircleCI で環境変数の設定</h3>
-
-<p>今回は <a href="https://circleci.com/">CircleCI</a> での利用例を紹介します 🙏</p>
-
-<p><a href="https://circleci.com/dashboard">ダッシュボード画面</a> に移動し、 RubocopChallenger を適用したいアプリケーションの <strong>Project Settings</strong> -> <strong>Environment Variables</strong> へと移動します。
-<strong>Add Variable</strong> をクリックして <code>GITHUB_ACCESS_TOKEN</code> という Key で先程作成した GitHub personal access token を設定します。</p>
-
-<p><img src="https://github.com/ryz310/rubocop_challenger/raw/master/images/circleci_environment_variables.png" alt="Environment Variables" /></p>
-
-<h3>4. <code>.circleci/config.yml</code> の編集</h3>
+<h3>1. <code>.circleci/config.yml</code> の編集</h3>
 
 <p>以下に設定例を紹介します。</p>
 
@@ -9377,7 +9556,7 @@ Nov 30 12:05:14 heroku[web] notice Process exited with status 143</pre>
       <span class="synStatement">- </span><span class="synIdentifier">run</span><span class="synSpecial">:</span>
           <span class="synIdentifier">name</span><span class="synSpecial">:</span> Rubocop Challenge
           <span class="synIdentifier">command</span><span class="synSpecial">:</span> |
-            bundle install
+            gem install rubocop_challenger
             bundle exec rubocop_challenger go \
               --email={RubocopChallenger が commit する際の user email} \
               --name=&quot;{RubocopChallenger が commit する際の user name}&quot;
@@ -9397,6 +9576,26 @@ Nov 30 12:05:14 heroku[web] notice Process exited with status 143</pre>
       <span class="synStatement">- </span>rubocop_challenge
 </pre>
 
+
+<p>インストールの際、 <strong>Gemfile に <code>gem 'rubocop_challenger'</code> を追記しないようにご注意下さい。</strong>
+他の gem との互換性問題により、 rubocop_challenger 実行中にエラーが発生するケースがあることを確認しております。</p>
+
+<h3>2. GitHub personal access token の作成</h3>
+
+<p>RubocopChallenger が PR を作成するために GitHub personal access token が必要になります。
+<a href="https://github.com/settings/tokens">Settings</a> から <a href="https://github.com/settings/tokens/new">Generate new token</a> をクリックして access token を作成します。
+<strong>Select Scopes</strong> では <code>repo</code> にチェック ✅ を入れて下さい。</p>
+
+<p><img src="https://github.com/ryz310/rubocop_challenger/raw/master/images/generate_token.png" alt="Generate new token" /></p>
+
+<h3>3. CircleCI で環境変数の設定</h3>
+
+<p>今回は <a href="https://circleci.com/">CircleCI</a> での利用例を紹介します 🙏</p>
+
+<p><a href="https://circleci.com/dashboard">ダッシュボード画面</a> に移動し、 RubocopChallenger を適用したいアプリケーションの <strong>Project Settings</strong> -> <strong>Environment Variables</strong> へと移動します。
+<strong>Add Variable</strong> をクリックして <code>GITHUB_ACCESS_TOKEN</code> という Key で先程作成した GitHub personal access token を設定します。</p>
+
+<p><img src="https://github.com/ryz310/rubocop_challenger/raw/master/images/circleci_environment_variables.png" alt="Environment Variables" /></p>
 
 <h3>5. 作成された PR の確認</h3>
 
