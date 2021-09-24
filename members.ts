@@ -52,6 +52,19 @@ export const members: Member[] = [
     websiteUrl: "https://masutaka.net",
   },
   {
+    name: "mashabow",
+    bio: "フロントエンドエンジニア。文字が好き。",
+    avatarSrc: "https://www.gravatar.com/avatar/6afbe110d33ef7e859fb8649b86bae55?size=256",
+    sources: [
+      "https://developer.feedforce.jp/rss/author/mashabow",
+      "https://rewired.cloud/author/mashabow/feed",
+      "https://shiromoji.hatenablog.jp/rss",
+    ],
+    twitterUsername: "mashabow",
+    githubUsername: "mashabow",
+    websiteUrl: "https://shiromoji.hatenablog.jp",
+  },
+  {
     name: "ryz310",
     bio: "バックエンドエンジニア。クラロワ好き⚔️",
     avatarSrc: "https://www.gravatar.com/userimage/47883079/b6f69b2794a96e21e5a037f511603d43?size=256",
