@@ -4,7 +4,7 @@
         <title>Feedforce Engineers' Blogs</title>
         <link>https://engineers.feedforce.jp</link>
         <description>フィードフォースグループに所属するエンジニアのブログ記事をまとめています。</description>
-        <lastBuildDate>Thu, 30 Sep 2021 01:28:21 GMT</lastBuildDate>
+        <lastBuildDate>Fri, 01 Oct 2021 01:28:04 GMT</lastBuildDate>
         <docs>https://validator.w3.org/feed/docs/rss2.html</docs>
         <generator>https://github.com/jpmonette/feed</generator>
         <image>
@@ -13,6 +13,13 @@
             <link>https://engineers.feedforce.jp</link>
         </image>
         <copyright>© Feedforce Inc.</copyright>
+        <item>
+            <title><![CDATA[【Shopify】Liquid 上で「現在の日付から◯日後」を表現する方法]]></title>
+            <link>https://rewired.cloud/how-to-add-days-to-date-shopify/</link>
+            <guid>https://rewired.cloud/how-to-add-days-to-date-shopify/</guid>
+            <pubDate>Fri, 01 Oct 2021 01:05:52 GMT</pubDate>
+            <description><![CDATA[<p><img src="https://rewired.cloud/wp-content/uploads/2021/09/211001_day-to-date_title-520x300.jpg" class="webfeedsFeaturedVisual" width="520" height="300" /></p>　 「◯日後」を表現したいシーンは多い 製品ページや顧客へのメールに配送予定日を表示したり、レッスンや新商品の予約可能日を自動的に変更するなど、Eコマースのインターフェースで「今から◯日後」を表現したいシーンは多いと思い ... ]]></description>
+        </item>
         <item>
             <title><![CDATA[Terraform を使わずに Route 53 の DNS レコードを管理する方法を調べてみた]]></title>
             <link>https://masutaka.net/chalow/2021-09-27-1.html</link>
