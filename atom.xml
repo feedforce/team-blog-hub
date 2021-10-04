@@ -2,12 +2,19 @@
 <feed xmlns="http://www.w3.org/2005/Atom">
     <id>https://engineers.feedforce.jp</id>
     <title>Feedforce Engineers' Blogs</title>
-    <updated>2021-10-03T01:30:20.351Z</updated>
+    <updated>2021-10-04T01:27:34.827Z</updated>
     <generator>https://github.com/jpmonette/feed</generator>
     <link rel="alternate" href="https://engineers.feedforce.jp"/>
     <subtitle>フィードフォースグループに所属するエンジニアのブログ記事をまとめています。</subtitle>
     <logo>https://engineers.feedforce.jp/logo.png</logo>
     <rights>© Feedforce Inc.</rights>
+    <entry>
+        <title type="html"><![CDATA[RIZIN LANDMARK vol.1 の時間帯に発生した U-NEXT の障害体験メモ #RIZIN_LANDMARK #RIZIN_LANDMARK01]]></title>
+        <id>https://masutaka.net/chalow/2021-10-03-1.html</id>
+        <link href="https://masutaka.net/chalow/2021-10-03-1.html"/>
+        <updated>2021-10-03T14:59:59.000Z</updated>
+        <summary type="html"><![CDATA[RIZIN 初の、配信に特化した格闘技イベント RIZIN LANDMARK vol.1 が 2021-10-02（土）19:00 から開催されるはずだった。ちなみに 4 試合で ¥3,800 と、オトクな料金設定ではない。その時間に合わせて 18:45 頃に PC ブラウザで https://video.unext.jp/ にアクセスしたら、しばらく待たされた後 502 Bad Gateway が返ってきた。[502 Bad Gateway]U-NEXT 公式アカウントからはお知らせがあった。https://video.unext.jp/ 自体にアクセス出来ないため、サイト上でのお知らせは確認できず。loading...しばらく待ってもアクセスできなかった。スマホアプリならアクセスできるとの情報を目にしたため Android 版をダウンロードしたところ、エラーにはならず静止画を見られた。幸い Chromecast を持っていたため、テレビにキャストして大画面には出来た。PC ブラウザだと相変わらず 502 Bad Gateway が発生。その後 404 Not Found のケースや、CloudFront が返す nginx らしきエラー文言も確認できた。スマホアプリはしばらくお待ちくださいメッセージと BGM が流れるのみ。自分の経験上、Chromecast でスマホアプリをテレビにキャストするより、PC をテレビに HDMI 接続するほうが安定性が高いので、見られはしたが不安要素はあった。19:45 にスタジオの映像が繋がり、RIZIN CEO 榊原さんからお詫びとともに 20:00 に開催するとのお知らせがあった。実際開催され、21:30 頃の終了まで、特に問題なく視聴することが出来た。ただし、その間 PC ブラウザはエラーになり続けたようだ。途中でブラウザのタブを閉じたため、復旧時間は分からない。試合の合間に U-NEXT の CM が入ったのは視聴者体験として最悪だった。それも RIZIN に合わせたわけではない普通の U-NEXT の CM。もちろんその時はまだ障害発生中。いやー、最悪だったw参考: 当日の私のツイート勝手に想像したことPC ブラウザ経由のアクセスについて、RIZIN LANDMARK 視聴者だけでなく、U-NEXT 視聴者全体に影響が出ていたと思われる。PC ブラウザはエラーになり、スマホアプリは問題なかったことと、502 Bad Gateway という事象から、両者のバックエンドサーバー群は別だったと考えられる。ちなみに成人向けの https://video.hnext.jp/ に PC ブラウザでアクセスしたらこちらも問題なかった。こちらも別だと考えられる。PC ブラウザは 20:00 以降もエラーが解消されなかった。バックエンドサーバーをスケールアウトするのにそこまで時間がかかるものだろうか？video.unext.jp は CloudFront の IP アドレスと紐付いていた。https://video.unext.jp から適当に見つけた in.unext.jp は AWS ELB の IP アドレスだった。$ dig +short video.unext.jpd1p8rc5i9ac9qt.cloudfront.net.13.225.159.6813.225.159.10013.225.159.5613.225.159.96$ dig +short in.unext.jptd-bridge-43693737.ap-northeast-1.elb.amazonaws.com.35.74.87.6254.65.156.10152.193.64.209勝手に想像するに、バックエンドサーバーは素の EC2 インスタンスで、運用の事情でスケールアウトに時間がかかったのかな。ECS を使っていたにしても、EC2 インスタンスの台数の上限に達してしまったのかもしれない。AWS のサポートに連絡するも、すぐには上限を開放できなかったとか、もしくは土曜日ということもあり、障害発生時に当番エンジニアに連絡がつかなかったとか。格闘技イベントならではの事情榊原さんの総括によると、格闘技イベントは間際の購入が多いそう。RIZIN Live は前日までの購入だと 500 円安いけど、U-NEXT は何もない。視聴者としては、今回早く買うインセンティブはなかった。ちなみに私は前日に買った。計画的奴。それもあって調達すべきサーバーの台数を見誤り、今回の障害が発生したのだと思う。U-NEXT では今まで音楽イベントのライブ配信はあったそうだが、外でも配信をしていたそう（噂レベル）。格闘技の独占配信ライブは初めてだったようなので完全な見積もりミス。初めての時は、見積もりの 2 倍くらいにはすると思うのですがね。ちなみにライブ視聴数は公式にはお知らせはないが 10 万人には行かないそう。RIZIN としては「U-NEXT 独占配信」が仇となった。まとめ2021-10-02（土）18:30 頃から 21:00 過ぎまで（？）に U-NEXT を PC ブラウザで見られない障害が発生した。スマホアプリでは見られた。同時間帯は RIZIN LANDMARK vol.1 のライブ配信のまっただ中。格闘技イベントという性質上、ネット上では不満が爆発した。選手もいつまでか分からない中待たされて、大変だったと思う。RIZIN は U-NEXT とのタッグを今後も続けるのであれば、早く買えば少し安くなるなど、見積もりの制度を上げる施策は必須。加えて、試合の高揚感をぶち壊すような CM を流さないことはもちろん、U-NEXT 上でも RIZIN のユーザー体験が出来るような、コミュニケーションのすり合わせも。配信プラットフォームを冗長化することも必要かもしれないが、アライアンスという意味では難しいのかな？そもそも今後、朝倉海選手の海外転向、那須川選手のボクシング転向など、スター選手が減る中で、配信特化型イベントを続けられるかという問題はあると思う。]]></summary>
+    </entry>
     <entry>
         <title type="html"><![CDATA[【Shopify】Liquid 上で「現在の日付から◯日後」を表現する方法]]></title>
         <id>https://rewired.cloud/how-to-add-days-to-date-shopify/</id>
@@ -6411,13 +6418,6 @@ get :show, params: { id: 1 }, flash: { notice: &#34;This is a flash message&#34;
         <link href="https://masutaka.net/chalow/2020-08-21-1.html"/>
         <updated>2020-08-21T14:59:59.000Z</updated>
         <summary type="html"><![CDATA[- MVOWIZON というメーカー- 今は ￥1,899 だけど、私は ￥1,399 で買えた - https://www.amazon.co.jp/gp/product/B087YRSHZK/ で購入したがすでにページがなかった- 5 入力 1 出力、リモコン付き、補助電源も可能でこのお値段はすごい- 3 入力 1 出力もある。現在 ￥1,198 - https://www.amazon.co.jp/dp/B07QQDV39T/- テレビと繋げるための HDMI ケーブルは別途必要だった - 30cm の https://www.amazon.co.jp/gp/product/B00QLF74BQ/ を買った- こんな感じで使用中。補助電源はせずに使えている - テレビ HDMI1: 個人用 MacBook Air（Thunderbolt） - テレビ HDMI2: 仕事用 MacBook Pro（USB Type-c） - テレビ HDMI3: 今回の HDMI 切替器 1. Chromecast 2. PS4 Pro 3. Nintendo Switch 4. 未使用 5. 未使用- HDMI 切替器を Mac と繋いだ時はうまくいかなかった- Nature Remo と連携したが、PS4 や Switch を ON にすると勝手に切り替わるのでほぼ使っていない- Google Home mini とも連携したが、そもそもテレビと Chromecast の区別がついていなかった（？）事情もあり挙動が不安定 - 成功する時は「セレクターのチャンネルを1にして」で OK。失敗することもある - Nature Remo にテレビとして登録する必要はあるっぽいダメな配線の例:[ダメな配線の例]]]></summary>
-    </entry>
-    <entry>
-        <title type="html"><![CDATA[Emacs-27.1 がリリースされたので elscreen.el を tab-bar.el に移行した]]></title>
-        <id>https://masutaka.net/chalow/2020-08-16-1.html</id>
-        <link href="https://masutaka.net/chalow/2020-08-16-1.html"/>
-        <updated>2020-08-16T14:59:59.000Z</updated>
-        <summary type="html"><![CDATA[8/11 に Emacs 27.1 がリリースされました。全然追ってなかったのですが、タブ機能がようやくネイティブでサポートされたそうなので、elscreen.el から移行してみました。https://github.com/masutaka/dotfiles-public/commit/14710b91d5342c4aec6666c0bd38dec7808d9927tab-bar.el のコード（※）を見て、出来るだけ独自の設定はせずに、elscreen.el の挙動と合わせてみました。※ M-x find-library [Enter] tab-bar [Enter] で開けます。真のデフォルト厨なら C-x t ? で確認できるキーを使うべきなのでしょうが、ヘタレなので elscreen.el と同じ C-z を Prefix key にしました。タブ数の制限がなくなったのはうれしいです（elscreen.el は 10 個までだった）。100 個以上作れることは確認しました。C-x t m (tab-move) でタブを移動できるようになったのも改善点です（しかしドラッグアンドドロップには対応していない...）。C-z C-m とかに定義するかも。C-x 3 で縦分割したときに、右側のウインドウがタブ領域を上書きしなくなったのもうれしいです。2020 年にもなって、こんなことで困っていたんだよなあ...。]]></summary>
     </entry>
     <entry>
         <title type="html"><![CDATA[個人的に実践している、Slack に振り回されない方法]]></title>
