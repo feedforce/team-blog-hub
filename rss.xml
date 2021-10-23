@@ -4,7 +4,7 @@
         <title>Feedforce Engineers' Blogs</title>
         <link>https://engineers.feedforce.jp</link>
         <description>フィードフォースグループに所属するエンジニアのブログ記事をまとめています。</description>
-        <lastBuildDate>Fri, 22 Oct 2021 01:29:48 GMT</lastBuildDate>
+        <lastBuildDate>Sat, 23 Oct 2021 01:27:50 GMT</lastBuildDate>
         <docs>https://validator.w3.org/feed/docs/rss2.html</docs>
         <generator>https://github.com/jpmonette/feed</generator>
         <image>
@@ -2331,7 +2331,7 @@ Docusaurus 2.0.0-alpha.75 で確認しています。
             <link>https://developer.feedforce.jp/entry/2021/04/28/110000</link>
             <guid>https://developer.feedforce.jp/entry/2021/04/28/110000</guid>
             <pubDate>Wed, 28 Apr 2021 02:00:00 GMT</pubDate>
-            <description><![CDATA[<p>こんにちは、ソーシャルPLUS チームの <a href="http://blog.hatena.ne.jp/mashabow/">id:mashabow</a> です。</p>
+            <description><![CDATA[<p>こんにちは、ソーシャルPLUS チームの <a href="http://blog.hatena.ne.jp/mashabow/" class="hatena-id-icon"><img src="https://cdn.profile-image.st-hatena.com/users/mashabow/profile.png" width="16" height="16" alt="" class="hatena-id-icon">id:mashabow</a> です。</p>
 
 <p>社内勉強会 <a href="https://developer.feedforce.jp/archive/category/FFTT">FFTT</a> のネタとして、ESP8266 で Wi-Fi 温湿度センサーを作り、グラフ化してみました。普段はフロントエンドの開発をしているんですが、ちょっと別のことをやってみようかと思いまして。電子工作に入門して、AWS IoT Core とか AWS Amplify を使ってみた記録です。</p>
 
@@ -2341,7 +2341,7 @@ Docusaurus 2.0.0-alpha.75 で確認しています。
 </ul>
 
 
-<p><span itemscope itemtype="http://schema.org/Photograph"><img src="https://cdn-ak.f.st-hatena.com/images/fotolife/m/mashabow/20210426/20210426193800.png" alt="f:id:mashabow:20210426193800p:plain:w300" title="" class="hatena-fotolife" style="width:300px" itemprop="image"></span> <span itemscope itemtype="http://schema.org/Photograph"><img src="https://cdn-ak.f.st-hatena.com/images/fotolife/m/mashabow/20210426/20210426193805.png" alt="f:id:mashabow:20210426193805p:plain:w330" title="" class="hatena-fotolife" style="width:330px" itemprop="image"></span></p>
+<p><span itemscope itemtype="http://schema.org/Photograph"><img src="https://cdn-ak.f.st-hatena.com/images/fotolife/m/mashabow/20210426/20210426193800.png" alt="f:id:mashabow:20210426193800p:plain:w300" width="1366" height="1018" loading="lazy" title="" class="hatena-fotolife" style="width:300px" itemprop="image"></span> <span itemscope itemtype="http://schema.org/Photograph"><img src="https://cdn-ak.f.st-hatena.com/images/fotolife/m/mashabow/20210426/20210426193805.png" alt="f:id:mashabow:20210426193805p:plain:w330" width="1982" height="1332" loading="lazy" title="" class="hatena-fotolife" style="width:330px" itemprop="image"></span></p>
 
 <p>詳しくはスライドをご覧ください。</p>
 
