@@ -2,12 +2,19 @@
 <feed xmlns="http://www.w3.org/2005/Atom">
     <id>https://engineers.feedforce.jp</id>
     <title>Feedforce Engineers' Blogs</title>
-    <updated>2021-10-26T01:25:10.175Z</updated>
+    <updated>2021-10-27T01:25:06.986Z</updated>
     <generator>https://github.com/jpmonette/feed</generator>
     <link rel="alternate" href="https://engineers.feedforce.jp"/>
     <subtitle>フィードフォースグループに所属するエンジニアのブログ記事をまとめています。</subtitle>
     <logo>https://engineers.feedforce.jp/logo.png</logo>
     <rights>© Feedforce Inc.</rights>
+    <entry>
+        <title type="html"><![CDATA[ニチレイフーズダイレクトが自分に合うかも]]></title>
+        <id>https://masutaka.net/chalow/2021-10-27-1.html</id>
+        <link href="https://masutaka.net/chalow/2021-10-27-1.html"/>
+        <updated>2021-10-27T14:59:59.000Z</updated>
+        <summary type="html"><![CDATA[ニチレイフーズダイレクトが良い感じです。loading...loading...loading...サービスを知ったのはこのサイトです。ひとり暮らしの僕が「宅食＆食材宅配サービス」を15個試したら、自炊の“苦手度”が下がった一食あたり 700 円ちょっと。全体的に油控えめなのか、薄味なのか、自分に合います。容器が薄いので冷凍庫を有効に使えるのも良い感じです。うちの中型冷蔵庫だと 8 食は余裕で入りました。今だけなのか、500 円クーポンが毎回入っています。まあ私は飲食系に割引はあまり求めないですけどね。ワンショットでの注文も、定期での注文も対応しています。そろそろ定期にしようかな。なぜ使い始めたのかこの前に nosh を２ヶ月くらい試していました。悪くはなかったのですが、微妙に胃もたれするのと、カロリーを抑えるためか甘味料を使っていたので、代わりのサービスを探していました。甘味料はスクラロースやアスパルテームがよく使われていました。私はそこまで抵抗はないのですが、今は特にカロリーを抑える理由はないので、nosh を選択する理由もないのかなと。お菓子に甘味料はまだ分かるけど、食事に甘味料はなあ？（それは抵抗があると言うのでは？）あと、容器が微妙に大きくて冷凍庫に 6 食入れるのがやっとでした。そもそもなぜ nosh を使い始めたのかというと、自炊に飽きたからですね。最近は野菜炒めかトマトソースしか作っていませんでした。(^^;3 年くらい前は意識高い系（）だったので、マッスルデリも少し使ってました。温めがうまくいかず、ご飯はパリパリ、おかずは冷たいってことがよくあったので止めた記憶です。一食あたり 1200 円と高かったので長く続けるつもりもなかったですけどね。残念なところサイトが微妙に残念です。サイトのログインセッションが 1 日くらいしかもたないかも？ EC サイトでこれは珍しい。不便なだけでは？あと、1Password でログイン情報を入力するとパスワードが倍になる（abc だったら abcabc）っぽいです。変なところが残念です。サインアップの時のパスワード再入力がコピペ禁止だったかもしれないです。こういうのは若干○意が湧きますね。(^^)]]></summary>
+    </entry>
     <entry>
         <title type="html"><![CDATA[OAuth の state パラメータに JWT を使ってステートレスにする]]></title>
         <id>https://developer.feedforce.jp/entry/2021/10/25/120000</id>
@@ -6296,13 +6303,6 @@ get :show, params: { id: 1 }, flash: { notice: &#34;This is a flash message&#34;
 
 <p>私もそろそろ年齢的には<ruby>中堅<rt>おじさん</rt></ruby>ですが、いつまでもそのように、人の間で学びながら成長できる人間でありたいものです。</p>
 ]]></summary>
-    </entry>
-    <entry>
-        <title type="html"><![CDATA[テレビ用に HDMI 切替器を買った]]></title>
-        <id>https://masutaka.net/chalow/2020-08-21-1.html</id>
-        <link href="https://masutaka.net/chalow/2020-08-21-1.html"/>
-        <updated>2020-08-21T14:59:59.000Z</updated>
-        <summary type="html"><![CDATA[- MVOWIZON というメーカー- 今は ￥1,899 だけど、私は ￥1,399 で買えた - https://www.amazon.co.jp/gp/product/B087YRSHZK/ で購入したがすでにページがなかった- 5 入力 1 出力、リモコン付き、補助電源も可能でこのお値段はすごい- 3 入力 1 出力もある。現在 ￥1,198 - https://www.amazon.co.jp/dp/B07QQDV39T/- テレビと繋げるための HDMI ケーブルは別途必要だった - 30cm の https://www.amazon.co.jp/gp/product/B00QLF74BQ/ を買った- こんな感じで使用中。補助電源はせずに使えている - テレビ HDMI1: 個人用 MacBook Air（Thunderbolt） - テレビ HDMI2: 仕事用 MacBook Pro（USB Type-c） - テレビ HDMI3: 今回の HDMI 切替器 1. Chromecast 2. PS4 Pro 3. Nintendo Switch 4. 未使用 5. 未使用- HDMI 切替器を Mac と繋いだ時はうまくいかなかった- Nature Remo と連携したが、PS4 や Switch を ON にすると勝手に切り替わるのでほぼ使っていない- Google Home mini とも連携したが、そもそもテレビと Chromecast の区別がついていなかった（？）事情もあり挙動が不安定 - 成功する時は「セレクターのチャンネルを1にして」で OK。失敗することもある - Nature Remo にテレビとして登録する必要はあるっぽいダメな配線の例:[ダメな配線の例]]]></summary>
     </entry>
     <entry>
         <title type="html"><![CDATA[個人的に実践している、Slack に振り回されない方法]]></title>
