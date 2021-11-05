@@ -4,7 +4,7 @@
         <title>Feedforce Engineers' Blogs</title>
         <link>https://engineers.feedforce.jp</link>
         <description>フィードフォースグループに所属するエンジニアのブログ記事をまとめています。</description>
-        <lastBuildDate>Thu, 04 Nov 2021 01:26:05 GMT</lastBuildDate>
+        <lastBuildDate>Fri, 05 Nov 2021 01:30:14 GMT</lastBuildDate>
         <docs>https://validator.w3.org/feed/docs/rss2.html</docs>
         <generator>https://github.com/jpmonette/feed</generator>
         <image>
@@ -13,6 +13,197 @@
             <link>https://engineers.feedforce.jp</link>
         </image>
         <copyright>© Feedforce Inc.</copyright>
+        <item>
+            <title><![CDATA[GitHub Packages を使ってプライベート gem を社内限定で公開した]]></title>
+            <link>https://developer.feedforce.jp/entry/2021/11/05/095050</link>
+            <guid>https://developer.feedforce.jp/entry/2021/11/05/095050</guid>
+            <pubDate>Fri, 05 Nov 2021 00:50:50 GMT</pubDate>
+            <description><![CDATA[<p>こんにちは、<a href="http://blog.hatena.ne.jp/daido1976/" class="hatena-id-icon"><img src="https://cdn.profile-image.st-hatena.com/users/daido1976/profile.png" width="16" height="16" alt="" class="hatena-id-icon">id:daido1976</a> です。</p>
+
+<p>先日 GitHub Packages を使ってプライベート gem を社内限定で公開したので、その方法をご紹介します。</p>
+
+<ul class="table-of-contents">
+    <li><a href="#GitHub-Packages-とは">GitHub Packages とは</a></li>
+    <li><a href="#既存のプライベート-gem-と-GitHub-Packages-との違い">既存のプライベート gem と GitHub Packages との違い</a></li>
+    <li><a href="#GitHub-Packages-を使ってプライベート-gem-を社内限定で公開する">GitHub Packages を使ってプライベート gem を社内限定で公開する</a><ul>
+            <li><a href="#gem-をリリースPublishする方法">gem をリリース（Publish）する方法</a><ul>
+                    <li><a href="#ローカルからリリースする">ローカルからリリースする</a></li>
+                    <li><a href="#CI-からリリースする">CI からリリースする</a></li>
+                </ul>
+            </li>
+            <li><a href="#各環境へのインストール方法">各環境へのインストール方法</a><ul>
+                    <li><a href="#ローカルや本番環境でのインストール">ローカルや本番環境でのインストール</a></li>
+                    <li><a href="#Dependabot-でのインストール">Dependabot でのインストール</a></li>
+                </ul>
+            </li>
+        </ul>
+    </li>
+    <li><a href="#関連記事">関連記事</a></li>
+</ul>
+
+<h2 id="GitHub-Packages-とは">GitHub Packages とは</h2>
+
+<p><iframe src="https://hatenablog-parts.com/embed?url=https%3A%2F%2Fgithub.co.jp%2Ffeatures%2Fpackages" title="Packages" class="embed-card embed-webcard" scrolling="no" frameborder="0" style="display: block; width: 100%; height: 155px; max-width: 500px; margin: 10px 0px;"></iframe><cite class="hatena-citation"><a href="https://github.co.jp/features/packages">github.co.jp</a></cite></p>
+
+<p>GitHub Packages はライブラリ（パッケージ）のホスティングサービスです。</p>
+
+<p>Ruby の場合 <code>https://rubygems.org</code> の代わりに <code>https://rubygems.pkg.github.com</code> に公開するイメージで、認証には GitHub の personal access token などを使います。</p>
+
+<h2 id="既存のプライベート-gem-と-GitHub-Packages-との違い">既存のプライベート gem と GitHub Packages との違い</h2>
+
+<p>既存のプライベート gem は主に git のタグやブランチを指定する方法が用いられますが、以下のようにいくつかの問題があります。</p>
+
+<pre class="code lang-ruby" data-lang="ruby" data-unlink><span class="synComment"># main ブランチの先端を使うのは再現性がない（ブランチ指定した場合も同じ）</span>
+gem <span class="synSpecial">'</span><span class="synConstant">my_rubygem</span><span class="synSpecial">'</span>, <span class="synConstant">github</span>: <span class="synSpecial">'</span><span class="synConstant">my_name/my_rubygem</span><span class="synSpecial">'</span>
+<span class="synComment"># タグを指定しても書き換えられる可能性がある</span>
+gem <span class="synSpecial">'</span><span class="synConstant">my_rubygem</span><span class="synSpecial">'</span>, <span class="synConstant">github</span>: <span class="synSpecial">'</span><span class="synConstant">my_name/my_rubygem</span><span class="synSpecial">'</span>, <span class="synConstant">tag</span>: <span class="synSpecial">'</span><span class="synConstant">v1.0.0</span><span class="synSpecial">'</span>
+<span class="synComment"># コミットの参照を指定するのはシンプルに見づらい</span>
+gem <span class="synSpecial">'</span><span class="synConstant">my_rubygem</span><span class="synSpecial">'</span>, <span class="synConstant">github</span>: <span class="synSpecial">'</span><span class="synConstant">my_name/my_rubygem</span><span class="synSpecial">'</span>, <span class="synConstant">ref</span>: <span class="synSpecial">'</span><span class="synConstant">4aded</span><span class="synSpecial">'</span>
+</pre>
+
+
+<p>GitHub Packages は <code>rubygems.org</code> と同じように、バージョン指定が明確かつ一度リリースしたバージョンは変更できないので安全です。</p>
+
+<h2 id="GitHub-Packages-を使ってプライベート-gem-を社内限定で公開する">GitHub Packages を使ってプライベート gem を社内限定で公開する</h2>
+
+<p>ここからは実際に GitHub Packages を使ってプライベート gem を社内限定で公開する方法（主にリリースとインストールの仕方）を説明していきます。</p>
+
+<p>今回は Organization は <code>feedforce</code>、gem の名前は <code>socialplus-rails</code> という想定です。</p>
+
+<p>日本語版のドキュメントは文章やサンプルコードが古いケースがあるので、以下の英語版ドキュメントを参照した方が良いです。</p>
+
+<p><a href="https://docs.github.com/en/packages/working-with-a-github-packages-registry/working-with-the-rubygems-registry">Working with the RubyGems registry - GitHub Docs</a></p>
+
+<p>認証に使う personal access token の権限については以下のドキュメントが詳しいです。</p>
+
+<p><a href="https://docs.github.com/en/packages/learn-github-packages/about-permissions-for-github-packages">About permissions for GitHub Packages - GitHub Docs</a></p>
+
+<h3 id="gem-をリリースPublishする方法">gem をリリース（Publish）する方法</h3>
+
+<p>まずは作成した gem をリリースする方法について説明します。</p>
+
+<h4 id="ローカルからリリースする">ローカルからリリースする</h4>
+
+<p>まとめると以下のような手順になります。</p>
+
+<ol>
+<li><code>〜/.gem/credentials</code> に GitHub の personal access token を追加
+
+<ul>
+<li>権限は <code>repo</code> と <code>write:packages</code> が必要</li>
+</ul>
+</li>
+<li><code>$ gem build socialplus-rails.gemspec</code> で gem をビルド
+
+<ul>
+<li><code>SocialplusRails::VERSION</code> は <code>0.1.0</code> を想定</li>
+</ul>
+</li>
+<li><code>$ gem push --key github --host https://rubygems.pkg.github.com/feedforce socialplus-rails-0.1.0.gem</code> で push する
+
+<ul>
+<li>この時に personal access token の権限が足りないとエラーになる</li>
+</ul>
+</li>
+</ol>
+
+
+<p>Push が成功すると <a href="https://github.com/orgs/feedforce/packages">https://github.com/orgs/feedforce/packages</a> のような Packages のページに反映されます 👏</p>
+
+<p><span itemscope itemtype="http://schema.org/Photograph"><img src="https://cdn-ak.f.st-hatena.com/images/fotolife/d/daido1976/20211104/20211104160709.png" alt="f:id:daido1976:20211104160709p:plain" width="1200" height="492" loading="lazy" title="" class="hatena-fotolife" itemprop="image"></span></p>
+
+<h4 id="CI-からリリースする">CI からリリースする</h4>
+
+<p>gem のソースコードを更新した際に毎回上記のようにローカルからリリースしても良いのですが、できれば CI からリリースできるように仕組み化したいものです。</p>
+
+<p>CircleCI の場合、以下のような <code>release</code> コマンドを定義して、リリース用のブランチがマージされた時に実行されるようにすれば OK です。</p>
+
+<pre class="code lang-yaml" data-lang="yaml" data-unlink><span class="synComment"># .circleci/config.yml</span>
+
+<span class="synIdentifier">version</span><span class="synSpecial">:</span> <span class="synConstant">2.1</span>
+<span class="synComment"># ...</span>
+<span class="synIdentifier">commands</span><span class="synSpecial">:</span>
+  <span class="synIdentifier">release</span><span class="synSpecial">:</span>
+    <span class="synIdentifier">description</span><span class="synSpecial">:</span> Release to GitHub Packages
+    <span class="synIdentifier">steps</span><span class="synSpecial">:</span>
+      <span class="synStatement">- </span><span class="synIdentifier">run</span><span class="synSpecial">:</span>
+          <span class="synIdentifier">name</span><span class="synSpecial">:</span> Create GitHub Packages Credentials
+          <span class="synIdentifier">command</span><span class="synSpecial">:</span> |
+            mkdir ~/.gem || <span class="synConstant">true</span>
+            echo -e <span class="synConstant">&quot;---</span><span class="synSpecial">\n</span><span class="synConstant">:github: Bearer ${GITHUB_ACCESS_TOKEN}&quot;</span> &gt; ~/.gem/credentials
+            chmod <span class="synConstant">0600</span> ~/.gem/credentials
+      <span class="synStatement">- </span><span class="synIdentifier">run</span><span class="synSpecial">:</span>
+          <span class="synIdentifier">name</span><span class="synSpecial">:</span> Release Gem
+          <span class="synIdentifier">command</span><span class="synSpecial">:</span> |
+            gem build socialplus-rails.gemspec
+            release_version=$(find . -name <span class="synConstant">&quot;socialplus-rails-*.gem&quot;</span> | sed -E <span class="synConstant">'s/\.\/socialplus-rails-(.*).gem/\1/'</span>)
+            gem push --key github --host https://rubygems.pkg.github.com/feedforce <span class="synConstant">&quot;socialplus-rails-${release_version}.gem&quot;</span>
+</pre>
+
+
+<h3 id="各環境へのインストール方法">各環境へのインストール方法</h3>
+
+<p>ここからはリリースした gem を各環境へインストールする方法を説明します。</p>
+
+<p>Gemfile への記述は以下のようにします。<a href="#f-ff64d70e" name="fn-ff64d70e" title="See. https://docs.github.com/en/packages/working-with-a-github-packages-registry/working-with-the-rubygems-registry#installing-a-package">*1</a></p>
+
+<pre class="code lang-ruby" data-lang="ruby" data-unlink><span class="synComment"># Gemfile</span>
+source <span class="synSpecial">'</span><span class="synConstant">https://rubygems.pkg.github.com/feedforce</span><span class="synSpecial">'</span> <span class="synStatement">do</span>
+  gem <span class="synSpecial">'</span><span class="synConstant">socialplus-rails</span><span class="synSpecial">'</span>, <span class="synSpecial">'</span><span class="synConstant">0.1.0</span><span class="synSpecial">'</span>
+<span class="synStatement">end</span>
+</pre>
+
+
+<h4 id="ローカルや本番環境でのインストール">ローカルや本番環境でのインストール</h4>
+
+<p>以下のように <code>bundle config</code> コマンドで認証情報をセットしてから <code>bundle install</code> を行います。<a href="#f-54facd0e" name="fn-54facd0e" title="環境変数を利用して認証情報をセットすることもできるようです">*2</a></p>
+
+<pre class="code lang-sh" data-lang="sh" data-unlink><span class="synComment"># `USERNAME:TOKEN` は `{GitHubのユーザ名}:{Personal access token}` という形です（例: `daido1976:7axxx`）</span>
+$ bundle config https://rubygems.pkg.github.com/feedforce USERNAME:TOKEN
+$ bundle install
+</pre>
+
+
+<p>※ インストール時の認証に利用する personal access token には <code>read:packages</code> の権限のみあれば OK です</p>
+
+<h4 id="Dependabot-でのインストール">Dependabot でのインストール</h4>
+
+<p>GitHub Packages のプライベート gem をDependabot の更新対象にしたい場合は追加の設定が必要です。</p>
+
+<p>以下のように設定ファイルで GitHub Packages の認証情報を渡す準備をします。<a href="#f-52f8882d" name="fn-52f8882d" title="See. https://docs.github.com/en/code-security/supply-chain-security/keeping-your-dependencies-updated-automatically/configuration-options-for-dependency-updates#rubygems-server">*3</a></p>
+
+<pre class="code lang-yaml" data-lang="yaml" data-unlink><span class="synComment"># .github/dependabot.yml</span>
+
+<span class="synIdentifier">version</span><span class="synSpecial">:</span> <span class="synConstant">2</span>
+<span class="synIdentifier">registries</span><span class="synSpecial">:</span>
+  <span class="synIdentifier">rubygems-pkg-github</span><span class="synSpecial">:</span>
+    <span class="synIdentifier">type</span><span class="synSpecial">:</span> rubygems-server
+    <span class="synIdentifier">url</span><span class="synSpecial">:</span> https://rubygems.pkg.github.com
+   <span class="synComment"> # BUNDLE_GITHUB_TOKEN の値は `USERNAME:TOKEN` という形式です</span>
+    <span class="synIdentifier">token</span><span class="synSpecial">:</span> <span class="synConstant">&quot;${{secrets.BUNDLE_GITHUB_TOKEN}}&quot;</span>
+</pre>
+
+
+<p>以下ドキュメントを参考に GitHub Packages の認証情報（今回の例なら <code>BUNDLE_GITHUB_TOKEN</code>）を Dependabot 用の Secret として登録すれば完了です。<a href="#f-e337a98d" name="fn-e337a98d" title="Secret はリポジトリ単位とオーガニゼーション単位のどちらでも設定できます">*4</a></p>
+
+<p><a href="https://docs.github.com/en/code-security/supply-chain-security/keeping-your-dependencies-updated-automatically/managing-encrypted-secrets-for-dependabot">Managing encrypted secrets for Dependabot - GitHub Docs</a></p>
+
+<h2 id="関連記事">関連記事</h2>
+
+<ul>
+<li><a href="https://tech.pepabo.com/2021/09/10/in-house-rubygems-registry-with-ghes-github-packages/">GitHub Enterprise Server&#x306E;GitHub Packages&#x3067;&#x793E;&#x5185;&#x7528;gem&#x3092;&#x30DB;&#x30B9;&#x30C8;&#x3059;&#x308B; - &#x30DA;&#x30D1;&#x30DC;&#x30C6;&#x30C3;&#x30AF;&#x30D6;&#x30ED;&#x30B0;</a></li>
+<li><a href="https://tech.actindi.net/2020/06/12/180000">GitHub Actions&#x3092;&#x5229;&#x7528;&#x3057;&#x3066;gem&#x3092;GitHub Packages&#x306B;&#x516C;&#x958B;&#x3059;&#x308B; - &#x30A2;&#x30AF;&#x30C8;&#x30A4;&#x30F3;&#x30C7;&#x30A3;&#x958B;&#x767A;&#x8005;&#x30D6;&#x30ED;&#x30B0;</a></li>
+<li><a href="https://chocoby.com/blog/2021/09/21/dependabot-github-packages-gem">Dependabot &#x3067; GitHub Packages &#x306B;&#x516C;&#x958B;&#x3057;&#x305F; Gem &#x306E;&#x30A2;&#x30C3;&#x30D7;&#x30C7;&#x30FC;&#x30C8;&#x3092;&#x30C1;&#x30A7;&#x30C3;&#x30AF;&#x3059;&#x308B; - &#x6687;&#x4EBA;&#x3058;&#x3083;&#x306A;&#x3044;</a></li>
+</ul>
+
+<div class="footnote">
+<p class="footnote"><a href="#fn-ff64d70e" name="f-ff64d70e" class="footnote-number">*1</a><span class="footnote-delimiter">:</span><span class="footnote-text">See. <a href="https://docs.github.com/en/packages/working-with-a-github-packages-registry/working-with-the-rubygems-registry#installing-a-package">https://docs.github.com/en/packages/working-with-a-github-packages-registry/working-with-the-rubygems-registry#installing-a-package</a></span></p>
+<p class="footnote"><a href="#fn-54facd0e" name="f-54facd0e" class="footnote-number">*2</a><span class="footnote-delimiter">:</span><span class="footnote-text"><a href="https://tech.pepabo.com/2021/09/10/in-house-rubygems-registry-with-ghes-github-packages/#%E3%83%AC%E3%82%B8%E3%82%B9%E3%83%88%E3%83%AA%E3%81%8B%E3%82%89%E3%81%AEgem%E3%81%AE%E3%83%80%E3%82%A6%E3%83%B3%E3%83%AD%E3%83%BC%E3%83%89">環境変数を利用して認証情報をセットすることもできるようです</a></span></p>
+<p class="footnote"><a href="#fn-52f8882d" name="f-52f8882d" class="footnote-number">*3</a><span class="footnote-delimiter">:</span><span class="footnote-text">See. <a href="https://docs.github.com/en/code-security/supply-chain-security/keeping-your-dependencies-updated-automatically/configuration-options-for-dependency-updates#rubygems-server">https://docs.github.com/en/code-security/supply-chain-security/keeping-your-dependencies-updated-automatically/configuration-options-for-dependency-updates#rubygems-server</a></span></p>
+<p class="footnote"><a href="#fn-e337a98d" name="f-e337a98d" class="footnote-number">*4</a><span class="footnote-delimiter">:</span><span class="footnote-text">Secret はリポジトリ単位とオーガニゼーション単位のどちらでも設定できます</span></p>
+</div>]]></description>
+            <enclosure url="https://cdn-ak.f.st-hatena.com/images/fotolife/d/daido1976/20211104/20211104160709.png" length="0" type="image/png"/>
+        </item>
         <item>
             <title><![CDATA[ニチレイフーズダイレクトが自分に合うかも]]></title>
             <link>https://masutaka.net/chalow/2021-10-27-1.html</link>
