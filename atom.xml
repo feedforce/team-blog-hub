@@ -2,12 +2,19 @@
 <feed xmlns="http://www.w3.org/2005/Atom">
     <id>https://engineers.feedforce.jp</id>
     <title>Feedforce Engineers' Blogs</title>
-    <updated>2021-11-07T01:27:03.710Z</updated>
+    <updated>2021-11-08T01:26:16.065Z</updated>
     <generator>https://github.com/jpmonette/feed</generator>
     <link rel="alternate" href="https://engineers.feedforce.jp"/>
     <subtitle>フィードフォースグループに所属するエンジニアのブログ記事をまとめています。</subtitle>
     <logo>https://engineers.feedforce.jp/logo.png</logo>
     <rights>© Feedforce Inc.</rights>
+    <entry>
+        <title type="html"><![CDATA[Shopifyの埋め込みアプリにメニューをつける方法]]></title>
+        <id>https://rewired.cloud/shopify-app-navigation-menu/</id>
+        <link href="https://rewired.cloud/shopify-app-navigation-menu/"/>
+        <updated>2021-11-07T23:20:54.000Z</updated>
+        <summary type="html"><![CDATA[<p><img src="https://rewired.cloud/wp-content/uploads/2021/11/211108_appmenu_TITLE-520x300.png" class="webfeedsFeaturedVisual" width="520" height="300" /></p>こんにちは、mashabow です。LINE で CRM を実現する Shopify アプリ「ソーシャルPLUS」の、フロントエンド開発を担当しています。 アプリに機能が増えてくると、埋め込みアプリ（マーチャントの方に触 ... ]]></summary>
+    </entry>
     <entry>
         <title type="html"><![CDATA[GitHub Packages を使ってプライベート gem を社内限定で公開した]]></title>
         <id>https://developer.feedforce.jp/entry/2021/11/05/095050</id>

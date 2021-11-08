@@ -4,7 +4,7 @@
         <title>Feedforce Engineers' Blogs</title>
         <link>https://engineers.feedforce.jp</link>
         <description>フィードフォースグループに所属するエンジニアのブログ記事をまとめています。</description>
-        <lastBuildDate>Sun, 07 Nov 2021 01:27:03 GMT</lastBuildDate>
+        <lastBuildDate>Mon, 08 Nov 2021 01:26:16 GMT</lastBuildDate>
         <docs>https://validator.w3.org/feed/docs/rss2.html</docs>
         <generator>https://github.com/jpmonette/feed</generator>
         <image>
@@ -13,6 +13,13 @@
             <link>https://engineers.feedforce.jp</link>
         </image>
         <copyright>© Feedforce Inc.</copyright>
+        <item>
+            <title><![CDATA[Shopifyの埋め込みアプリにメニューをつける方法]]></title>
+            <link>https://rewired.cloud/shopify-app-navigation-menu/</link>
+            <guid>https://rewired.cloud/shopify-app-navigation-menu/</guid>
+            <pubDate>Sun, 07 Nov 2021 23:20:54 GMT</pubDate>
+            <description><![CDATA[<p><img src="https://rewired.cloud/wp-content/uploads/2021/11/211108_appmenu_TITLE-520x300.png" class="webfeedsFeaturedVisual" width="520" height="300" /></p>こんにちは、mashabow です。LINE で CRM を実現する Shopify アプリ「ソーシャルPLUS」の、フロントエンド開発を担当しています。 アプリに機能が増えてくると、埋め込みアプリ（マーチャントの方に触 ... ]]></description>
+        </item>
         <item>
             <title><![CDATA[GitHub Packages を使ってプライベート gem を社内限定で公開した]]></title>
             <link>https://developer.feedforce.jp/entry/2021/11/05/095050</link>
