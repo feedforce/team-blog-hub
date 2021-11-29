@@ -2,12 +2,19 @@
 <feed xmlns="http://www.w3.org/2005/Atom">
     <id>https://engineers.feedforce.jp</id>
     <title>Feedforce Engineers' Blogs</title>
-    <updated>2021-11-28T01:27:03.975Z</updated>
+    <updated>2021-11-29T01:26:03.585Z</updated>
     <generator>https://github.com/jpmonette/feed</generator>
     <link rel="alternate" href="https://engineers.feedforce.jp"/>
     <subtitle>フィードフォースグループに所属するエンジニアのブログ記事をまとめています。</subtitle>
     <logo>https://engineers.feedforce.jp/logo.png</logo>
     <rights>© Feedforce Inc.</rights>
+    <entry>
+        <title type="html"><![CDATA[『論理が伝わる　世界標準の「書く技術」』を読んだ]]></title>
+        <id>https://masutaka.net/chalow/2021-11-29-1.html</id>
+        <link href="https://masutaka.net/chalow/2021-11-29-1.html"/>
+        <updated>2021-11-29T14:59:59.000Z</updated>
+        <summary type="html"><![CDATA[職場の同僚が勧めていたので遅ればせながら読みました。私が 20 年近くかけてたどり着いた技術（未だに不完全です）を、この本で習得出来る人が羨ましいです。仕事で少しでも文章を書く人全てにオススメします。ブログを書く人にもオススメできます。反対に、物語を書くための技術ではありません。欧米では論理的な文章はパラグラフを使って書くそうです。パラグラフで書けば各パラグラフの先頭文をつまみ食いする、流し読みが出�...]]></summary>
+    </entry>
     <entry>
         <title type="html"><![CDATA[サービス側にメールアドレスを公開しない方法を調べた（Firefox Relay や 1Password + Fastmail のお話）]]></title>
         <id>https://masutaka.net/chalow/2021-11-17-1.html</id>
@@ -6444,13 +6451,6 @@ get :show, params: { id: 1 }, flash: { notice: &#34;This is a flash message&#34;
 <div class="footnote">
 <p class="footnote"><a href="#fn-df52a8d8" name="f-df52a8d8" class="footnote-number">*1</a><span class="footnote-delimiter">:</span><span class="footnote-text">複数サーバのうちの一部にだけ新しいバージョンのアプリケーションをリリースするデプロイ手法</span></p>
 </div>]]></summary>
-    </entry>
-    <entry>
-        <title type="html"><![CDATA[Looker User Meetup in Tokyo #4（BEACON Japan 前夜祭）に参加した #lookermeetup]]></title>
-        <id>https://masutaka.net/chalow/2020-09-03-1.html</id>
-        <link href="https://masutaka.net/chalow/2020-09-03-1.html"/>
-        <updated>2020-09-03T14:59:59.000Z</updated>
-        <summary type="html"><![CDATA[【Looker ユーザー限定】Looker User Meetup in Tokyo #4 - connpass[Looker Logo]昨日開催されたこちらのイベントに参加しました。本日 9/3 から 4 週に渡って行われる Looker BEACON Japan の前夜祭です。よく考えたら Looker ユーザーの方々を拝見するのは初めてで、生の声を聴けたことが一番の成果でした。運営の方々、ありがとうございました。今は会社で Looker を導入し、そろそろ Jumpstart プログラムが終わるフェーズで、これからボッチ LookML 開発に拍車がかかるところです。実装がんばります・・・！以下、個人的なメモです。User Talk 1 : Lookerを利用した医療ビッグデータのマーケティング分析ツールの開発 医療データと Looker は相性が良かったとのこと。それにしても作り込んであるなあ。元が構造化されたデータで扱いやすいのかもしれないが、複雑なデータであることは確かっぽい。User Talk 2 : DeNAゲームタイトルの共通分析におけるLooker活用事例ソシャゲだけあって規模感がすごかった。スピーカーの鈴木さんによると、最大 5 人で LookML を開発していて、KPI ごとに担当者を分けているそう。5 人 x チーム数分のようだった。規模がすごいなあ。共通定義プロジェクトを用意して、継承（extends）して使っているそう。共通定義の定義が難易度高そうだった。どうなんだろう？User Talk 3 : トレタの分析環境とLookerへのこだわりRedash で行き詰まり（？）、Looker に移行したそう。分かる。とは言え、Looker はリターンが多い分、学習コストがかなり高いんだけど、その辺どうだったのかな。開発体制はスピーカーの CTO 鄧さんと業務委託 2 人で 3 ヶ月で作ったそう。Jumpstart 使ったのかな？あと 2 人くらい Looker のエバンジェリスト的な人（ビジネス職の人かな？）はいるっぽい。Explore はだいぶきれい。(1) や (2) は真似しようと思った。https://debezium.io/ 使って（？）MySQL から BigQuery に同期しているっぽい。数秒で同期とか言ってた気がする。User Talk 4 : 分析者でもプロダクト開発がしたい！と思ったら LookerYAMAP さんのダッシュボードが風情があるとザワザワしてた。リモートなのにザワザワが分かるくらいには。データ分析チーム（２人）で完結でき、フロントエンドエンジニアの力を借りずともリッチなダッシュボードを作ることが出来ているそう。あと２人、スポットで LookML 開発するために Developer 権限を与えているエンジニアはいるとのこと。Product Updates (BEACON Sneakpeak)Google Slide と Looker の統合は良さそう。Google Slide 上で Looker のグラフ（Look）とか生データをを表示できる。当日の #lookermeetup]]></summary>
     </entry>
     <entry>
         <title type="html"><![CDATA[いろんな本でつながった「認知（cognition）のはなし」]]></title>
