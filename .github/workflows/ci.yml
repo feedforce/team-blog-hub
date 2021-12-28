@@ -36,3 +36,7 @@ jobs:
           user_email: 'github-actions[bot]@users.noreply.github.com'
           publish_dir: ./out
           cname: engineers.feedforce.jp
+
+      # 60 日間アクティビティがないと Scheduled workflow が止まってしまうことへの対策
+      # See: https://docs.github.com/ja/actions/managing-workflow-runs/disabling-and-enabling-a-workflow
+      - uses: gautamkrishnar/keepalive-workflow@master
