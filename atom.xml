@@ -2,12 +2,19 @@
 <feed xmlns="http://www.w3.org/2005/Atom">
     <id>https://engineers.feedforce.jp</id>
     <title>Feedforce Engineers' Blogs</title>
-    <updated>2021-12-29T01:26:20.720Z</updated>
+    <updated>2021-12-30T01:26:16.839Z</updated>
     <generator>https://github.com/jpmonette/feed</generator>
     <link rel="alternate" href="https://engineers.feedforce.jp"/>
     <subtitle>フィードフォースグループに所属するエンジニアのブログ記事をまとめています。</subtitle>
     <logo>https://engineers.feedforce.jp/logo.png</logo>
     <rights>© Feedforce Inc.</rights>
+    <entry>
+        <title type="html"><![CDATA[Manjaro で CD をリッピングする]]></title>
+        <id>https://masutaka.net/chalow/2021-12-30-1.html</id>
+        <link href="https://masutaka.net/chalow/2021-12-30-1.html"/>
+        <updated>2021-12-30T14:59:59.000Z</updated>
+        <summary type="html"><![CDATA[Asunder という GUI ツールを使えば、簡単にリッピング出来る。$ sudo pacman -S asunderエンコーダがないので、Asunder 上で直接 AAC(.m4a) に変換出来ない。「設定」で促されるがままに fdkaac をインストールすれば OK 。$ sudo pacman -S fdkaacデフォルトの CDDB サーバ gnudb.gnudb.org:8880 だと、『青天を衝けI』のサントラは引けなかった。有志の方が立てたサーバだと引けた。サーバ: freedbtest.dyndns.orgポート: 80ただ『青天を衝けII』は引けなかった。Linux からでもこの freedbtest サーバに登録は出来ると思うが、サイトに書かれているのは Windows アプリ CDex での登録方法のみ。iTunes だとどちらのサントラも引けた。iTunes は Gracenote という CDDB サーバを使っているらしい？ちなみに CDDB は Gracenote の登録商標らしい。freedbtest サーバに登録できたとしても、YouTube Music に登録するためには、各 .m4a ファイルにアートワークを登録しないと寂しいことになる。なんらかの方法で .m4a ファイルを編集する必要がある。そういえば .mp3 ファイルの時は Emacs の mpg123.el 経由で id3put を使って編集した記憶。当時はアートワークなんてものはなかったけどね。懐かしい...。いろいろ面倒くさいので、結局 Windows の iTunes でリッピングするのが一番楽なのであった...。・Wikipedia - CDDB・freedb 日本語・Asunderで参照先CDDBサーバーを変更: k のガジェット日記・「まだ自作CDをCDDBに登録してないの？」実はあなたも出来ていない？！CDDBへの登録について - 夕立ノート]]></summary>
+    </entry>
     <entry>
         <title type="html"><![CDATA[2021 年に買って良かったもの 7 選（ガチ）]]></title>
         <id>https://masutaka.net/chalow/2021-12-26-1.html</id>
@@ -129,6 +136,7 @@
         </ul>
     </li>
     <li><a href="#まとめ">まとめ</a></li>
+    <li><a href="#2021-12-29-追記">2021-12-29 追記</a></li>
 </ul>
 
 <h2 id="今回のプロジェクトの規模感">今回のプロジェクトの規模感</h2>
@@ -396,6 +404,16 @@ constant: table_name2  { value: &#34;`table2.view`&#34; }</pre>
 <p><iframe src="https://hatenablog-parts.com/embed?url=https%3A%2F%2Fcommunity.looker.com%2F%25E3%2582%25B3%25E3%2583%25A9%25E3%2583%25A0-103%2Frefinements%25E3%2582%2592%25E4%25BD%25BF%25E3%2581%25A3%25E3%2581%25A6lookml%25E3%2581%25AE%25E3%2582%25B3%25E3%2583%25BC%25E3%2583%2589%25E3%2582%2592%25E6%2595%25B4%25E7%2590%2586%25E3%2581%2599%25E3%2582%258B-18809" title="Refinementsを使ってLookMLのコードを整理する | Looker Community" class="embed-card embed-webcard" scrolling="no" frameborder="0" style="display: block; width: 100%; height: 155px; max-width: 500px; margin: 10px 0px;"></iframe></p>
 
 <p>皆さんのディレクトリ構造も是非教えて下さい！</p>
+
+<h2 id="2021-12-29-追記">2021-12-29 追記</h2>
+
+<p><a href="https://community.looker.com/lookml-5/what-is-the-looker-recommended-folder-structure-for-lookml-development-28826">What is the looker recommended folder structure for LookML development ? | Looker Community</a></p>
+
+<p>Looker Community にもお悩みの方がいらっしゃいました。返信している Dawid さんはよくお見かけする方で、かなりの熟練者だと思います。</p>
+
+<p>そんな彼も、今回私が書いた記事のような物理的な構造が良いのか、論理的な構造が良いのか、未だに試行錯誤しているようです。</p>
+
+<p>始めは物理的なディレクトリ構造から始めて、徐々に変化しながら論理的な構造に近づくのかもしれません。その頃にはステージに応じたベストプラクティスが出ていると良いですね。</p>
 <div class="footnotes">
 <hr/>
 <ol>
@@ -6398,13 +6416,6 @@ generated_file_test(
         <link href="https://masutaka.net/chalow/2020-12-03-1.html"/>
         <updated>2020-12-03T14:59:59.000Z</updated>
         <summary type="html"><![CDATA[この記事は Feedforce Advent Calendar 2020 の 3 日目の記事です。昨日は kysnrm の「さよなら湯島」でした。私も今のところに住んで来年で 6 年になるので、8 回目の引っ越しを少し考えてますが、まだ状況が流動的なので悩ましい...。（ここから歌詞）優先度を付けると、高高高高高高とかになることあるよね。みんな優先度が高い。でも人間は一度に複数のタスクを処理することは出来ないよ。それに実際終わってみたら、終わった順番が付いているはずだよ。じゃあ 1, 2, 3... とタスクに順番を付けてみようか。つまりは優先順位ね。優先度より優先順位のほうが偉い。ダンダン優先度は優先順位を決める１つの要素でしかないよ。区別しようか。例えば他にもこんなのを考慮する必要があるよ。・期日・かかる時間・かかるお金・サービスへのインパクト（顧客増加、顧客満足度など）・他のタスクがどれだけ効率化するか？優先度より優先順位のほうが偉い。ダンダンダン先の例だと、優先度はだいたい「期日」と「サービスへのインパクト」でふんわり決まっていることが多いと思うよ。作業者は他の要素も考慮して「優先順位」を決めると良いよ。とは言え、考えすぎても難しいから、最初は「優先度」「かかる時間」「期日」から「優先順位」を決めると良いよ。タスクAのほうが優先度が高いけど、タスクBはすぐ終わりそうだし、タスクAの期日までまだ余裕があるから、タスクBを先にやろう的な。優先度より優先順位のほうが偉い。ダンダンダ、ダンつまりは優先度よりも優先順位は上位のレイヤー、優先度より優先順位のほうが偉いということよ！優先度より優先順位のほうが偉い。ダンダンダ、ダダン（号泣してみんな立ち上がる）（歌詞終わり）次回（？）は、私が使っている優先順位を決めるための具体的なテクニックをご紹介します。明日の Feedforce Advent Calendar 2020 は、八百くんがよく日報に書いていた AI Quest の話をしてくれるみたいです。お楽しみに。]]></summary>
-    </entry>
-    <entry>
-        <title type="html"><![CDATA[『理論から学ぶデータベース実践入門』を読んだ]]></title>
-        <id>https://masutaka.net/chalow/2020-11-10-1.html</id>
-        <link href="https://masutaka.net/chalow/2020-11-10-1.html"/>
-        <updated>2020-11-10T14:59:59.000Z</updated>
-        <summary type="html"><![CDATA[4 月から Looker という BI ツールを使って、ウェブ広告の媒体数値や計測数値などの分析や可視化をすべく、日々取り組んでいます。ちょうど先月社内勉強会でそんな話をしました。現在扱っているデータは Web アプリケーションで扱うような、正規化されたきれいなデータではありません。NULL は頻繁に出てきますし、サブクエリ等でゴリッときれいにしてキャッシュする処理も書いたりします。いつの間にか想定外のレコードが入っていて、定義を変更することもあります。今までこのようなデータに向き合ったことはなかったので、こんなスキーマで良いのかなあ？とか思いながらの毎日でした。そんな中、数年前に 94 ページ目まで読んで挫折したこの本が頭にちらついていました。以前はふわっと読み始めたと記憶していますが、今回は割と明確な課題があります。今回は挫折しなさそうな気がしたのと、何かのヒントを期待して読むことにしました。結論から書くと P155 に明確な答えが書いてありました。リレーショナルモデルに適合しないデータをテーブルを用いて格納する場合は、リレーショナルモデルの原理原則に従う必要はまるでありません。そのようなテーブルでは、NULLを用いてもかまいませんし、正規化をする必要すらないでしょう。ここを読むまでは、仮にリレーショナルモデルの原理原則に従うのだとしたら、すべてのカラムで NULL を許容しているテーブルを ETL 等でリレーショナルモデルに適合したテーブルにクリーニングするのかなあ？でも現実的ではないなあ？など考えながら読んでいました。なので、急に答えが降ってきたようでした。SQL はリレーショナルモデルを扱うことが得意ですが、そうでないものも扱って良いと力強く書いてあります。もちろん用法用量を守って。特に目の前の課題が解決したわけではありませんが、なにか光が見えた気がしました。他の話も一応書いておくと、理論だけあって全部を理解するのはかなり難しく、特に第２〜４章は全く頭に入ってきませんでした。数年前はここで挫折...。ただし、第１章の SQL と集合の関係については比較的容易で、私が数年前に読んだ時は SQL への向き合い方が変わりました。気になる人は第１章だけでも読むと良いかもしれません。他も第９章の履歴データや第１３章のリファクタリングなども。なにか課題を抱えている人は、あまり気負わずに流して読むと良いかもしれません。]]></summary>
     </entry>
     <entry>
         <title type="html"><![CDATA[『4月から取り組んできたLookerの導入から実装までのお話（Redashとも比較）』という発表をした]]></title>
