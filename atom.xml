@@ -2,12 +2,44 @@
 <feed xmlns="http://www.w3.org/2005/Atom">
     <id>https://engineers.feedforce.jp</id>
     <title>Feedforce Engineers' Blogs</title>
-    <updated>2022-01-16T01:28:39.895Z</updated>
+    <updated>2022-01-17T01:28:10.644Z</updated>
     <generator>https://github.com/jpmonette/feed</generator>
     <link rel="alternate" href="https://engineers.feedforce.jp"/>
     <subtitle>フィードフォースグループに所属するエンジニアのブログ記事をまとめています。</subtitle>
     <logo>https://engineers.feedforce.jp/logo.png</logo>
     <rights>© Feedforce Inc.</rights>
+    <entry>
+        <title type="html"><![CDATA[LINE絵文字概観]]></title>
+        <id>https://shiromoji.hatenablog.jp/entry/2022/01/16/235051</id>
+        <link href="https://shiromoji.hatenablog.jp/entry/2022/01/16/235051"/>
+        <updated>2022-01-16T14:50:51.000Z</updated>
+        <summary type="html"><![CDATA[<p>LINEで使える3種類の絵文字について、昨年末の<a href="https://developer.feedforce.jp/archive/category/FFTT">社内勉強会</a>でざっくりと解説しました。そのときのスライドを上げておきます。ざっくり概観なので、厳密でない表現や調査が不十分な箇所はありますが、雰囲気はつかめるんじゃないでしょうか。</p>
+
+<iframe class="speakerdeck-iframe" style="border: 0px none; background: rgba(0, 0, 0, 0.1) none repeat scroll 0% 0% padding-box; margin: 0px; padding: 0px; border-radius: 6px; box-shadow: rgba(0, 0, 0, 0.2) 0px 5px 40px; width: 560px; height: 314px;" src="https://speakerdeck.com/player/535cc3eccd204aeca4e9ce68e8175768" title="LINE絵文字概観 / FFTT #465" allowfullscreen="true" mozallowfullscreen="true" webkitallowfullscreen="true" data-ratio="1.78343949044586" frameborder="0"></iframe>
+
+
+<h2>参考ページ</h2>
+
+<ul>
+<li><a href="https://linecorp.com/ja/pr/news/ja/2018/2160">【LINE】「デコ文字」に続き、トークがもっと楽しくなる新機能が登場　人気キャラクターが“絵文字”になった「LINE絵文字」を本日より発売開始 | ニュース | LINE株式会社</a></li>
+<li><a href="https://linecorp.com/ja/pr/news/ja/2018/2410">【LINE Creators Market】LINE、「LINEクリエイターズ絵文字」を2018年11月中に販売開始、絵文字制作に関する申請ガイドラインを本日より公開 | ニュース | LINE株式会社</a></li>
+<li><a href="https://linecorp.com/ja/pr/news/ja/2021/3898">LINE、メッセージ内で動く「アニメーション絵文字」を発売開始 | ニュース | LINE株式会社</a></li>
+<li><a href="https://creator.line.me/ja/guideline/emoji/">絵文字 ―ガイドライン - LINE Creators Market</a></li>
+<li><a href="https://unicode.org/emoji/charts/emoji-versions.html">Emoji Versions, v14.0</a></li>
+<li><a href="https://unicode.org/emoji/charts/emoji-counts.html">Emoji Counts, v14.0</a></li>
+<li><a href="https://developers.line.biz/ja/docs/messaging-api/emoji-list/">送信可能なLINE絵文字リスト | LINE Developers</a></li>
+<li><a href="https://www.rfc-editor.org/rfc/rfc8259.html#section-8.1">8.1. Character Encoding ― RFC 8259: The JavaScript Object Notation (JSON) Data Interchange Format</a></li>
+<li><a href="https://www.unicode.org/versions/Unicode14.0.0/ch23.pdf#page=23">23.5 Private-Use Characters ― The Unicode Standard Version 14.0</a></li>
+<li><a href="https://store.line.me/emojishop/home/creators/ja">LINE クリエイターズ絵文字 - 話題の新着絵文字など | LINE STORE</a></li>
+<li><a href="https://developers.line.biz/ja/docs/messaging-api/message-types/#text-messages">テキストメッセージ ― メッセージタイプ | LINE Developers</a>（送信側）</li>
+<li><a href="https://developers.line.biz/ja/reference/messaging-api/#wh-text">テキスト ― Messaging APIリファレンス | LINE Developers</a>（受信側）</li>
+<li><a href="https://store.line.me/emojishop/product/5bc84438031a6704f8cff722/ja">カナヘイのピスケ&amp;うさぎ 絵文字 2 - LINE絵文字 | LINE STORE</a></li>
+<li><a href="https://emojipedia.org/shortcodes/">⏩ Emoji Shortcodes</a></li>
+<li><a href="https://developers.line.biz/ja/news/2021/11/30/line-original-unicode-emojis-will-be-discontinued/">ニュース：2022年3月31日をもって、Messaging APIの「LINE独自のUnicode絵文字」を廃止します | LINE Developers</a></li>
+</ul>
+
+]]></summary>
+    </entry>
     <entry>
         <title type="html"><![CDATA[Manjaro で CD をリッピングする]]></title>
         <id>https://masutaka.net/chalow/2021-12-30-1.html</id>
@@ -18124,30 +18156,5 @@ Quit()
 </div><div class="footnote">
 <p class="footnote"><a href="#fn-75c27c15" name="f-75c27c15" class="footnote-number">*1</a><span class="footnote-delimiter">:</span><span class="footnote-text">こちらは花園明朝OTには収録していない。</span></p>
 </div>]]></summary>
-    </entry>
-    <entry>
-        <title type="html"><![CDATA[Windows 8 Consumer Preview のIMEにおけるIVS対応]]></title>
-        <id>https://shiromoji.hatenablog.jp/entry/20120302/1330712411</id>
-        <link href="https://shiromoji.hatenablog.jp/entry/20120302/1330712411"/>
-        <updated>2012-03-01T18:20:11.000Z</updated>
-        <summary type="html"><![CDATA[<p>昨年9月13日に公開された <a class="keyword" href="http://d.hatena.ne.jp/keyword/Windows%208">Windows 8</a> Developer Preview では、<a class="keyword" href="http://d.hatena.ne.jp/keyword/IME">IME</a>の変換候補にIVSを含む語が現れるようになっているとのことだった。</p>
-
-    <blockquote cite="http://ameblo.jp/naoshi1128/entry-11030691791.html">
-        <p><a class="keyword" href="http://d.hatena.ne.jp/keyword/Windows%208">Windows 8</a> では IVS（Ideographic Variation Sequence）を変換候補から選択できるようになっています。IVSとは？については、<a href="http://itpro.nikkeibp.co.jp/article/COLUMN/20100126/343783/">&#x3053;&#x3061;&#x3089;</a>など詳しく書いてあるので参考にしてください。 <br />
- <br />
-実例を示すと、<a class="keyword" href="http://d.hatena.ne.jp/keyword/Windows%207">Windows 7</a>まではJIS90と<a class="keyword" href="http://d.hatena.ne.jp/keyword/JIS2004">JIS2004</a>の文字の混在が<a class="keyword" href="http://d.hatena.ne.jp/keyword/IME">IME</a>でできませんでした。したがって、辻という文字はJIS90では「一点しんにょう」ですし、<a class="keyword" href="http://d.hatena.ne.jp/keyword/JIS2004">JIS2004</a>では「二点しんにょう」となり、双方を同時に使うということはできませんでした。<a class="keyword" href="http://d.hatena.ne.jp/keyword/Windows%207">Windows 7</a>で<a class="keyword" href="http://d.hatena.ne.jp/keyword/%B5%EC%BB%FA%C2%CE">旧字体</a>を使いたい場合は、<a href="http://www.microsoft.com/ja-jp/windows/products/windowsvista/jp_font/default.aspx">JIS90&#x4E92;&#x63DB;&#x30D5;&#x30A9;&#x30F3;&#x30C8;&#x30D1;&#x30C3;&#x30B1;&#x30FC;&#x30B8;</a>をインストールする必要がありました。 <br />
- <br />
-これが<a class="keyword" href="http://d.hatena.ne.jp/keyword/Windows%208">Windows 8</a>から変わります。</p>
-
-        <cite><a href="http://ameblo.jp/naoshi1128/entry-11030691791.html">IVS&#x3092;&#x5229;&#x7528;&#x3057;&#x305F;&#x6587;&#x5B57;&#x3092;&#x5909;&#x63DB;&#x5019;&#x88DC;&#x306B;&#x8868;&#x793A;&#x3055;&#x305B;&#x306A;&#x3044;&#x65B9;&#x6CD5;&#xFF5C;&#x7A93;&#x306E;&#x304F;&#x3059;&#x308A;&#x7BB1;</a></cite>
-    </blockquote>
-<p>今回 <a class="keyword" href="http://d.hatena.ne.jp/keyword/Windows%208">Windows 8</a> Consumer Preview が公開され、自分の環境にもインストールをしたので、<a class="keyword" href="http://d.hatena.ne.jp/keyword/IME">IME</a>のIVS対応について改めて確認してみた。<a class="keyword" href="http://d.hatena.ne.jp/keyword/IME">IME</a>のバージョンは <a class="keyword" href="http://d.hatena.ne.jp/keyword/Microsoft">Microsoft</a> <a class="keyword" href="http://d.hatena.ne.jp/keyword/IME">IME</a> 2012 (15.0.8250.0)。</p><p>プロパティ > 詳細設定 > [変換]タブ > 詳細設定 をクリックすると、以下のようなウィンドウが現れる。</p><p><span itemscope itemtype="http://schema.org/Photograph"><a href="http://f.hatena.ne.jp/mashabow/20120303022402" class="hatena-fotolife" itemprop="url"><img src="http://cdn-ak.f.st-hatena.com/images/fotolife/m/mashabow/20120303/20120303022402.png" alt="f:id:mashabow:20120303022402p:image" title="f:id:mashabow:20120303022402p:image" class="hatena-fotolife" itemprop="image"></a></span></p><p>この [変換文字制限] の項で [変換文字制限をしない] を選択すると、IVSを含む語が候補に出現するようになる。デフォルトでは [IVS (Ideographic Variation Sequence) を含む文字を制限する] になっているので、IVSを含む語は出現しない。Developer Preview の段階では [変換文字制限をしない] がデフォルトだったようだが、さすがに混乱が懸念されるので変更したのだろう。</p><p>下の図はメモ帳上で<a class="keyword" href="http://d.hatena.ne.jp/keyword/%A1%D6%A4%AF%A4%BA%A1%D7">「くず」</a>を変換してみた様子。</p><p><span itemscope itemtype="http://schema.org/Photograph"><a href="http://f.hatena.ne.jp/mashabow/20120303022401" class="hatena-fotolife" itemprop="url"><img src="http://cdn-ak.f.st-hatena.com/images/fotolife/m/mashabow/20120303/20120303022401.png" alt="f:id:mashabow:20120303022401p:image" title="f:id:mashabow:20120303022401p:image" class="hatena-fotolife" itemprop="image"></a></span></p><p><a class="keyword" href="http://d.hatena.ne.jp/keyword/JIS2004">JIS2004</a>字形 <a href="http://glyphwiki.org/wiki/u845b-ue0101" target="_blank"><img src="http://glyphwiki.org/glyph/u845b-ue0101@6.50px.png" alt="u845b-ue0101"></a> と、JIS90字形 <a href="http://glyphwiki.org/wiki/u845b-ue0100" target="_blank"><img src="http://glyphwiki.org/glyph/u845b-ue0100@7.50px.png" alt="u845b-ue0100"></a> が変換候補に表示されている。<a class="keyword" href="http://d.hatena.ne.jp/keyword/JIS2004">JIS2004</a>字形を選択すると単に [U+845B] が入力されるだけだが、JIS90字形を選択するとVS付きのIVS [U+845B U+E0100] が入力される。</p><p>「味<strong>噌</strong>」「<strong>祇</strong>園」「<strong>辻</strong>」など、<a class="keyword" href="http://d.hatena.ne.jp/keyword/JIS2004">JIS2004</a>で例示字形が変更された文字が対象のようだ。ただ、「いばらき」で変換した場合に候補に出るのはVSなしの [U+8328]（茨）のみで、JIS90字形の [U+8328 U+E0100] は出てこないなど、辞書への収録基準はよくわからない。</p><p>カーソルの移動や削除などはIVS（＝基底文字+VS）で1単位となっているため、「変な箇所で切り貼りしてしまって別の基底文字にVSがついてしまった」というようなミスはあまり心配しなくてよい。また、そもそも上述のようにIVSを含む候補の表示はデフォルトでオフになっているので、IVSを含んだ文書が <a class="keyword" href="http://d.hatena.ne.jp/keyword/Windows%208">Windows 8</a> によって爆発的に増えるというわけでもないだろう。ただ、IVSを扱える環境が徐々に広まりつつあるのは事実だ。</p><p>なお、<a class="keyword" href="http://d.hatena.ne.jp/keyword/%A5%DE%A5%A4%A5%AF%A5%ED%A5%BD%A5%D5%A5%C8">マイクロソフト</a>はこれまで<a class="keyword" href="http://d.hatena.ne.jp/keyword/%B8%E5%CA%FD%B8%DF%B4%B9">後方互換</a>性のためにJIS90互換フォントパッケージを提供してきたが、<a class="keyword" href="http://d.hatena.ne.jp/keyword/Windows%208">Windows 8</a> 以降には提供しないと発表されている。</p>
-
-    <blockquote cite="http://internet.watch.impress.co.jp/docs/news/20090713_301952.html">
-        <p><a class="keyword" href="http://d.hatena.ne.jp/keyword/%A5%DE%A5%A4%A5%AF%A5%ED%A5%BD%A5%D5%A5%C8">マイクロソフト</a>では、JIS90互換フォントパックを提供するのは、<a class="keyword" href="http://d.hatena.ne.jp/keyword/Windows%207">Windows 7</a>用が最後になることも明らかにした。<a class="keyword" href="http://d.hatena.ne.jp/keyword/Windows%207">Windows 7</a>の次のバージョンからは、<a class="keyword" href="http://d.hatena.ne.jp/keyword/JIS2004">JIS2004</a>に完全移行するとしている。</p>
-
-        <cite><a href="http://internet.watch.impress.co.jp/docs/news/20090713_301952.html">&#x30DE;&#x30A4;&#x30AF;&#x30ED;&#x30BD;&#x30D5;&#x30C8;&#x3001;JIS90&#x4E92;&#x63DB;&#x30D5;&#x30A9;&#x30F3;&#x30C8;&#x306E;&#x63D0;&#x4F9B;&#x306F;Windows 7&#x3067;&#x6700;&#x5F8C; -INTERNET Watch</a></cite>
-    </blockquote>
-]]></summary>
     </entry>
 </feed>
