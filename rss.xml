@@ -4,7 +4,7 @@
         <title>Feedforce Engineers' Blogs</title>
         <link>https://engineers.feedforce.jp</link>
         <description>フィードフォースグループに所属するエンジニアのブログ記事をまとめています。</description>
-        <lastBuildDate>Fri, 04 Feb 2022 01:23:40 GMT</lastBuildDate>
+        <lastBuildDate>Sat, 05 Feb 2022 01:18:47 GMT</lastBuildDate>
         <docs>https://validator.w3.org/feed/docs/rss2.html</docs>
         <generator>https://github.com/jpmonette/feed</generator>
         <image>
@@ -13,6 +13,30 @@
             <link>https://engineers.feedforce.jp</link>
         </image>
         <copyright>© Feedforce Inc.</copyright>
+        <item>
+            <title><![CDATA[『ボッチLookML開発者兼データ整備人を連れてきたよ！』という発表をした]]></title>
+            <link>https://developer.feedforce.jp/entry/2022/02/04/180000</link>
+            <guid>https://developer.feedforce.jp/entry/2022/02/04/180000</guid>
+            <pubDate>Fri, 04 Feb 2022 09:00:00 GMT</pubDate>
+            <description><![CDATA[<p>こんにちは <a href="http://blog.hatena.ne.jp/masutaka26/" class="hatena-id-icon"><img src="https://cdn.profile-image.st-hatena.com/users/masutaka26/profile.png" width="16" height="16" alt="" class="hatena-id-icon">id:masutaka26</a> です。</p>
+
+<p>本日、週次の社内勉強会 <a href="https://developer.feedforce.jp/archive/category/FFTT">FFTT</a> で『ボッチLookML開発者兼データ整備人を連れてきたよ！』というひどいタイトルの発表をしました。</p>
+
+<iframe src="https://docs.google.com/presentation/d/e/2PACX-1vTv911SmUBM9fAk-IKQM9139Q29fU7INnUHwbFeOBxolqyybPdlcFHW2dAHBTgr3P9J_kL0Xdhbe38L/embed?start=false&loop=false&delayms=3000" frameborder="0" width="960" height="400" allowfullscreen="true" mozallowfullscreen="true" webkitallowfullscreen="true"></iframe>
+
+
+<p>2020 年 4 月から Looker に関わって得たことをまとめた内容であるとともに、1 年半近く前からのアップデートになります。</p>
+
+<p><iframe src="https://hatenablog-parts.com/embed?url=https%3A%2F%2Fdeveloper.feedforce.jp%2Fentry%2F2020%2F10%2F23%2F190000" title="『4月から取り組んできたLookerの導入から実装までのお話（Redashとも比較）』という発表をした - Feedforce Developer Blog" class="embed-card embed-blogcard" scrolling="no" frameborder="0" style="display: block; width: 100%; height: 190px; max-width: 500px; margin: 10px 0px;"></iframe><cite class="hatena-citation"><a href="https://developer.feedforce.jp/entry/2020/10/23/190000">developer.feedforce.jp</a></cite></p>
+
+<p>世に出ている Looker の情報はキラキラしているものが多く、ツラい話をそれほど目にしません。<s>絶対にあるはずなのに！😭</s></p>
+
+<p>それならば！とツラい話や解決が困難な話を散りばめさせてもらいました。課題が共有されて初めて知見が役に立つと思いますからね。<em>解決した課題もあるよ（小声）。</em></p>
+
+<p>それでは良い週末を！(^^)/</p>
+]]></description>
+            <enclosure url="https://cdn-ak.f.st-hatena.com/images/fotolife/m/masutaka26/20201023/20201023184859.png" length="0" type="image/png"/>
+        </item>
         <item>
             <title><![CDATA[仮想通貨ウォレットを知るために MetaMask と Coincheck のアカウントを作って、仮想通貨を送金してみた]]></title>
             <link>https://masutaka.net/chalow/2022-01-19-1.html</link>
@@ -5617,219 +5641,6 @@ Enter a value: yes</pre>
             <guid>https://masutaka.net/chalow/2021-01-16-1.html</guid>
             <pubDate>Sat, 16 Jan 2021 14:59:59 GMT</pubDate>
             <description><![CDATA[[2019-12-20-1] で circleci/orb-tools を解説しました。リリースフローがよく出来ていたので、感動した記憶があります。しかし、記事を書いた時にはすでに v9.0.0 がリリースされており、それはそれは大きな BREAKING CHANGES でした...。やる気が出なかったので、tfupdate orb で使っているバージョンはずっと据え置いていましたが、今日急にやる気になったので、最新の v10.0.3 にアップデートしました。当該 PR はこちらです。.circleci/config.yml がかなり短くなりました。https://github.com/masutaka/circleci-tfupdate-orb/pull/2公式ドキュメントや circleci/orb-tools のドキュメントはありますが、よく分からないのと、今までの経緯からあまり信用できないので、v10.0.3 のコードリーディングをして理解しました。circleci/orb-tools 自身の .circleci/config.yml も読みました。結果的にここまで複雑にする必要はなかったです。https://github.com/CircleCI-Public/orb-tools-orb/blob/v10.0.3/.circleci/config.yml今までは master ブランチに commit するたびに orb のバージョンが自動的に上がっていきました。セマンティックバージョンの制御はできません。現在はその commit message によって、orb バージョンを半自動的に上げられるようになりました。セマンティックバージョンを制御可能です。v8.27.5 で振る舞いmaster ブランチに commit が追加された時、src/commands または src/jobs 以下が変更されていれば minor version が、それ以外の変更では patch version が自動的に上がりました。major version はサポートされていませんでした。何も考えずに済んだので楽ではありましたが、制御できないのは不満があったのかもしれません。v10.0.3 での振る舞いmaster ブランチに commit が追加された時、当該 commit message に以下の文字列が含まれていれば（例）、その指定に従ってバージョンが上がります。[semver:major][semver:minor][semver:patch]必須パラメータ publish-version-tag が true の時は git tag も push してくれます。含まれている文字列が [semver:skip] の時はバージョンは上がりません。どれも含まれていない場合、必須パラメータ fail-if-semver-not-indicated によって、CI の成功/失敗を制御できます。私は false にしましたが、厳格にしたい時は true にすると良いと思います。覚えている自信はありませんが、この記事が未来の自分への助けになることでしょう。他に、必須パラメータ add-pr-comment を true にすると、紐づく PR にコメントを追加してくれるようです（例）。私は false です。P.S.公式ドキュメントや circleci/orb-tools 自身の .circleci/config.yml では orb-tools/trigger-integration-tests-workflow job を使って、新しい workflow をトリガーしていますが、その必要は感じなかったので、1 つの workflow の中で lint や publish を全部やりました。公式の例では .circleci/config.yml の中からは pipeline.parameters.run-integration-tests が true になるタイミングの理解が非常に分かりづらくて、無駄に複雑な workflow を書いてしまうと思いました。]]></description>
-        </item>
-        <item>
-            <title><![CDATA[Google MyBusiness APIのGoクライアントを生成する]]></title>
-            <link>https://developer.feedforce.jp/entry/2021/01/12/120000</link>
-            <guid>https://developer.feedforce.jp/entry/2021/01/12/120000</guid>
-            <pubDate>Tue, 12 Jan 2021 03:00:00 GMT</pubDate>
-            <description><![CDATA[<p>こんにちは、 <a href="http://blog.hatena.ne.jp/kogainotdan/">id:kogainotdan</a> です。</p>
-
-<p>現在私は新規事業開発のチームで、飲食店支援のサービスの可能性を探索しています。</p>
-
-<p>飲食店、ひいてはローカルビジネスの運営において、<a href="https://blog.feedmatic.net/2019-04-01-134512">集客施策として重要</a>とされるのがGoogleマイビジネスの活用です。</p>
-
-<p>ナレッジパネルやローカル検索において表示されている情報は、ユーザーとしても見たことがある方が多いと思います。</p>
-
-<p>喫緊の話題としては、緊急事態宣言の前後における営業時間や営業形態の変更の正確な反映が、見込み顧客の取りこぼしを防ぐと共に店舗自体への信頼感の醸成にも役立つものと考えられます。</p>
-
-<p>そんなGoogleマイビジネスですが、Googleの他のサービス同様にAPIが存在します。</p>
-
-<p>ただし、まだGeneral Availableではない様子で、<a href="https://developers.google.com/my-business/content/prereqs">フォームによる利用申請</a>が必要となるのですが、
-Googleマイビジネスの管理画面で出来る操作の多くをサポートしており、ローカルビジネス関連のサービスを開発する際に重要なパーツとなり得ると思われます。</p>
-
-<p>さて、そんなGoogle MyBusiness APIですが、公式に提供されているクライアントライブラリが<a href="https://developers.google.com/my-business/samples">Java, PHP, C#</a>の3種となっています。</p>
-
-<p>他のGoogleのサービスと同様にDiscoveryドキュメントが提供されていますので、この3種以外の任意の言語のクライアントライブラリを生成することは可能と思われます。</p>
-
-<p>そこで本稿では、Google MyBusiness APIのGolangクライアントライブラリの生成までのステップを記録したいと思います。</p>
-
-<h2>Google API Discovery Service</h2>
-
-<p><a href="https://developers.google.com/my-business/content/prereqs">公式ガイドの導入ドキュメント</a>に沿ってAPIを有効化し、<code>OAuth 2.0</code> の認証情報を取得すると、APIリクエストが発行出来るようになります。
-(認証情報の取得は他のサービスと同様なので割愛します)</p>
-
-<p>なお、APIの利用申請は<code>organization</code>毎に1つだけ許可されるようですのでご注意ください。</p>
-
-<p>さて、前述のようにGoogle MyBusiness APIのクライアントライブラリは、<a href="https://developers.google.com/my-business/samples">Java, PHP, C#</a>の3種のみ提供されています。</p>
-
-<p>この3種のいずれかでアプリケーションを開発する手も無くはないですが、すでに稼働している別の言語のコードがある場合など、APIの利用のためだけに別の言語のランタイムを導入するのは大仰に過ぎるというケースもあるかと思います。
-(白状すると、私はこの3種のどれも書いたことがありません)</p>
-
-<p>ところで上記のクライアントライブラリの紹介ページには、以下のようなことも書かれています。</p>
-
-<blockquote><p>Google My Business API Discovery ドキュメントは、この API の個々のバージョンのインターフェースについて解説しています。このドキュメントは Google API Discovery Service とともにご利用ください。</p></blockquote>
-
-<p>Swagger/Open API SpecificationやGraphQLなど、Web APIのクライアントは形式化された仕様から生成するのが一般的になっています。</p>
-
-<p><a href="https://developers.google.com/discovery">Google API Discovery Serviceのサイト</a>に飛ぶと、</p>
-
-<blockquote><p>Use the Google API Discovery Service to build client libraries</p>
-
-<p>The Discovery API provides a list of Google APIs and a machine-readable "Discovery Document" for each API.</p></blockquote>
-
-<p>とあり、これもそういった仕様の一つであることが伺えます。</p>
-
-<h2>Google関連のAPIクライアントライブラリ</h2>
-
-<p>ここでGoogleが提供する<a href="https://github.com/googleapis/google-api-go-client">各種サービスのAPIクライアントライブラリが集積されたレポジトリ</a>を見てみましょう。</p>
-
-<p>何らかの形でこのDiscoveryドキュメントが利用されていることが<a href="https://github.com/googleapis/google-api-go-client/search?l=JSON&amp;q=discovery">見て取れます</a>。
-Goほど分かりやすい形ではないですが、<a href="https://github.com/googleapis/google-api-ruby-client/search?l=YAML&amp;q=discovery">Ruby</a>や<a href="https://github.com/googleapis/google-api-dotnet-client/search?q=discovery">.NET</a>でも、同様に利用されていることが伺われます。</p>
-
-<p>Google MyBusiness APIのドキュメントに示されている通り、このレポジトリにはGoogle MyBusiness APIのクライアントライブラリは置かれていません。</p>
-
-<p>ただし<a href="https://github.com/googleapis/google-api-go-client/issues/597">Support for Bussiness Messaging private API? #597</a>に</p>
-
-<blockquote><p>If you want to try out the generator and see if it works for you can.</p>
-
-<p>You would need to clone this repo and generate from within it as the code it generates will rely upon some internal packages here.</p></blockquote>
-
-<p>という回答が付いています。</p>
-
-<p>internal packageを利用する必要があるものの、Discoveryドキュメントさえあれば、個々の開発者がクライアントライブラリを生成する道はありそうです。</p>
-
-<h2>Google MyBusiness API クライアントライブラリの生成</h2>
-
-<p>上述のIssueから参照されている<a href="https://github.com/googleapis/google-api-go-client/issues/283">Add instructions to generate services yourself #283</a>にあるように、同じレポジトリにコードジェネレータも置いてあるようです。</p>
-
-<p>実態としては<a href="https://github.com/googleapis/google-api-go-client/blob/39bc9cc19fcd620129ddffe34a7531784d1dd793/google-api-go-generator/gen.go#L130-L183">Goのmain package</a>のようですので、forkしてGoogle MyBusiness APIのDiscoveryドキュメントを食わせて上げれば良さそうです。
-公式に公開されたツールというわけではないようなので、ドキュメントなどは見当たりませんが、<code>--help</code>オプションで実行してあげるとサポートされているオプションが確認出来ます。</p>
-
-<pre class="code" data-lang="" data-unlink>  -api string
-        The API ID to generate, like &#39;tasks:v1&#39;. A value of &#39;*&#39; means all. (default &#34;*&#34;)
-  -api_json_file string
-        If non-empty, the path to a local file on disk containing the API to generate. Exclusive with setting --api.
-  -api_pkg_base string
-        Go package prefix to use for all generated APIs. (default &#34;google.golang.org/api&#34;)
-  -base_url string
-        (optional) Override the default service API URL. If empty, the service&#39;s root URL will be used.
-  -build
-        Compile generated packages.
-  -cache
-        Use cache of discovered Google API discovery documents. (default true)
-  -copyright_year string
-        Year for copyright. (default &#34;2021&#34;)
-  -discoveryurl string
-        URL to root discovery document (default &#34;https://www.googleapis.com/discovery/v1/apis&#34;)
-  -gendir string
-        Directory to use to write out generated Go files (default &#34;/Users/kogai/.gvm/pkgsets/go1.14/global/src/google.golang.org/api&#34;)
-  -gensupport_pkg string
-        Go package path of the &#39;api/internal/gensupport&#39; support package. (default &#34;google.golang.org/api/internal/gensupport&#34;)
-  -googleapi_pkg string
-        Go package path of the &#39;api/googleapi&#39; support package. (default &#34;google.golang.org/api/googleapi&#34;)
-  -header_path string
-        If non-empty, prepend the contents of this file to generated services.
-  -htransport_pkg string
-        Go package path of the &#39;api/transport/http&#39; support package. (default &#34;google.golang.org/api/transport/http&#34;)
-  -install
-        Install generated packages.
-  -internaloption_pkg string
-        Go package path of the &#39;api/option/internaloption&#39; support package. (default &#34;google.golang.org/api/option/internaloption&#34;)
-  -option_pkg string
-        Go package path of the &#39;api/option&#39; support package. (default &#34;google.golang.org/api/option&#34;)
-  -output string
-        (optional) Path to source output file. If not specified, the API name and version are used to construct an output path (e.g. tasks/v1).
-  -publiconly
-        Only build public, released APIs. Only applicable for Google employees. (default true)</pre>
-
-
-<p><a href="https://github.com/googleapis/google-api-go-client/issues/283">Add instructions to generate services yourself #283</a>で指摘されている<code>api_json</code>などのオプションも確認出来ます。</p>
-
-<p><a href="https://developer.feedforce.jp/entry/2020/12/04/100000">GitHub Actionsを使ったShopify テーマの自動デプロイ環境構築</a>という記事でも触れたのですが、私の管理しているmonorepoレポジトリはBazelでビルドターゲットを管理していますので、
-Google MyBusiness APIのクライアントライブラリも、ビルド単位の一つとして扱っています。</p>
-
-<pre class="code bazel" data-lang="bazel" data-unlink># WORKSPACE
-
-# Discoveryドキュメントを取得する
-http_file(
-    name = &#34;mybusiness_api_go_schema&#34;,
-    downloaded_file_path = &#34;mybusiness.json&#34;,
-    sha256 = &#34;084e68d0fc746fe9d0ba105f6878b8eb208181f5ee1288e79c35a11684ec4a13&#34;,
-    urls = [&#34;https://developers.google.com/my-business/samples/mybusiness_google_rest_v4p7.json&#34;],
-)
-
-# forkしてくる代わりにcloneしておく
-new_git_repository(
-    name = &#34;google_api_go_client&#34;,
-    # non-bazelレポジトリなので、カスタムのビルドファイルを作っておく
-    build_file = &#34;//:google_api_go_client.bazel&#34;,
-    commit = &#34;074c16e73361434fc3d1f6ef62585d57b70a9d1b&#34;,
-    remote = &#34;https://github.com/googleapis/google-api-go-client.git&#34;,
-    shallow_since = &#34;1608641643 +0000&#34;,
-)</pre>
-
-
-
-
-<pre class="code bazel" data-lang="bazel" data-unlink># google_api_go_client.bazel
-# ビルドに必要なのはinternal packageだけ
-exports_files(
-    [] + glob([&#34;internal/**/*.go&#34;]),
-)</pre>
-
-
-
-
-<pre class="code bazel" data-lang="bazel" data-unlink>load(&#34;@io_bazel_rules_go//go:def.bzl&#34;, &#34;go_binary&#34;)
-load(&#34;@build_bazel_rules_nodejs//:index.bzl&#34;, &#34;generated_file_test&#34;)
-
-filegroup(
-    name = &#34;gensupport&#34;,
-    srcs = [
-        &#34;@google_api_go_client//:internal/gensupport/buffer.go&#34;,
-        &#34;@google_api_go_client//:internal/gensupport/doc.go&#34;,
-        &#34;@google_api_go_client//:internal/gensupport/json.go&#34;,
-        &#34;@google_api_go_client//:internal/gensupport/jsonfloat.go&#34;,
-        &#34;@google_api_go_client//:internal/gensupport/media.go&#34;,
-        &#34;@google_api_go_client//:internal/gensupport/params.go&#34;,
-        &#34;@google_api_go_client//:internal/gensupport/resumable.go&#34;,
-        &#34;@google_api_go_client//:internal/gensupport/retryable_linux.go&#34;,
-        &#34;@google_api_go_client//:internal/gensupport/send.go&#34;,
-        &#34;@google_api_go_client//:internal/gensupport/version.go&#34;,
-    ],
-)
-
-# gazelle:ignore
-go_binary(
-    name = &#34;codegen&#34;,
-    args = [&#34;-api_json_file=$(location @mybusiness_api_go_schema//file:mybusiness.json)&#34;],
-    data = [
-        &#34;:gensupport&#34;,
-        &#34;@mybusiness_api_go_schema//file:mybusiness.json&#34;,
-    ],
-    embed = [
-        &#34;@org_golang_google_api//google-api-go-generator&#34;,
-    ],
-    visibility = [&#34;//visibility:public&#34;],
-)
-
-generated_file_test(
-    name = &#34;json&#34;,
-    src = &#34;//packages/google-mybusiness-api-go/mybusiness/v4:mybusiness-api.json&#34;,
-    generated = &#34;@mybusiness_api_go_schema//file:mybusiness.json&#34;,
-)</pre>
-
-
-<p>当初は単純にMakefileにcurlの実行などを書いていたのですが、Discoveryドキュメントを都度取得・クライアントライブラリを生成しているとCIが重くなるので、で適宜キャッシュさせるためにもBazelが効いています。</p>
-
-<pre class="code makefile" data-lang="makefile" data-unlink>mybusiness/v4:
-    npx bazelisk run -- //google-mybusiness-api-go:codegen \
-        -gendir=&#34;$(CURDIR)&#34; \
-                # internal以下に置かれたpackageではなく、手元に移したpackageを使う
-        -gensupport_pkg=&#34;github.com/your-organization/your-repository/packages/google-mybusiness-api-go/mybusiness/gensupport&#34;
-    cp -r $(BZL_BIN)/$(PKG)/codegen_/codegen.runfiles/google_api_go_client_internal/internal/gensupport $(CURDIR)/mybusiness</pre>
-
-
-<p>最後の<code>generated_file_test</code>はクライアントライブラリの生成には直接関係しないのですが、同じレポジトリでTypeScriptのコードも管理している関係でJavaScript関係のBazel Ruleが導入されています。
-ついでだったので、Discoveryドキュメントのスナップショットテストのようなこともしています。</p>
-
-<h2>まとめ</h2>
-
-<p>Google MyBusiness APIのGoクライアントライブラリの生成について書いてみました。
-何かの参考になれば幸いです。</p>
-]]></description>
-            <enclosure url="https://cdn.user.blog.st-hatena.com/default_entry_og_image/4268819/1588226000876991" length="0" type="image//default_entry_og_image/4268819/1588226000876991"/>
         </item>
         <item>
             <title><![CDATA[思考を寝かせて、優先順位を決めるための「やるかもしれないリスト」がとてもうまくワークしている]]></title>
