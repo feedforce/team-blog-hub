@@ -2,12 +2,116 @@
 <feed xmlns="http://www.w3.org/2005/Atom">
     <id>https://engineers.feedforce.jp</id>
     <title>Feedforce Engineers' Blogs</title>
-    <updated>2022-02-09T01:28:21.843Z</updated>
+    <updated>2022-02-10T01:26:33.776Z</updated>
     <generator>https://github.com/jpmonette/feed</generator>
     <link rel="alternate" href="https://engineers.feedforce.jp"/>
     <subtitle>フィードフォースグループに所属するエンジニアのブログ記事をまとめています。</subtitle>
     <logo>https://engineers.feedforce.jp/logo.png</logo>
     <rights>© Feedforce Inc.</rights>
+    <entry>
+        <title type="html"><![CDATA[操作ログを用いた行動パターン変化の検知]]></title>
+        <id>https://developer.feedforce.jp/entry/2022/02/09/110824</id>
+        <link href="https://developer.feedforce.jp/entry/2022/02/09/110824"/>
+        <updated>2022-02-09T02:08:24.000Z</updated>
+        <summary type="html"><![CDATA[<p>こんにちは　
+データサイエンティストの<a href="https://twitter.com/feed_yao">八百俊哉</a>です。
+最近は花粉が飛んでいることを感じています。目がかゆい。</p>
+
+<p>今回はdfplus.ioの操作ログを用いてクライアントの行動パターン変化を検知する仕組みを作成し、社内で有効活用された事例がありますので、その手法と成果を紹介します。</p>
+
+<p>弊社のサービス<a href="https://dfplus.io/">dfplus.io</a>はマーケティング・広告運用チームのためのデータフィード管理ツールになります。様々な商品・商材データをマーケティングでフル活用できるようになるサービスです。</p>
+
+<h1>分析背景</h1>
+
+<p>dfplus.ioでの解約理由の一つに<strong>「クライアントの担当者が変更する際に引き継ぎがうまくできず、dfplus.ioの使い方がわからなくなってしまう」</strong>というケースがありました。</p>
+
+<p>dfplus.ioカスタマーサクセスチーム（※以下CSチーム）では、<strong>クライアント側から事前に担当者の変更のご連絡を頂いた場合は新しいご担当者様にdfplus.ioの操作や活用に関するご案内をしております。しかし、クライアント側からご連絡がない場合は担当者の変更に気付くことができずそのご案内ができないという課題</strong>がありました。</p>
+
+<p>その為なんらかの方法でクライアントの担当者の変更を検知することができると、新しい担当者にCSチームからdfplus.ioの操作や活用に関するご案内をすることができます。</p>
+
+<p>そこで今回は<strong>操作ログを用いて行動パターンの変化を検知するという分析を実施し、クライアントの担当者の変更に気がつけるようにしました。</strong></p>
+
+<h1>操作ログを用いて行動パターンを可視化</h1>
+
+<p>dfplus.ioには全部で90個のAPIが存在します。どのアカウントがいつどのAPIを使用したのかのデータがすべて蓄積されている状態です。以下が実際に今回の分析で使用したデータになります。</p>
+
+<p><figure class="figure-image figure-image-fotolife" title="実際に使用した元データ"><span itemscope itemtype="http://schema.org/Photograph"><img src="https://cdn-ak.f.st-hatena.com/images/fotolife/n/newton800/20220208/20220208141429.png" alt="f:id:newton800:20220208141429p:plain" width="643" height="173" loading="lazy" title="" class="hatena-fotolife" itemprop="image"></span><figcaption>実際に使用した元データ</figcaption></figure></p>
+
+<p>今回はこちらのデータを用いて各クライアントの行動パターンを作成しました。以下が実際の操作ログを用いて作成できた行動パターンの可視化例です。</p>
+
+<p><span itemscope itemtype="http://schema.org/Photograph"><img src="https://cdn-ak.f.st-hatena.com/images/fotolife/n/newton800/20220209/20220209092518.png" alt="f:id:newton800:20220209092518p:plain" width="778" height="531" loading="lazy" title="" class="hatena-fotolife" itemprop="image"></span></p>
+
+<p>それぞれの<strong>APIに0~89の通し番号を割り振り、x軸</strong>としました。また、<strong>y軸には日数を使用</strong>して上のように可視化しました。</p>
+
+<p>1日のうち1度でもAPIを操作すれば、(x(API番号), y(操作日)) = 1となるようにしており、画素値は0か1しか取らないようになっています。(画像で表現するときは1を255としている。)</p>
+
+<p><strong>それらのデータを月ごとに切り分け、前月とその前の月の行動パターンを比較することで、行動パターンの変化を確認しました。</strong></p>
+
+<p>上の画像の例だと2021年12月と2022年01月を比較することで、変化の検知を行うということになります。</p>
+
+<h1>行動パターン変化の定義</h1>
+
+<p>ここから2つの月の行動パターンを比較していきます。</p>
+
+<p>はじめは画像同士をそのまま引き算することで変化量を求めようと思いました。しかし、仮にdfplus.ioを使用する業務が1日遅れになってしまったクライアントがいた場合、同じ作業をしているにも関わらず、行動パターン変化量が大きくなってしまいます。</p>
+
+<p>そこで行動パターン変化量(<img src="https://chart.apis.google.com/chart?cht=tx&chl=%20d" alt=" d"/>)を以下のように定義しました。</p>
+
+<div align="center">
+<img src="https://chart.apis.google.com/chart?cht=tx&chl=%20d%20%3D%20%20%5Cdfrac%7B%5Csum%20%5E%7B89%7D_%7By%3D0%7D%5Cleft%28%20%5Csum%20%5E%7B30%7D_%7Bx%3D0%7Dp_%7Bx%2Cy%7D%5E%7Bbetore%7D-%5Csum%20%5E%7B30%7D_%7Bx%3D0%7Dp_%7Bx%2Cy%7D%5E%7Bafter%7D%5Cright%29%20%5E%7B2%7D%7D%7B%5Cleft%28%20%5Csum%20%5E%7B89%7D_%7By%3D0%7D%5Csum%20%5E%7B30%7D_%7Bx%3D0%7Dp_%7Bx%2Cy%7D%5E%7Bbetore%7D%2B%5Csum%20%5E%7B89%7D_%7By%3D0%7D%5Csum%20%5E%7B30%7D_%7Bx%3D0%7Dp_%7Bx%2Cy%7D%5E%7Bafter%7D%5Cright%29%20%7D%5C%5C%20" alt=" d =  \dfrac{\sum ^{89}_{y=0}\left( \sum ^{30}_{x=0}p_{x,y}^{betore}-\sum ^{30}_{x=0}p_{x,y}^{after}\right) ^{2}}{\left( \sum ^{89}_{y=0}\sum ^{30}_{x=0}p_{x,y}^{betore}+\sum ^{89}_{y=0}\sum ^{30}_{x=0}p_{x,y}^{after}\right) }\\ "/>
+</div>
+
+
+<p></p></p>
+
+<div align="center">
+<img src="https://chart.apis.google.com/chart?cht=tx&chl=%20%0Ap_%7Bx%2Cy%7D%20%3D%20%5Cleft%5C%7B%0A%5Cbegin%7Barray%7D%7Bll%7D%0A1%20%26%20%E6%93%8D%E4%BD%9C%E3%81%8C%E3%81%82%E3%81%A3%E3%81%9F%E5%A0%B4%E5%90%88%5C%5C%0A0%20%26%20%E6%93%8D%E4%BD%9C%E3%81%8C%E3%81%AA%E3%81%8B%E3%81%A3%E3%81%9F%E5%A0%B4%E5%90%88%0A%5Cend%7Barray%7D%0A%5Cright.%0A" alt=" 
+p_{x,y} = \left\{
+\begin{array}{ll}
+1 &amp; &#x64CD;&#x4F5C;&#x304C;&#x3042;&#x3063;&#x305F;&#x5834;&#x5408;\\
+0 &amp; &#x64CD;&#x4F5C;&#x304C;&#x306A;&#x304B;&#x3063;&#x305F;&#x5834;&#x5408;
+\end{array}
+\right.
+"/>
+</div>
+
+
+<p></p></p>
+
+<p>もともとは分子の部分だけを用いて行動パターン変化量と定義していましたが、そうすると必然的に操作頻度が多いユーザーの変化量が多くなってしまい、月に数度しか使用しないクライアントの行動パターン変化量がとても小さくなってしまうという課題がありました。</p>
+
+<p>そこで上のように分母に全体の操作頻度を導入することで、操作頻度による評価のばらつきを削減しました。</p>
+
+<p>行動パターン変化量(<img src="https://chart.apis.google.com/chart?cht=tx&chl=%20d" alt=" d"/>)がいくつ以上になれば、行動パターンが変化したと言えるかについては、CSチームと<img src="https://chart.apis.google.com/chart?cht=tx&chl=%20d" alt=" d"/>と行動パターンの可視化画像を確認の上、決定しております。今後もその閾値については調整を行っていく予定になります。</p>
+
+<h1>実際に検知できた例</h1>
+
+<p><strong>これらの仕組みを使用することで毎月10件前後の変化検知があります。
+その検知結果をCSチームで確認し、ご案内が必要だと判断した場合にCSチームからクライアントに連絡を実施するという流れになっています。</strong></p>
+
+<p>以下は実際に担当者の変更の検知に成功した事例です。</p>
+
+<p><span itemscope itemtype="http://schema.org/Photograph"><img src="https://cdn-ak.f.st-hatena.com/images/fotolife/n/newton800/20220208/20220208160800.png" alt="f:id:newton800:20220208160800p:plain" width="721" height="361" loading="lazy" title="" class="hatena-fotolife" itemprop="image"></span></p>
+
+<p>可視化された行動パターンからも確認できるように、<strong>2021年11月までは頻繁に使用されていましたが、2021月12月の前半以降は使用回数が激減しています。</strong></p>
+
+<p><strong>実際にこちらのクライアントは担当者が退職されており、担当者の変更検知の成功例となりました。</strong></p>
+
+<p>以下は、実際にCSチームから頂いた連絡です。
+<span itemscope itemtype="http://schema.org/Photograph"><img src="https://cdn-ak.f.st-hatena.com/images/fotolife/n/newton800/20220208/20220208161732.png" alt="f:id:newton800:20220208161732p:plain" width="883" height="251" loading="lazy" title="" class="hatena-fotolife" itemprop="image"></span></p>
+
+<h1>さいごに</h1>
+
+<p>今回は操作ログを用いた行動パターン変化の検知について紹介しました。
+こちらの分析案件は、ヒアリングから現在まで1年ほどかけて現状の形になりました。入社2年目の私にとってはかなり長い間実施した業務になります。</p>
+
+<p>今回は触れられていませんが、現在に至るまで紆余曲折ありました。最後まで諦めずに現在の形にできて非常に嬉しく感じます。</p>
+
+<p>現在運用から4ヶ月ほど経過しており、実際に担当者の変更が検知できた事例が2件となっています。引き続き運用を続けていくことで、より多くの成果が残せると考えています。</p>
+
+<p>最後までお付き合いいただき、ありがとうございました。</p>
+]]></summary>
+    </entry>
     <entry>
         <title type="html"><![CDATA[『ボッチLookML開発者兼データ整備人を連れてきたよ！』という発表をした]]></title>
         <id>https://developer.feedforce.jp/entry/2022/02/04/180000</id>
