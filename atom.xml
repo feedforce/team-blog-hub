@@ -2,7 +2,7 @@
 <feed xmlns="http://www.w3.org/2005/Atom">
     <id>https://engineers.feedforce.jp</id>
     <title>Feedforce Engineers' Blogs</title>
-    <updated>2022-02-10T01:26:33.776Z</updated>
+    <updated>2022-02-11T01:27:42.038Z</updated>
     <generator>https://github.com/jpmonette/feed</generator>
     <link rel="alternate" href="https://engineers.feedforce.jp"/>
     <subtitle>フィードフォースグループに所属するエンジニアのブログ記事をまとめています。</subtitle>
@@ -58,7 +58,7 @@
 <p>そこで行動パターン変化量(<img src="https://chart.apis.google.com/chart?cht=tx&chl=%20d" alt=" d"/>)を以下のように定義しました。</p>
 
 <div align="center">
-<img src="https://chart.apis.google.com/chart?cht=tx&chl=%20d%20%3D%20%20%5Cdfrac%7B%5Csum%20%5E%7B89%7D_%7By%3D0%7D%5Cleft%28%20%5Csum%20%5E%7B30%7D_%7Bx%3D0%7Dp_%7Bx%2Cy%7D%5E%7Bbetore%7D-%5Csum%20%5E%7B30%7D_%7Bx%3D0%7Dp_%7Bx%2Cy%7D%5E%7Bafter%7D%5Cright%29%20%5E%7B2%7D%7D%7B%5Cleft%28%20%5Csum%20%5E%7B89%7D_%7By%3D0%7D%5Csum%20%5E%7B30%7D_%7Bx%3D0%7Dp_%7Bx%2Cy%7D%5E%7Bbetore%7D%2B%5Csum%20%5E%7B89%7D_%7By%3D0%7D%5Csum%20%5E%7B30%7D_%7Bx%3D0%7Dp_%7Bx%2Cy%7D%5E%7Bafter%7D%5Cright%29%20%7D%5C%5C%20" alt=" d =  \dfrac{\sum ^{89}_{y=0}\left( \sum ^{30}_{x=0}p_{x,y}^{betore}-\sum ^{30}_{x=0}p_{x,y}^{after}\right) ^{2}}{\left( \sum ^{89}_{y=0}\sum ^{30}_{x=0}p_{x,y}^{betore}+\sum ^{89}_{y=0}\sum ^{30}_{x=0}p_{x,y}^{after}\right) }\\ "/>
+<img src="https://chart.apis.google.com/chart?cht=tx&chl=%20d%20%3D%20%20%5Cdfrac%7B%5Csum%20%5E%7B89%7D_%7Bx%3D0%7D%5Cleft%28%20%5Csum%20%5E%7B30%7D_%7By%3D0%7Dp_%7Bx%2Cy%7D%5E%7Bbetore%7D-%5Csum%20%5E%7B30%7D_%7By%3D0%7Dp_%7Bx%2Cy%7D%5E%7Bafter%7D%5Cright%29%20%5E%7B2%7D%7D%7B%5Cleft%28%20%5Csum%20%5E%7B89%7D_%7Bx%3D0%7D%5Csum%20%5E%7B30%7D_%7By%3D0%7Dp_%7Bx%2Cy%7D%5E%7Bbetore%7D%2B%5Csum%20%5E%7B89%7D_%7Bx%3D0%7D%5Csum%20%5E%7B30%7D_%7By%3D0%7Dp_%7Bx%2Cy%7D%5E%7Bafter%7D%5Cright%29%20%7D%5C%5C%20" alt=" d =  \dfrac{\sum ^{89}_{x=0}\left( \sum ^{30}_{y=0}p_{x,y}^{betore}-\sum ^{30}_{y=0}p_{x,y}^{after}\right) ^{2}}{\left( \sum ^{89}_{x=0}\sum ^{30}_{y=0}p_{x,y}^{betore}+\sum ^{89}_{x=0}\sum ^{30}_{y=0}p_{x,y}^{after}\right) }\\ "/>
 </div>
 
 
