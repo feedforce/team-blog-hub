@@ -42,7 +42,7 @@ export const members: Member[] = [
     name: "masutaka",
     role: "LookML Developer",
     bio: "カレー大好き！",
-    avatarSrc: "https://www.gravatar.com/avatar/b7a93b5c3bcfa8f2f8047584cc16bf13?size=256",
+    avatarSrc: "https://www.gravatar.com/avatar/d6c5403c0b6ef2f9fd51910ea38323a3?size=256",
     sources: [
       "https://developer.feedforce.jp/rss/author/masutaka26",
       "https://masutaka.net/chalow/cl.rss",
