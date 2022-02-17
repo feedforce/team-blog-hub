@@ -4,7 +4,7 @@
         <title>Feedforce Engineers' Blogs</title>
         <link>https://engineers.feedforce.jp</link>
         <description>フィードフォースグループに所属するエンジニアのブログ記事をまとめています。</description>
-        <lastBuildDate>Wed, 16 Feb 2022 03:10:18 GMT</lastBuildDate>
+        <lastBuildDate>Thu, 17 Feb 2022 01:24:05 GMT</lastBuildDate>
         <docs>https://validator.w3.org/feed/docs/rss2.html</docs>
         <generator>https://github.com/jpmonette/feed</generator>
         <image>
@@ -2112,7 +2112,7 @@ explore: child {
 <p>Twitter は <a href="https://ifttt.com/">IFTTT</a> を使って、同 channel に POST しています。</p>
 
 <ul>
-<li><code>If</code> New tweet from search <code>#looker lang:ja -rt</code></li>
+<li><code>If</code> New tweet from search <code>#looker OR LookML lang:ja -rt</code></li>
 <li><code>Then</code> Post to channel
 
 <ul>
