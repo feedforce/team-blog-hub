@@ -4,7 +4,7 @@
         <title>Feedforce Engineers' Blogs</title>
         <link>https://engineers.feedforce.jp</link>
         <description>フィードフォースグループに所属するエンジニアのブログ記事をまとめています。</description>
-        <lastBuildDate>Mon, 21 Feb 2022 01:26:10 GMT</lastBuildDate>
+        <lastBuildDate>Tue, 22 Feb 2022 01:26:37 GMT</lastBuildDate>
         <docs>https://validator.w3.org/feed/docs/rss2.html</docs>
         <generator>https://github.com/jpmonette/feed</generator>
         <image>
@@ -13,6 +13,159 @@
             <link>https://engineers.feedforce.jp</link>
         </image>
         <copyright>© Feedforce Inc.</copyright>
+        <item>
+            <title><![CDATA[ECサイトのタイトルと説明文から取り扱いカテゴリの予測を行った]]></title>
+            <link>https://developer.feedforce.jp/entry/2022/02/21/104757</link>
+            <guid>https://developer.feedforce.jp/entry/2022/02/21/104757</guid>
+            <pubDate>Mon, 21 Feb 2022 01:47:57 GMT</pubDate>
+            <description><![CDATA[<p>こんにちは　 データサイエンティストの八百俊哉です。最近は家でカクテルを作ることにはまっています。</p>
+
+<p><strong>今回はEC BoosterのクライントのECサイトのタイトルと説明文を用いることで、どのカテゴリの商品を扱っているのか予測する仕組みを作成しました</strong>ので、その方法を紹介します。</p>
+
+<p>弊社のサービス<a href="https://ecbooster.jp/">EC Booster</a>は、Google ショッピング広告の自動運用による自社EC自動集客サービスです。主要ECシステムと連携することで、Google の検索結果画面に画像付きで自社商品を訴求することが可能となります。</p>
+
+<h1>分析背景</h1>
+
+<p>EC Boosterを利用いただくことで、Google ショッピング広告を自動運用することができます。
+Googleショッピング広告では広告出稿する際に、<strong>Googleが自動的にそれぞれの商品にgoogle product categoryというカテゴリ情報を割り当てます。</strong></p>
+
+<p><iframe src="https://hatenablog-parts.com/embed?url=https%3A%2F%2Fsupport.google.com%2Fmerchants%2Fanswer%2F6324436%3Fhl%3Dja" title="Google 商品カテゴリ [google_product_category] - Google Merchant Center ヘルプ" class="embed-card embed-webcard" scrolling="no" frameborder="0" style="display: block; width: 100%; height: 155px; max-width: 500px; margin: 10px 0px;"></iframe><cite class="hatena-citation"><a href="https://support.google.com/merchants/answer/6324436?hl=ja">support.google.com</a></cite></p>
+
+<p>しかしながら、<strong>Googleが自動的に割り振った商品ごとのカテゴリ情報はEC Booster側からは確認することができません。</strong></p>
+
+<blockquote><p>Google's category of the item (see Google product taxonomy). When querying products, this field will contain the user provided value. There is currently no way to get back the auto assigned google product categories through the API.
+<cite><a href="https://developers.google.com/shopping-content/reference/rest/v2.1/products?hl=en#Product.FIELDS.google_product_category">https://developers.google.com/shopping-content/reference/rest/v2.1/products?hl=en#Product.FIELDS.google_product_category</a></cite></p></blockquote>
+
+<p>商品ごとに割り振られたカテゴリがわからないと、それぞれのクライントがどのような商品を扱っているのかわからなくなります。</p>
+
+<p>その結果、<strong>クライアントの実績を取扱商品カテゴリごとに集計したり、扱っているカテゴリごとのサポートを行ったりすることができなくなってしまいます。</strong></p>
+
+<p>そこで今回は<strong>クライントごとに取扱商品カテゴリをEC Booster側で予測する</strong>ことで、上に挙げたような課題を解決するような仕組みを作成しました。</p>
+
+<h1>学習・予測に必要なデータの収集</h1>
+
+<p>EC Boosterは現在有料プラン約300のクライントとフリープラン約2000のクライントにご利用いただいております。（<a href="https://ssl4.eir-parts.net/doc/7068/tdnet/2065834/00.pdf">2022年5月第2四半期 決算説明資料より</a>）</p>
+
+<p><strong>学習データ生成のために、有料プランユーザーを中心に約470のクライントに対して手動でカテゴリを割り振るという作業を実施しました。</strong>また、このデータの作成はそれぞれのクライントのホームページを目視で確認し、適切なカテゴリを割り振りました。</p>
+
+<p>次に学習・予測に必要な入力データの収集を行いました。<strong>今回はそれぞれのクライントのタイトルと説明文を用いて学習をします。</strong>
+<strong>そのため以下に示すようにそれぞれのホームページからtitleとdescriptionのスクレイピングを行いました。
+</strong>
+<figure class="figure-image figure-image-fotolife" title="タイトル(title)、説明文(description)の例"><span itemscope itemtype="http://schema.org/Photograph"><img src="https://cdn-ak.f.st-hatena.com/images/fotolife/n/newton800/20220215/20220215113752.png" alt="f:id:newton800:20220215113752p:plain" width="1200" height="575" loading="lazy" title="" class="hatena-fotolife" itemprop="image"></span><figcaption>タイトル(title)、説明文(description)の例</figcaption></figure></p>
+
+<p>それぞれのtitleとdescriptionが収集できると以下のようなデータになります。</p>
+
+<table>
+<thead>
+<tr>
+<th>  shop_id  </th>
+<th>  手入力カテゴリ  </th>
+<th> title</th>
+<th> description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>  A  </td>
+<td>  カテゴリA  </td>
+<td> レトロな服を買うならA  </td>
+<td> レトロな服を買うならAで決まり!!お問い合わせは...  </td>
+</tr>
+<tr>
+<td>  B  </td>
+<td>  カテゴリB  </td>
+<td> 高級食材のB </td>
+<td> 高級食材を買うならBが安い!!  </td>
+</tr>
+<tr>
+<td>  C  </td>
+<td>  カテゴリC  </td>
+<td> 車のパーツはC </td>
+<td> パーツの取付も行います!!  </td>
+</tr>
+</tbody>
+</table>
+
+
+<p>すべてのtitleとdescriptionを収集すると、手動でカテゴリを定めたデータ数と等しいデータ数になるので約470の学習データが集まったことになります。</p>
+
+<h1>学習</h1>
+
+<p>今回はBERTを用いて学習・予測を行いました。</p>
+
+<p><a href="https://arxiv.org/abs/1810.04805">BERT（Bidirectional Encoder Representations from Transformers）</a>とは2018年にGoogleから発表された自然言語モデルです。</p>
+
+<p>また、私自身BERTに精通しているわけではないので、今回は勉強も兼ねて「<a href="https://www.amazon.co.jp/dp/B098J9M4PP/ref=dp-kindle-redirect?_encoding=UTF8&amp;btkr=1">BERTによる自然言語処理入門 ―Transformersを使った実践プログラミング</a>」を参考に学習を実施しました。</p>
+
+<p>第6章にBERTによる文章分類というものがあるので、そちらを一部書き換えて使用しました。</p>
+
+<h1>工夫したポイント</h1>
+
+<p>モデルやpre-trained modelは本で紹介されている通りのものを使用しましたが、<strong>18カテゴリへの分類問題で正解率が62%前後しか確保できていないため、この精度では運用できない</strong>と判断し、以下のような工夫を行いました。</p>
+
+<h2>工夫したポイント①　2種類の予測モデルを用いる</h2>
+
+<p>精度改善のために元々1つの予測モデルで学習・予測行っていたものを、2つの予測モデルで行うように変更しました。それぞれの予測モデルは以下のような役割を担っています。</p>
+
+<table>
+<thead>
+<tr>
+<th>  予測モデル  </th>
+<th>  役割  </th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>  予測モデル1  </td>
+<td>  データ量が多いカテゴリを予測するモデル。簡単な予測問題を間違えない。また、データ数が少ないカテゴリはまとめて「その他」と予測する。  </td>
+</tr>
+<tr>
+<td>  予測モデル2  </td>
+<td>  予測モデル1で「その他」と予測されたデータを、それぞれのカテゴリに割り振る予測モデル。データ数が少なく難しいカテゴリに対して予測を行うので正解率は低い。  </td>
+</tr>
+</tbody>
+</table>
+
+
+<p>手動で割り振られた約470データのカテゴリは以下のようになっており、<strong>学習に使用できるデータ量がカテゴリごとにばらつきが大きいことがわかります。</strong> <strong>またデータ量が少ないカテゴリは、多くの場合低い精度を示していました。</strong></p>
+
+<p><span itemscope itemtype="http://schema.org/Photograph"><img src="https://cdn-ak.f.st-hatena.com/images/fotolife/n/newton800/20220216/20220216105400.png" alt="f:id:newton800:20220216105400p:plain" width="601" height="372" loading="lazy" title="" class="hatena-fotolife" itemprop="image"></span></p>
+
+<p><br></p>
+
+<p>予測モデル1では、データ量が少ないカテゴリは「その他」とまとめてしまい学習を行いました。予測モデル2では「その他」をより細分化するための学習を行いました。</p>
+
+<p><br></p>
+
+<p><span itemscope itemtype="http://schema.org/Photograph"><img src="https://cdn-ak.f.st-hatena.com/images/fotolife/n/newton800/20220216/20220216111039.png" alt="f:id:newton800:20220216111039p:plain" width="951" height="393" loading="lazy" title="" class="hatena-fotolife" itemprop="image"></span></p>
+
+<p><br>
+しかしながら、<strong>この方法だけではデータ量が少ないカテゴリを学習している予測モデル2はこれまで通り低い精度でした</strong>ので、以下に示す工夫ポイント2を導入することにしました。</p>
+
+<h2>工夫したポイント②　 自信のない予測は、後で人手で確認するようなフローにする</h2>
+
+<p>これまでは出力されたカテゴリの全てを信頼するようにしていましたが、<strong>一定の信頼値以下の予測に関しては後で人手で確認するというフローを導入</strong>しました。</p>
+
+<p><span itemscope itemtype="http://schema.org/Photograph"><img src="https://cdn-ak.f.st-hatena.com/images/fotolife/n/newton800/20220216/20220216111955.png" alt="f:id:newton800:20220216111955p:plain" width="951" height="441" loading="lazy" title="" class="hatena-fotolife" itemprop="image"></span></p>
+
+<p>そうすることで、<strong>予測結果の信頼値が高いものは予測結果がそのまま採用され、信頼値が低いものは人が後で確認する</strong>という流れになりました。また人が後で確認してカテゴリを定めたデータは、学習モデルの精度向上のための再学習に使用することができます。</p>
+
+<h2>工夫したポイントを導入した結果</h2>
+
+<p>元々正解率が62%だったものが上に示したような<strong>工夫ポイントを導入することで正解率は91%まで向上しました。</strong>また、そのうち2割ほどが人手での再確認を要するものとなりました。</p>
+
+<h1>さいごに</h1>
+
+<p>工夫したポイント②の「自信のない予測は、後で人手で確認するようなフローにする」はちょっとせこいのではないか？と思われる方もいるかもしれません。しかし、残りの全てのクライントに手動で割り振ることと比較すると業務量としてはかなり削減できることになっています。（8割軽減）</p>
+
+<p><strong>「機械にできる簡単なタスクは機械に任せてしまって、人間は本当に考えないといけないような業務に集中できる」ような分析やサービス作りに携わっていきたいなぁと改めて感じた業務でした。</strong></p>
+
+<p>最後までありがとうございました。</p>
+
+<p>P.S. 工夫ポイント1はlossの設計をうまくやれば不要だったりするのかなぁなんて思ったり...</p>
+]]></description>
+            <enclosure url="https://cdn.user.blog.st-hatena.com/default_entry_og_image/4268819/1588226000876991" length="0" type="image//default_entry_og_image/4268819/1588226000876991"/>
+        </item>
         <item>
             <title><![CDATA[Wi-Fi 6 ルーターを買うまでの長い検討メモと結論、そして数日使った感想]]></title>
             <link>https://masutaka.net/chalow/2022-02-16-1.html</link>
