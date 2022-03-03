@@ -4,7 +4,7 @@
         <title>Feedforce Engineers' Blogs</title>
         <link>https://engineers.feedforce.jp</link>
         <description>フィードフォースグループに所属するエンジニアのブログ記事をまとめています。</description>
-        <lastBuildDate>Wed, 02 Mar 2022 01:31:08 GMT</lastBuildDate>
+        <lastBuildDate>Thu, 03 Mar 2022 01:30:50 GMT</lastBuildDate>
         <docs>https://validator.w3.org/feed/docs/rss2.html</docs>
         <generator>https://github.com/jpmonette/feed</generator>
         <image>
@@ -13,6 +13,13 @@
             <link>https://engineers.feedforce.jp</link>
         </image>
         <copyright>© Feedforce Inc.</copyright>
+        <item>
+            <title><![CDATA[『GitHubセキュリティ Organization運用のベストプラクティス』を読んだ]]></title>
+            <link>https://masutaka.net/chalow/2022-03-03-1.html</link>
+            <guid>https://masutaka.net/chalow/2022-03-03-1.html</guid>
+            <pubDate>Thu, 03 Mar 2022 14:59:59 GMT</pubDate>
+            <description><![CDATA[昨日、職場の同僚から教えてもらった、昨日公開されたこちらの本を読みました。GitHubセキュリティ Organization運用のベストプラクティス著者は @tmknom さん。[2019-05-07-1] に読んだ『Pragmatic Terraform on AWS』改め『実践Terraform』の著者でもあります。今の会社は 2014 年から GitHub を使っています。当初は全部分かりまっせ！という設定ボリュームでしたが、時を経てものすごくてんこ盛りになり、把握しきれない設定項目も増えてきました。本書によって、それらの棚卸しが出来た気がします。本自体のボリュームは大きくないので、流し読みすることも出来ますし、適度に GiHub Docs へのリンクになっているため、ガッツリ読むことも出来ます。いたく感動したため、少額ながらサポートさせて頂きました。(^^)欲張りすぎずにコツコツ改善していくことが大事だと、自分をリセット出来た気がします。]]></description>
+        </item>
         <item>
             <title><![CDATA[ECサイトのタイトルと説明文から取り扱いカテゴリの予測を行った]]></title>
             <link>https://developer.feedforce.jp/entry/2022/02/21/104757</link>
@@ -5906,13 +5913,6 @@ Enter a value: yes</pre>
             <guid>https://masutaka.net/chalow/2021-01-22-1.html</guid>
             <pubDate>Fri, 22 Jan 2021 14:59:59 GMT</pubDate>
             <description><![CDATA[個人で Slack workspace を作るのはオーバースペックだという宗教的な理由から、各種通知は Pushover という通知サービスを利用しています。[2015-03-08-1] に紹介記事を書いてましたね。今は亡き im.kayac.com を便利にしたやつと言えば、分かる人には分かるでしょうか？長らく CI の失敗通知は CircleCI のコンソールを見て久しぶりに気づくという、ダメな運用をしていました。去年の 9 /13 に重い腰を上げて、CI が失敗したら Pushover に通知させようとしました。その時作った PR がこちらです。https://github.com/pbrisbin/pushover-orb/pull/1レビューして頂いたは良いが、放置してしまい、修正 commit をしたのが先日の 1/18。無事マージされましたが、作者様は GitHub Actions に移行しており、メンテナーにならないかとお誘いを受けました。https://github.com/pbrisbin/pushover-orb/pull/1#issuecomment-762920348ちょうど tfupdate orb で CircleCI Orb の勘所は掴んでいたので、喜んで承諾。リリース周りを整えたリポジトリがこちらです。メンテナーも変わったことだし、メジャーバージョンアップしつつ v2.0.0 をリリースしました。https://circleci.com/developer/orbs/orb/masutaka/pushover?version=2.0.0https://github.com/masutaka/pushover-orb/releases/tag/v2.0.0よろしければご利用くださいませ。]]></description>
-        </item>
-        <item>
-            <title><![CDATA[tfupdate orb の circleci/orb-tools を v8.27.5 から v10.0.3 にアップデートした]]></title>
-            <link>https://masutaka.net/chalow/2021-01-16-1.html</link>
-            <guid>https://masutaka.net/chalow/2021-01-16-1.html</guid>
-            <pubDate>Sat, 16 Jan 2021 14:59:59 GMT</pubDate>
-            <description><![CDATA[[2019-12-20-1] で circleci/orb-tools を解説しました。リリースフローがよく出来ていたので、感動した記憶があります。しかし、記事を書いた時にはすでに v9.0.0 がリリースされており、それはそれは大きな BREAKING CHANGES でした...。やる気が出なかったので、tfupdate orb で使っているバージョンはずっと据え置いていましたが、今日急にやる気になったので、最新の v10.0.3 にアップデートしました。当該 PR はこちらです。.circleci/config.yml がかなり短くなりました。https://github.com/masutaka/circleci-tfupdate-orb/pull/2公式ドキュメントや circleci/orb-tools のドキュメントはありますが、よく分からないのと、今までの経緯からあまり信用できないので、v10.0.3 のコードリーディングをして理解しました。circleci/orb-tools 自身の .circleci/config.yml も読みました。結果的にここまで複雑にする必要はなかったです。https://github.com/CircleCI-Public/orb-tools-orb/blob/v10.0.3/.circleci/config.yml今までは master ブランチに commit するたびに orb のバージョンが自動的に上がっていきました。セマンティックバージョンの制御はできません。現在はその commit message によって、orb バージョンを半自動的に上げられるようになりました。セマンティックバージョンを制御可能です。v8.27.5 で振る舞いmaster ブランチに commit が追加された時、src/commands または src/jobs 以下が変更されていれば minor version が、それ以外の変更では patch version が自動的に上がりました。major version はサポートされていませんでした。何も考えずに済んだので楽ではありましたが、制御できないのは不満があったのかもしれません。v10.0.3 での振る舞いmaster ブランチに commit が追加された時、当該 commit message に以下の文字列が含まれていれば（例）、その指定に従ってバージョンが上がります。[semver:major][semver:minor][semver:patch]必須パラメータ publish-version-tag が true の時は git tag も push してくれます。含まれている文字列が [semver:skip] の時はバージョンは上がりません。どれも含まれていない場合、必須パラメータ fail-if-semver-not-indicated によって、CI の成功/失敗を制御できます。私は false にしましたが、厳格にしたい時は true にすると良いと思います。覚えている自信はありませんが、この記事が未来の自分への助けになることでしょう。他に、必須パラメータ add-pr-comment を true にすると、紐づく PR にコメントを追加してくれるようです（例）。私は false です。P.S.公式ドキュメントや circleci/orb-tools 自身の .circleci/config.yml では orb-tools/trigger-integration-tests-workflow job を使って、新しい workflow をトリガーしていますが、その必要は感じなかったので、1 つの workflow の中で lint や publish を全部やりました。公式の例では .circleci/config.yml の中からは pipeline.parameters.run-integration-tests が true になるタイミングの理解が非常に分かりづらくて、無駄に複雑な workflow を書いてしまうと思いました。]]></description>
         </item>
         <item>
             <title><![CDATA[Shopify アプリのリスト設定ポイント]]></title>
