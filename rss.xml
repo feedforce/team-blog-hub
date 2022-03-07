@@ -4,7 +4,7 @@
         <title>Feedforce Engineers' Blogs</title>
         <link>https://engineers.feedforce.jp</link>
         <description>フィードフォースグループに所属するエンジニアのブログ記事をまとめています。</description>
-        <lastBuildDate>Sun, 06 Mar 2022 01:29:15 GMT</lastBuildDate>
+        <lastBuildDate>Mon, 07 Mar 2022 01:30:49 GMT</lastBuildDate>
         <docs>https://validator.w3.org/feed/docs/rss2.html</docs>
         <generator>https://github.com/jpmonette/feed</generator>
         <image>
@@ -13,6 +13,13 @@
             <link>https://engineers.feedforce.jp</link>
         </image>
         <copyright>© Feedforce Inc.</copyright>
+        <item>
+            <title><![CDATA[『読む力 最新スキル大全』を読んだ]]></title>
+            <link>https://masutaka.net/chalow/2022-03-06-1.html</link>
+            <guid>https://masutaka.net/chalow/2022-03-06-1.html</guid>
+            <pubDate>Sun, 06 Mar 2022 14:59:59 GMT</pubDate>
+            <description><![CDATA[コロナ禍に突入して丸２年。よく散歩をするようになりました。基本在宅ワークなので、意識的に散歩しないとさすがに健康リスクが高いからです。散歩は考えを整理するのにもとても良くて、直近の課題への良いアイディアが出てきたり、寝かせた課題への解決策がふっと浮き上がってきたりします。[2021-01-05-1] でも書いた件です。馴染みの曲を聞きながら、いつもと同じコースを歩くと、特に効果的です。それと相反してはしまうのですが、最近はそれに飽きてしまい、散歩中に技術系や格闘技系、歴史系の Podcast をよく聞くようになりました。ちなみにインプットモードになるので、思考の整理にはなりません。(^^;そんな中、格闘家の青木選手きっかけで Voicy の存在を知り、他に聞くものないかなーと探して見つけたのが、佐々木俊尚さんの Voicy でした。佐々木さんは @sasakitoshinao での朝のキュレーションが有名なジャーナリストで、私は 2011 年ごろからフォローしていたと思います。※ よくアンチが湧いていますが、そんな変なことは言ってないと思うんだよなあ。私、朝はツイッターをあまり見ないので、佐々木さんとは一方的に疎遠みたいになってました。そんなこんなで懐かしい気持ちで聞き始め、とうとう過去の放送を全部聞いてしまいました。放送開始は去年の 9 月で、佐々木さんは毎朝 Voicy を配信しているので、それなりの数です。そんな佐々木さんが本を出しました。お礼の気持ち半分、佐々木さんの情報収集方法を知ること半分で購入してみました。読んだ感想としては「良い本だとは思うけど、マッチする人とそうでもない人がいると思う」かなあ？私の情報収集方法は、佐々木さんほど深くはありませんが、似たりよったりです。肝心の「マルチタスクワーキング」は、ちょっと使わないかなあ？なんでだろう？私がプログラマーだから、割とガッツリしたタスクが多いから？会社員だから、請求書作るだとかの細かいタスクが少ないから？ ※ 過去にポモドーロやタスクシュート [2016-10-26-1] は試した上での感想です。だいたい毎日、仕事を始めたら溜まった Slack 読んでウォーミングアップして、あとはそれなりの大きさのタスクをガーッと処理する感じです。不惑の年はとうに越しましたが、集中力が続かない悩みはあまり感じたことはありません。あ、キリが悪いところで止めるテクニックは、プログラマーの間ではテストを失敗させた状態で作業を止めるテクニックとして知られていて、私もたまに使いますね。一方でビジネス職の人には、情報収集方法や仕事の仕方は参考になるかもしれません。Feedly, Pocket, Twitter（のリスト）など、存在や良さげな使い方はプログラマーよりは知らないかもしれませんし、タスクの粒度は小さく、種類は多い印象があります。ということで、気になる方はポチッとすると良いと思いました。ここまでで、私ひとつ嘘をつきました。「『読む力 最新スキル大全』を読んだ」と書きましたが、実際には Fire HD 8 の「Kindle 読み上げ」で全部聞きました。読んでいません。皮肉みたいになって、なんだかすみません。「マルチタスクワーキング」は集中力など要らない、時間を細切れに使えという提案ですが、聞くという解はあると思います。さすがに私も本を読む集中力は頻繁に切れます。Twitter は見ちゃうし、格闘技系 YouTube も気になる。そんな課題がある中で、Podcast や Voicy は異様に捗っていました。どうやら今の生活にマッチしていたようです。だったら本も聞いてしまえば、集中力が切れる課題を解決できるかな？と試した最初の本が『読む力 最新スキル大全』でした。伏線回収？もしかしたら、佐々木さんの Voicy を聞いているうちに「集中力なんか要らない」という仮説を認識し、それと Podcast や Voicy が生活にマッチしていることがうまく結びついて、課題を解決できたのかもしれません。などと、この記事を書いていて思いました。「Kindle 読み上げ」を使って、どのように本を聞いているかは、近々記事にする予定です。いろいろあって大変でした。(^^;ではまた明日。]]></description>
+        </item>
         <item>
             <title><![CDATA[『GitHubセキュリティ Organization運用のベストプラクティス』を読んだ]]></title>
             <link>https://masutaka.net/chalow/2022-03-03-1.html</link>
@@ -5906,13 +5913,6 @@ Enter a value: yes</pre>
 <p>公式の <a href="https://www.ruby-lang.org/en/news/2019/12/12/separation-of-positional-and-keyword-arguments-in-ruby-3-0/#delegation-ruby-3">Separation of positional and keyword arguments in Ruby 3.0#delegation-ruby-3</a> の通りにやれば OK です。</p>
 ]]></description>
             <enclosure url="https://cdn.user.blog.st-hatena.com/default_entry_og_image/4268819/1588226000876991" length="0" type="image//default_entry_og_image/4268819/1588226000876991"/>
-        </item>
-        <item>
-            <title><![CDATA[pushover orb のメンテナーになった]]></title>
-            <link>https://masutaka.net/chalow/2021-01-22-1.html</link>
-            <guid>https://masutaka.net/chalow/2021-01-22-1.html</guid>
-            <pubDate>Fri, 22 Jan 2021 14:59:59 GMT</pubDate>
-            <description><![CDATA[個人で Slack workspace を作るのはオーバースペックだという宗教的な理由から、各種通知は Pushover という通知サービスを利用しています。[2015-03-08-1] に紹介記事を書いてましたね。今は亡き im.kayac.com を便利にしたやつと言えば、分かる人には分かるでしょうか？長らく CI の失敗通知は CircleCI のコンソールを見て久しぶりに気づくという、ダメな運用をしていました。去年の 9 /13 に重い腰を上げて、CI が失敗したら Pushover に通知させようとしました。その時作った PR がこちらです。https://github.com/pbrisbin/pushover-orb/pull/1レビューして頂いたは良いが、放置してしまい、修正 commit をしたのが先日の 1/18。無事マージされましたが、作者様は GitHub Actions に移行しており、メンテナーにならないかとお誘いを受けました。https://github.com/pbrisbin/pushover-orb/pull/1#issuecomment-762920348ちょうど tfupdate orb で CircleCI Orb の勘所は掴んでいたので、喜んで承諾。リリース周りを整えたリポジトリがこちらです。メンテナーも変わったことだし、メジャーバージョンアップしつつ v2.0.0 をリリースしました。https://circleci.com/developer/orbs/orb/masutaka/pushover?version=2.0.0https://github.com/masutaka/pushover-orb/releases/tag/v2.0.0よろしければご利用くださいませ。]]></description>
         </item>
         <item>
             <title><![CDATA[Shopify アプリのリスト設定ポイント]]></title>
