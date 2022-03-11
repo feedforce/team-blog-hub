@@ -2,12 +2,19 @@
 <feed xmlns="http://www.w3.org/2005/Atom">
     <id>https://engineers.feedforce.jp</id>
     <title>Feedforce Engineers' Blogs</title>
-    <updated>2022-03-10T01:31:28.259Z</updated>
+    <updated>2022-03-11T01:30:40.247Z</updated>
     <generator>https://github.com/jpmonette/feed</generator>
     <link rel="alternate" href="https://engineers.feedforce.jp"/>
     <subtitle>フィードフォースグループに所属するエンジニアのブログ記事をまとめています。</subtitle>
     <logo>https://engineers.feedforce.jp/logo.png</logo>
     <rights>© Feedforce Inc.</rights>
+    <entry>
+        <title type="html"><![CDATA[『だから僕たちは、組織を変えていける』を読んだ]]></title>
+        <id>https://masutaka.net/chalow/2022-03-10-1.html</id>
+        <link href="https://masutaka.net/chalow/2022-03-10-1.html"/>
+        <updated>2022-03-10T14:59:59.000Z</updated>
+        <summary type="html"><![CDATA[組織に課題を持った同僚が紹介していたので、ポチッとしました。読んだ感想としては、まあそうだよねって感じで異論とかはなかった。なんなら自分は読む前から理解していたつもりだし、やる気溢れるメンタルで実践してたつもり。※ 現在一人開発なので難易度が低い。でも、組織で実践出来る風景が全く思い浮かばない。日本は不満を撒き散らす社員が多く、やる気に満ちた社員が少ない　「とんでもなく時代遅れ」な組織が抱える問題点 - ログミーBizこちらの記事が紹介記事。今の会社は不満を撒き散らす社員は思いつかないし、とんでもなく時代遅れな会社でもないと思う。やる気のありなしはフルリモートワークもあってよく分からない。バラバラなピースをどう完成させていけば良いのかな。自分はまだ正解が分からない。]]></summary>
+    </entry>
     <entry>
         <title type="html"><![CDATA[『読む力 最新スキル大全』を読んだ]]></title>
         <id>https://masutaka.net/chalow/2022-03-06-1.html</id>
@@ -4833,13 +4840,6 @@ delay + delay_jitter</pre>
 
 <p>また時間ある時にでも調べます。</p>
 ]]></summary>
-    </entry>
-    <entry>
-        <title type="html"><![CDATA[『達人に学ぶSQL徹底指南書 第2版』を読んだ]]></title>
-        <id>https://masutaka.net/chalow/2021-02-22-1.html</id>
-        <link href="https://masutaka.net/chalow/2021-02-22-1.html"/>
-        <updated>2021-02-22T14:59:59.000Z</updated>
-        <summary type="html"><![CDATA[[2020-12-20-1] にも書いた通り、去年の 4 月から SQL と格闘する毎日です。もっとも全部自分で書くわけではなく、Looker が出力する SQL を理解したり、発生したエラーやデータ不正の原因を SQL 視点で調査したり、検証用の使い捨ての SQL を書いたりといった感じです。つまりは SELECT 文しか書かないです。しかし、SELECT 文こそが SQL そのものと言っても良いため、現在のデータアーキテクト（データ整備人）という立ち位置での学習教材を探していました。そんな中思い出したのが本書になります。LookML 開発者としてはこの本に書かれた全てが「優先度高」ではないため、敢えて流し読みを心がけました。その中で重要だと思ったのはこのあたりでしょうか。・１ CASE 式のススメ・２ 必ずわかるウィンドウ関数・４ ３値論理と NULL・７ ウィンドウ関数で行間比較を行なう・８ 外部結合の使い方・１８ GROUP BY と PARTITION BYLooker が出力する SQL で見かけない気がする EXISTS, HAVING あたりは流し読みしたので、正直まだ理解していません。近いうちに読み返すと思います。それとは別に、「第１部 ９ SQL での集合演算」は興味深かったです。すなわち、和（UNION）、差（EXCEPT）、積（CROSS JOIN）です。商（DIVEDE BY）は「諸事情」により標準化が遅れているそうです。今まで雰囲気で UNION ALL を使うくらいだったので、集合演算は自分のスコープが広がった気がしました。「１５ 関係に始まり関係に終わる」に SQL の関係閉包性が UNIX のパイプの概念とよく似ているという記述も興味深かったです。UNIX ではファイルがさまざまなコマンドの入力・出力になるため、（標準）出力をパイプで次々と渡すことが出来ます。SQL では UNIX のファイルはテーブルに相当します。SELECT 文はテーブルを引数にとってテーブルを返すため、UNIX と同じように次々と出力を渡すことが出来ます。これを関係の閉包性と呼ぶそうです。これを知って、SQL に一気に親近感が湧きました。後半に進むにつれ、より抽象的な話になっていきます。集合論というワードはちょいちょい出てきて気になってましたが、後半の「SQLでは、集合論的な観点からプログラミングを考えることが上達の鍵」というセンテンスを見てちょっと学んでみようかと思い、評判が良さそうなこの本を購入しました。あまり気負わずに読んでみます。データアーキテクト（データ整備人）という文脈でオススメの本を見つけて、大変満足したというお話でした。]]></summary>
     </entry>
     <entry>
         <title type="html"><![CDATA[CircleCI で docker build するときの Empty continuation lines will become errors in a future release. という warning への対処方法]]></title>
