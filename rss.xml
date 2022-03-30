@@ -4,7 +4,7 @@
         <title>Feedforce Engineers' Blogs</title>
         <link>https://engineers.feedforce.jp</link>
         <description>フィードフォースグループに所属するエンジニアのブログ記事をまとめています。</description>
-        <lastBuildDate>Tue, 29 Mar 2022 01:32:57 GMT</lastBuildDate>
+        <lastBuildDate>Wed, 30 Mar 2022 01:31:41 GMT</lastBuildDate>
         <docs>https://validator.w3.org/feed/docs/rss2.html</docs>
         <generator>https://github.com/jpmonette/feed</generator>
         <image>
@@ -13,6 +13,13 @@
             <link>https://engineers.feedforce.jp</link>
         </image>
         <copyright>© Feedforce Inc.</copyright>
+        <item>
+            <title><![CDATA[1Password に SSH キーをインポートしたら UX として良かった]]></title>
+            <link>https://masutaka.net/chalow/2022-03-29-1.html</link>
+            <guid>https://masutaka.net/chalow/2022-03-29-1.html</guid>
+            <pubDate>Tue, 29 Mar 2022 14:59:59 GMT</pubDate>
+            <description><![CDATA[- 1password 8 beta の macOS バージョンで ssh キーをすべて扱うようにした - HsbtDiary(2022-03-18)- SSH and Git, meet 1Password 🥰｜1PasswordmacOS はベータ版をインストールする必要があるが、メインマシンの Manjaro (Linux) の 1Password はすでに 8.6.1 だったので、試しに使ってみた。1Password には SSH 秘密鍵をインポートする。1Password 内では秘密鍵から公開鍵を作ってくれる。~/.ssh/ 以下の SSH キーは秘密鍵と公開鍵の両方とも不要になる。UNIX Socket ファイルが出来るようなので、~/.ssh/config で設定をそこに向ければ勝手に使ってくれる。こんなことが出来るんだ。Host * IdentityAgent "~/.1password/agent.sock"ただ、git fetch や git pull のたびに指紋認証が要求されるので、利用頻度が多い GitHub なんかは今まで通りが良い気はした。Host github.com IdentityFile "~/.ssh/github_ed25519" IdentityAgent noneHost * IdentityAgent "~/.1password/agent.sock"ssh config は設定が上書かれないことには注意。先にマッチしたほうが優先される。ssh_config(5) - Linux manual page]]></description>
+        </item>
         <item>
             <title><![CDATA[『だから僕たちは、組織を変えていける』を読んだ]]></title>
             <link>https://masutaka.net/chalow/2022-03-10-1.html</link>
@@ -4609,13 +4616,6 @@ disapp_disapp.to_csv(dirname+<span class="synConstant">'disapp_disapp.csv'</span
 <p>Self-Attentionとデータセットの相性が悪いという可能性も考えられるので、tfidf+lgbも試みましたが、こちらもうまくいきませんでした。やはりこちらの結果からもtitle,descriptionのみからは承認と不承認を分類することができないということが考えられます。</p>
 ]]></description>
             <enclosure url="https://cdn-ak.f.st-hatena.com/images/fotolife/n/newton800/20210224/20210224172435.png" length="0" type="image/png"/>
-        </item>
-        <item>
-            <title><![CDATA[『集合論入門』の第１編まで読んであとは挫折した]]></title>
-            <link>https://masutaka.net/chalow/2021-03-09-1.html</link>
-            <guid>https://masutaka.net/chalow/2021-03-09-1.html</guid>
-            <pubDate>Tue, 09 Mar 2021 14:59:59 GMT</pubDate>
-            <description><![CDATA[[2021-02-22-1] の『達人に学ぶSQL徹底指南書 第2版』から派生して読みました。Amazon のレビューでは読みやすい読みやすいと書いてあったので、どんなに読みやすいか期待しつつ読み進めました。「第１編 集合の代数」は確かに読みやすかったですが、「第２編 濃度」から急に理解できなくなり、「第３編 順序数」も含めてペラペラとページをめくって終了しました。正確に書くと、SQL との関連性に期待して読み進めたが、距離が遠すぎて読むのを止めたといった感じです。焦るところではないので、そういうものだと受け入れました。以下は第１編の自分用メモです。高校の頃は数学が好きだったので、懐かしみながらメモを取りました。a ∈ Aa は A に属する、a は A の元（げん）であるa ∉ Aa は A に属さない、a は A の元（げん）でないA ⊆ B または B ⊇ AA は B の部分集合であるA ⊂ B または B ⊃ AA は B の真部分集合であるØ または {}空集合A ∪ BA と B の和集合。"A cup B" または "A join B" と読む。SQL では UNION なので、∪ は覚えやすい。A ∩ BA と B の共通部分（積集合）。"A cap B" または "A meet B" と読む。SQL では INTERSECT。A ∩ B = Ø の時（共通な元が１つもない）、A と B は「互いに素」である。A × BA と B の直積P.S.Kindle 版はハイライトやメモを取れませんでした。本気で理解しようとする人は煩わしいと感じるかも。]]></description>
         </item>
         <item>
             <title><![CDATA[自作の gem の名前を考えるのは難しい]]></title>
