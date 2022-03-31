@@ -4,7 +4,7 @@
         <title>Feedforce Engineers' Blogs</title>
         <link>https://engineers.feedforce.jp</link>
         <description>フィードフォースグループに所属するエンジニアのブログ記事をまとめています。</description>
-        <lastBuildDate>Wed, 30 Mar 2022 01:31:41 GMT</lastBuildDate>
+        <lastBuildDate>Thu, 31 Mar 2022 01:31:58 GMT</lastBuildDate>
         <docs>https://validator.w3.org/feed/docs/rss2.html</docs>
         <generator>https://github.com/jpmonette/feed</generator>
         <image>
@@ -13,6 +13,13 @@
             <link>https://engineers.feedforce.jp</link>
         </image>
         <copyright>© Feedforce Inc.</copyright>
+        <item>
+            <title><![CDATA[『銃・病原菌・鉄』を読み終えた]]></title>
+            <link>https://masutaka.net/chalow/2022-03-30-1.html</link>
+            <guid>https://masutaka.net/chalow/2022-03-30-1.html</guid>
+            <pubDate>Wed, 30 Mar 2022 14:59:59 GMT</pubDate>
+            <description><![CDATA[購入から６年半以上。下巻の途中で数年止まっていましたが、今月えいやっと読み終えました。※ 正確に書くと、Kindle 本をオーディオブック化して聴き終えました。上巻はもはや覚えていませんが、全体を通して覚えていることは「人種間に能力の優劣などなく、地理的環境的なアドバンテージが文化的な発展の違いに繋がった」ことです。例えばユーラシア大陸は大陸は横に長いため、作物や技術が伝播しやすいです。緯度が変わらないため、気候が似通っているからです。しかし、南北アメリカ大陸やアフリカ大陸は縦に長いため、ユーラシア大陸に比べて伝播が遅かったり、途中で止まったりします。こちらを知れただけで読んだ価値がありました。下巻の最後では、なぜヨーロッパの国々はアメリカ大陸やアジア諸国で植民地支配が広がったのに、中国はそうでなかったのかという興味深い話が解説されていました。ヨーロッパは国の数が多く競争が激しいため、新しい技術が開発されたら取り入れざるを得ず、ある国の支援が得られなくても他の国でなら可能（コロンブスの話）という事情が生まれるそうです。一方で中国は１つの王朝が統一しているため、例えば外洋航海の禁止という決定事項が中国全土に浸透し、その決定が愚かだったかの検証さえ出来なくなってしまったそう。Kindle 本をオーディオブック化するスキルを身に付けたので、これからもジャンジャン読んで聴いていきます。P.S.これから読む予定。日本の地理学は『銃・病原菌・鉄』をいかに語るのか―英語圏と日本における受容過程の比較検討から―]]></description>
+        </item>
         <item>
             <title><![CDATA[1Password に SSH キーをインポートしたら UX として良かった]]></title>
             <link>https://masutaka.net/chalow/2022-03-29-1.html</link>
@@ -4164,13 +4171,6 @@ $ <span class="synIdentifier">DOCKER_BUILDKIT</span>=<span class="synConstant">1
             <guid>https://masutaka.net/chalow/2021-03-14-1.html</guid>
             <pubDate>Sun, 14 Mar 2021 14:59:59 GMT</pubDate>
             <description><![CDATA[「Looker の記事一覧｜DevelopersIO」が更新されたら Slack に POST したかったのです。トップページならフィードが配信されているけど、これだと多すぎます。ノンエンジニアである会社の同僚が https://feed43.com/ で作っているらしいので、試してみました。結果的にこのフィードを作れましたがめっちゃ面倒くさかったので、記録として残します。同僚すごい...。https://feed43.com/developersio-looker.xmlhttps://feed43.com/ の "Create your first RSS feed" をクリックして、指示に従って作ります。今回は https://dev.classmethod.jp/tags/looker/ です。入力し Reload します。[Feed43 Step1]HTML が取得され、"extraction rules" の入力を促されるのでそうします。[Feed43 Step2a]予想はしていましたが、これがめちゃめちゃ大変で時間がかかりました。1. HTML 構造を理解する2. 記事一覧に相当する HTML をテキストエディタに貼り付ける3. 記事の URL やタイトルなど、取り出したい箇所を {%} で置換し、Extract する4. Extract できたら儲けもの。不要な HTML を {*} で置換して、少しずつ小さくしていく最終的にこのルールを作ることが出来ました。<div class="post{*}"{*}&gt;{*}<a href="{%}" class="link"{*}&gt;{*}<h3 class="post-title"{*}&gt;{%}</h3&gt;{*}</a&gt;{*}<p class="date"{*}&gt;{%}</p&gt;{*}</div&gt;{*} はワイルドカードです。関係ない HTML はこれで省略しましょう。スペースや改行、HTML コメントなども削除したら {*} にする必要はあるかも。{%} は正規表現の \1, \2 みたいなやつです。上の例だと 3 つあるので、あとで {%1}, {%2}, {%3} として取り出すことが出来ます。取り出せた様子です。[Feed43 Step2b]あとはフィードの output format を設定するだけです。[Feed43 Step3a]Preview ボタンをクリックすると、無事フィードが生成されました。[Feed43 Step3b]任意のファイル名に変換することが出来ます。今回は developersio-looker にしました。[Your feed is ready!]そして、私はこのあとハマりました...。Feed43 のアカウントを作って作業したためか、上の Make this feed private に User Name と Password が設定されてしまい、Slack から購読することが出来ませんでした。両方とも空にして Set すれば良いみたいです。Slack やフィードリーダーでは単純に https://feed43.com/developersio-looker.xml を購読すれば良いです。この URL をブラウザで開くと https://node2.feed43.com/developersio-looker.xml にリダイレクトされますが、こちらは変更され得ると思うので、購読してはいけません。変更され得ると言えば、サイトの HTML 構造も変わり得るので、いつかは壊れるでしょう。スクレイピングあるあるです。そしたらフィード経由で分かるのかしら？FAQ ページには載ってませんでした。検索すると似たような記事は見つかります。でも「めちゃめちゃ大変」なことが書かれていなかったので、今回記事を書きました。えぇ...追記(2021-08-17):https://dev.classmethod.jp/tags/looker/ のフィードは https://dev.classmethod.jp/feed/?tag=looker にありました。その後書いた会社ブログ記事へのリアクションで知りました。ありがとうございます。]]></description>
-        </item>
-        <item>
-            <title><![CDATA[『NO RULES』を読んだ]]></title>
-            <link>https://masutaka.net/chalow/2021-03-13-1.html</link>
-            <guid>https://masutaka.net/chalow/2021-03-13-1.html</guid>
-            <pubDate>Sat, 13 Mar 2021 14:59:59 GMT</pubDate>
-            <description><![CDATA[２ヶ月くらいかけてようやく読み終えました。ビジネス書を読み切れたのはいつ以来ぶりだろう？NETFLIXは「能力密度を高める」ことを最優先にしており、そんな超優秀な彼らに「個人における最高水準の報酬を払って」います。しかも、会社として成長できる環境を用意しているので、他の会社にも引き抜かれづらい理屈らしいです。ペパボのあんちぽさんが書いてた「いるだけで成長できる環境」を思い出しました。その原資はそれほど優秀でない人を解雇して確保しているとのこと。日本だと簡単に解雇できないみたいなので、アメリカの法律を最大限に利用しているのかな。NETFLIX の日本法人だとどうなっているんだろう？NETFLIX ではピラミッド構造ではなく、分散型のいわゆるティール組織なんだと思う。[2019-08-13-1] に読んだ橋本さんの本の中で、大阪市はピラミッド構造でないと無理、ティール組織は絶対無理だと言っていたが、「能力密度」の高い/低いの話だと理解しました。そして能力密度を十分に高めた状態で、「情報に通じたキャプテン」に意思決定を完全にお任せする。上司は一切意思決定をしない。そのキャプテンはコンテキストをきちんと理解し、さまざまな立場の人からフィードバックを受け、あらゆる選択肢を理解することが求められるし、協力も受ける。割とすんなり理解できたのは、今所属しているフィードフォースの社長や人事の方が、長い年月をかけて浸透させてきたからかな？以前の私だと納得できなかったかもしれないです。感謝。それにしても長い。長すぎます。丁寧に説明されているけど、結論を先にして、2/3 くらいに圧縮できなかったものかなあ...。物理本だと 456 ページもあったんですね。よく読み切った・・・！そういう意味では [2020-12-20-1] の『データマネジメントが30分でわかる本』の、読者が「30 秒コース」「3 分コース」「30 分コース」を選べる方式は秀逸でした。しっかり読むと大変なので、ななめ読みくらいの気持ちでに読むと良いかも。まあでも良い本でした。]]></description>
         </item>
         <item>
             <title><![CDATA[Self-Attentionを用いてGoogle 無料リスティングの「拡張リスティングの不承認」に挑んだ話]]></title>
