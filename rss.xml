@@ -4,7 +4,7 @@
         <title>Feedforce Engineers' Blogs</title>
         <link>https://engineers.feedforce.jp</link>
         <description>フィードフォースグループに所属するエンジニアのブログ記事をまとめています。</description>
-        <lastBuildDate>Sat, 09 Apr 2022 01:31:46 GMT</lastBuildDate>
+        <lastBuildDate>Sun, 10 Apr 2022 01:32:30 GMT</lastBuildDate>
         <docs>https://validator.w3.org/feed/docs/rss2.html</docs>
         <generator>https://github.com/jpmonette/feed</generator>
         <image>
@@ -13,6 +13,13 @@
             <link>https://engineers.feedforce.jp</link>
         </image>
         <copyright>© Feedforce Inc.</copyright>
+        <item>
+            <title><![CDATA[『本を聴く毎日を送っています』という LT をした]]></title>
+            <link>https://masutaka.net/chalow/2022-04-09-1.html</link>
+            <guid>https://masutaka.net/chalow/2022-04-09-1.html</guid>
+            <pubDate>Sat, 09 Apr 2022 14:59:59 GMT</pubDate>
+            <description><![CDATA[私が所属しているフィードフォースでは、毎月 FFLT という LT 大会があります。最近久しぶりに参加していて、昨日は本当に久しぶりに LT をしました。久しぶりすぎて LT が 5 分であることを気にかけなかったという...。いや、もちろん覚えてはいたのですが（汗）。お題は [2022-03-06-1] や [2022-03-30-1] でそれとなく書いていた「Kindle 本を聴く」方法です。すべてのケースに合うわけでも、ベストな方法でもありませんが、集中力が必要で眠くなりがちな本を読むという作業を省エネ化出来たことは、自分にとって価値あるものでした。まだまだ最適化が必要なので、やっていきます。]]></description>
+        </item>
         <item>
             <title><![CDATA[『銃・病原菌・鉄』を読み終えた]]></title>
             <link>https://masutaka.net/chalow/2022-03-30-1.html</link>
@@ -329,7 +336,7 @@ p_{x,y} = \left\{
 
 <p>本日、週次の社内勉強会 <a href="https://developer.feedforce.jp/archive/category/FFTT">FFTT</a> で『ボッチLookML開発者兼データ整備人を連れてきたよ！』というひどいタイトルの発表をしました。</p>
 
-<iframe src="https://docs.google.com/presentation/d/e/2PACX-1vTv911SmUBM9fAk-IKQM9139Q29fU7INnUHwbFeOBxolqyybPdlcFHW2dAHBTgr3P9J_kL0Xdhbe38L/embed?start=false&loop=false&delayms=3000" frameborder="0" width="960" height="400" allowfullscreen="true" mozallowfullscreen="true" webkitallowfullscreen="true"></iframe>
+<iframe src="https://docs.google.com/presentation/d/e/2PACX-1vTv911SmUBM9fAk-IKQM9139Q29fU7INnUHwbFeOBxolqyybPdlcFHW2dAHBTgr3P9J_kL0Xdhbe38L/embed?start=false&loop=false&delayms=3000" frameborder="0" width="960" height="410" allowfullscreen="true" mozallowfullscreen="true" webkitallowfullscreen="true"></iframe>
 
 
 <p>2020 年 4 月から Looker に関わって得たことをまとめた内容であるとともに、1 年半近く前からのアップデートになります。</p>
@@ -4164,13 +4171,6 @@ $ <span class="synIdentifier">DOCKER_BUILDKIT</span>=<span class="synConstant">1
 <p class="footnote"><a href="#fn-140b8608" name="f-140b8608" class="footnote-number">*1</a><span class="footnote-delimiter">:</span><span class="footnote-text">BuildKit や --secret フラグってそもそも何？という方は最下部の参考記事に詳しくまとまっておりますのでぜひご覧ください。</span></p>
 </div>]]></description>
             <enclosure url="https://cdn.user.blog.st-hatena.com/default_entry_og_image/4268819/1588226000876991" length="0" type="image//default_entry_og_image/4268819/1588226000876991"/>
-        </item>
-        <item>
-            <title><![CDATA[フィード（RSS/Atom）を配信していないサイトのフィードを Feed43 で作成する]]></title>
-            <link>https://masutaka.net/chalow/2021-03-14-1.html</link>
-            <guid>https://masutaka.net/chalow/2021-03-14-1.html</guid>
-            <pubDate>Sun, 14 Mar 2021 14:59:59 GMT</pubDate>
-            <description><![CDATA[「Looker の記事一覧｜DevelopersIO」が更新されたら Slack に POST したかったのです。トップページならフィードが配信されているけど、これだと多すぎます。ノンエンジニアである会社の同僚が https://feed43.com/ で作っているらしいので、試してみました。結果的にこのフィードを作れましたがめっちゃ面倒くさかったので、記録として残します。同僚すごい...。https://feed43.com/developersio-looker.xmlhttps://feed43.com/ の "Create your first RSS feed" をクリックして、指示に従って作ります。今回は https://dev.classmethod.jp/tags/looker/ です。入力し Reload します。[Feed43 Step1]HTML が取得され、"extraction rules" の入力を促されるのでそうします。[Feed43 Step2a]予想はしていましたが、これがめちゃめちゃ大変で時間がかかりました。1. HTML 構造を理解する2. 記事一覧に相当する HTML をテキストエディタに貼り付ける3. 記事の URL やタイトルなど、取り出したい箇所を {%} で置換し、Extract する4. Extract できたら儲けもの。不要な HTML を {*} で置換して、少しずつ小さくしていく最終的にこのルールを作ることが出来ました。<div class="post{*}"{*}&gt;{*}<a href="{%}" class="link"{*}&gt;{*}<h3 class="post-title"{*}&gt;{%}</h3&gt;{*}</a&gt;{*}<p class="date"{*}&gt;{%}</p&gt;{*}</div&gt;{*} はワイルドカードです。関係ない HTML はこれで省略しましょう。スペースや改行、HTML コメントなども削除したら {*} にする必要はあるかも。{%} は正規表現の \1, \2 みたいなやつです。上の例だと 3 つあるので、あとで {%1}, {%2}, {%3} として取り出すことが出来ます。取り出せた様子です。[Feed43 Step2b]あとはフィードの output format を設定するだけです。[Feed43 Step3a]Preview ボタンをクリックすると、無事フィードが生成されました。[Feed43 Step3b]任意のファイル名に変換することが出来ます。今回は developersio-looker にしました。[Your feed is ready!]そして、私はこのあとハマりました...。Feed43 のアカウントを作って作業したためか、上の Make this feed private に User Name と Password が設定されてしまい、Slack から購読することが出来ませんでした。両方とも空にして Set すれば良いみたいです。Slack やフィードリーダーでは単純に https://feed43.com/developersio-looker.xml を購読すれば良いです。この URL をブラウザで開くと https://node2.feed43.com/developersio-looker.xml にリダイレクトされますが、こちらは変更され得ると思うので、購読してはいけません。変更され得ると言えば、サイトの HTML 構造も変わり得るので、いつかは壊れるでしょう。スクレイピングあるあるです。そしたらフィード経由で分かるのかしら？FAQ ページには載ってませんでした。検索すると似たような記事は見つかります。でも「めちゃめちゃ大変」なことが書かれていなかったので、今回記事を書きました。えぇ...追記(2021-08-17):https://dev.classmethod.jp/tags/looker/ のフィードは https://dev.classmethod.jp/feed/?tag=looker にありました。その後書いた会社ブログ記事へのリアクションで知りました。ありがとうございます。]]></description>
         </item>
         <item>
             <title><![CDATA[Self-Attentionを用いてGoogle 無料リスティングの「拡張リスティングの不承認」に挑んだ話]]></title>
