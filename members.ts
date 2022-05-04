@@ -45,7 +45,7 @@ export const members: Member[] = [
     avatarSrc: "https://www.gravatar.com/avatar/d6c5403c0b6ef2f9fd51910ea38323a3?size=256",
     sources: [
       "https://developer.feedforce.jp/rss/author/masutaka26",
-      "https://masutaka.net/chalow/cl.rss",
+      "https://masutaka.net/tags/feedforce/index.xml",
     ],
     twitterUsername: "masutaka",
     githubUsername: "masutaka",
