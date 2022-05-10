@@ -4,7 +4,7 @@
         <title>Feedforce Engineers' Blogs</title>
         <link>https://engineers.feedforce.jp</link>
         <description>フィードフォースグループに所属するエンジニアのブログ記事をまとめています。</description>
-        <lastBuildDate>Mon, 09 May 2022 01:34:07 GMT</lastBuildDate>
+        <lastBuildDate>Tue, 10 May 2022 01:31:15 GMT</lastBuildDate>
         <docs>https://validator.w3.org/feed/docs/rss2.html</docs>
         <generator>https://github.com/jpmonette/feed</generator>
         <image>
@@ -13,6 +13,279 @@
             <link>https://engineers.feedforce.jp</link>
         </image>
         <copyright>© Feedforce Inc.</copyright>
+        <item>
+            <title><![CDATA[画像上の文字を自動削除する仕組みを作ってみた]]></title>
+            <link>https://developer.feedforce.jp/entry/2022/05/09/114054</link>
+            <guid>https://developer.feedforce.jp/entry/2022/05/09/114054</guid>
+            <pubDate>Mon, 09 May 2022 02:40:54 GMT</pubDate>
+            <description><![CDATA[<p>こんにちは　 データサイエンティストの八百俊哉です。</p>
+
+<p><strong>今回は画像上に存在する文字を自動的に削除し、背景を補完する仕組みを作成しました。</strong>ただ、弊社のプロダクトに実装される可能性が極めて低いので、自由研究の結果としてここに残そうと思います。</p>
+
+<p>弊社のサービスはインターネット広告と深く関わりがあり、インターネット広告に関する分析を実施することが多いです。今回はインターネット広告の画像に関する調査を実施したので、その結果を共有します。</p>
+
+<h1>背景</h1>
+
+<p>インターネット広告では、商品画像上にプロモーションのロゴや行動を促すフレーズが入っている場合、不承認とされ広告表示されなくなる可能性があります。</p>
+
+<p><figure class="figure-image figure-image-fotolife" title="プロモーションが入った商品画像の例"><span itemscope itemtype="http://schema.org/Photograph"><img src="https://cdn-ak.f.st-hatena.com/images/fotolife/n/newton800/20220330/20220330091344.png" width="496" height="426" loading="lazy" title="" class="hatena-fotolife" itemprop="image"></span><figcaption>プロモーションが入った商品画像の例</figcaption></figure></p>
+
+<p><iframe src="https://hatenablog-parts.com/embed?url=https%3A%2F%2Fsupport.ecbooster.jp%2Fja%2Farticles%2F4666716-google-merchant-center%25E3%2581%25A7%25E3%2582%25AA%25E3%2583%25BC%25E3%2583%2590%25E3%2583%25BC%25E3%2583%25AC%25E3%2582%25A4%25E3%2581%25AB%25E3%2582%2588%25E3%2582%258B%25E7%2594%25BB%25E5%2583%258F%25E4%25B8%258D%25E6%2589%25BF%25E8%25AA%258D%25E3%2581%25AB%25E5%25AF%25BE%25E5%25BF%259C%25E3%2581%2597%25E3%2581%259F%25E3%2581%2584%25E3%2581%25A8%25E3%2581%258D" title="Google Merchant Centerでオーバーレイによる画像不承認に対応したいとき" class="embed-card embed-webcard" scrolling="no" frameborder="0" style="display: block; width: 100%; height: 155px; max-width: 500px; margin: 10px 0px;"></iframe><cite class="hatena-citation"><a href="https://support.ecbooster.jp/ja/articles/4666716-google-merchant-center%E3%81%A7%E3%82%AA%E3%83%BC%E3%83%90%E3%83%BC%E3%83%AC%E3%82%A4%E3%81%AB%E3%82%88%E3%82%8B%E7%94%BB%E5%83%8F%E4%B8%8D%E6%89%BF%E8%AA%8D%E3%81%AB%E5%AF%BE%E5%BF%9C%E3%81%97%E3%81%9F%E3%81%84%E3%81%A8%E3%81%8D">support.ecbooster.jp</a></cite></p>
+
+<p>商品数が少ない場合や再度商品の写真を用意できる場合は、商品画像の差し替えが可能ですが、そうではない場合はプロモーションが入っていない画像をいちから用意するのは非常に困難です。</p>
+
+<p>一部画像においては、<a href="https://support.google.com/merchants/answer/9242973">Googleが公開している画像の自動改善</a>を用いることで、プロモーションを削除することができますが、例には背景が白のもののみになっています。一方で商品画像は何らかの背景（机の上・壁紙）が写真に写り込んでいることが多く、白い背景以外にも対応したプロモーション削除方法が必要です。</p>
+
+<p>そこで今回は背景ありのプロモーションが掲載されている商品画像から自動的にプロモーションを削除する機能が必要ではないかと考え検証を行いました。</p>
+
+<h1>全体の流れ</h1>
+
+<p>サンプルとして以下の画像を用意しました。（自作なのでクオリティは低いです）</p>
+
+<p><figure class="figure-image figure-image-fotolife" title="サンプル画像"><span itemscope itemtype="http://schema.org/Photograph"><img src="https://cdn-ak.f.st-hatena.com/images/fotolife/n/newton800/20220330/20220330092012.png" width="551" height="551" loading="lazy" title="" class="hatena-fotolife" itemprop="image"></span><figcaption>サンプル画像</figcaption></figure></p>
+
+<p>今回はこのサンプル画像にある送料無料という文字を消すことを目的にしたいと思います。</p>
+
+<p>以下に示すフローで文字を消し、背景を補完します。</p>
+
+<p><figure class="figure-image figure-image-fotolife" title="全体のフロー"><span itemscope itemtype="http://schema.org/Photograph"><img src="https://cdn-ak.f.st-hatena.com/images/fotolife/n/newton800/20220330/20220330100726.png" width="742" height="306" loading="lazy" title="" class="hatena-fotolife" itemprop="image"></span><figcaption>全体のフロー</figcaption></figure></p>
+
+<p>最終的には以下のような文字除去ができました。
+<figure class="figure-image figure-image-fotolife" title="実行することで文字除去に成功した例"><span itemscope itemtype="http://schema.org/Photograph"><img src="https://cdn-ak.f.st-hatena.com/images/fotolife/n/newton800/20220509/20220509105601.png" width="1200" height="568" loading="lazy" title="" class="hatena-fotolife" itemprop="image"></span><figcaption>実行することで文字除去に成功した例</figcaption></figure></p>
+
+<p>では実際にどのように文字を除去したのかを紹介します。</p>
+
+<h1>画像上のどこに文字があるか判定する・文字の部分だけ黒い画像を用意</h1>
+
+<p>まずはじめに画像の上のどこに文字があるかを判定します。今回はOCRを用いて文字を見つけていきます。</p>
+
+<blockquote><p>OCR（Optical Character Recognition/Reader、オーシーアール、光学的文字認識）とは、手書きや印刷された文字を、イメージスキャナやデジタルカメラによって読みとり、コンピュータが利用できるデジタルの文字コードに変換する技術です。
+<cite><a href="https://mediadrive.jp/technology/ocr">https://mediadrive.jp/technology/ocr</a></cite></p></blockquote>
+
+<p>まずpythonでOCRを使用するために必要なライブリラリをインストールします。（今回はColabを用いた実行を想定しています。）</p>
+
+<pre class="code" data-lang="" data-unlink>!pip install --upgrade opencv-contrib-python
+!apt install tesseract-ocr libtesseract-dev tesseract-ocr-jpn
+!pip install pyocr</pre>
+
+
+<p>以下がOCRを用いて、文字を検知する関数になります。</p>
+
+<pre class="code lang-python" data-lang="python" data-unlink>tools = pyocr.get_available_tools()
+tool = tools[<span class="synConstant">0</span>]
+
+<span class="synStatement">def</span> <span class="synIdentifier">get_box</span>(img, tool, show=<span class="synIdentifier">True</span>):
+    <span class="synConstant">&quot;&quot;&quot;</span>
+<span class="synConstant">    img:PIL.Image.Image</span>
+<span class="synConstant">    &quot;&quot;&quot;</span>
+
+    results = tool.image_to_string(
+        img,
+        lang=<span class="synConstant">'jpn'</span>,
+        builder=pyocr.builders.LineBoxBuilder(tesseract_layout=<span class="synConstant">6</span>)
+    )
+
+    img_np = np.array(img)
+
+    w, h = img_np.shape[<span class="synConstant">0</span>], img_np.shape[<span class="synConstant">1</span>]
+
+    <span class="synStatement">for</span> box <span class="synStatement">in</span> results:
+        <span class="synStatement">if</span> box.content == <span class="synConstant">' '</span> <span class="synStatement">or</span> box.content == <span class="synConstant">''</span>:
+            <span class="synStatement">continue</span>
+        <span class="synStatement">if</span> (box.position[<span class="synConstant">0</span>][<span class="synConstant">0</span>] == <span class="synConstant">0</span>) <span class="synStatement">and</span> (box.position[<span class="synConstant">0</span>][<span class="synConstant">1</span>] == <span class="synConstant">0</span>) <span class="synStatement">and</span> (box.position[<span class="synConstant">1</span>][<span class="synConstant">0</span>] == w) <span class="synStatement">and</span> (box.position[<span class="synConstant">1</span>][<span class="synConstant">1</span>] == h):
+            <span class="synStatement">continue</span>
+        cv2.rectangle(img_np, box.position[<span class="synConstant">0</span>], box.position[<span class="synConstant">1</span>], (<span class="synConstant">0</span>, <span class="synConstant">255</span>, <span class="synConstant">0</span>), <span class="synConstant">1</span>)
+    <span class="synStatement">if</span> show:
+        display(Image.fromarray(img_np))
+    <span class="synStatement">return</span> img_np, results
+</pre>
+
+
+<p>しかし、ただ画像を上記の関数に渡すだけでは文字を認識できる精度が低いという課題がありました。そこで以下のようにすることで文字認識の精度向上を行いました。</p>
+
+<ol>
+<li>画像を拡大する</li>
+<li>拡大した画像を5×5に分割する</li>
+<li>分割後の画像をそれぞれOCRにかける</li>
+<li>分割前の拡大した画像をOCRにかける</li>
+<li>3,4で文字と判定され部分（OR）を文字がある場所とする</li>
+</ol>
+
+
+<p>図で示すと以下のようになっています。</p>
+
+<p><figure class="figure-image figure-image-fotolife" title="文字検知の精度向上のための取り組み"><span itemscope itemtype="http://schema.org/Photograph"><img src="https://cdn-ak.f.st-hatena.com/images/fotolife/n/newton800/20220405/20220405122649.png" width="932" height="403" loading="lazy" title="" class="hatena-fotolife" itemprop="image"></span><figcaption>文字検知の精度向上のための取り組み</figcaption></figure></p>
+
+<p>実際には以下のようにして求めます。</p>
+
+<pre class="code lang-python" data-lang="python" data-unlink><span class="synStatement">def</span> <span class="synIdentifier">split_images</span>(img, h_split, w_split):
+    <span class="synConstant">&quot;&quot;&quot;</span>
+<span class="synConstant">    画像を分割し、分割後の画像と元画像における座標を返す</span>
+<span class="synConstant">    img:numpy</span>
+<span class="synConstant">    &quot;&quot;&quot;</span>
+
+    h,w = img.shape[<span class="synConstant">0</span>],img.shape[<span class="synConstant">1</span>]
+    images = []
+
+    new_h = <span class="synIdentifier">int</span>(h / h_split)
+    new_w = <span class="synIdentifier">int</span>(w / w_split)
+
+    start_coordinates = []
+
+    <span class="synStatement">for</span> _h <span class="synStatement">in</span> <span class="synIdentifier">range</span>(h_split):
+        h_start = _h * new_h
+        h_end = h_start + new_h
+
+        <span class="synStatement">for</span> _w <span class="synStatement">in</span> <span class="synIdentifier">range</span>(w_split):
+            w_start = _w * new_w
+            w_end = w_start + new_w
+            images.append(img[h_start:h_end, w_start:w_end, :])
+
+            coordinate = {}
+            coordinate[<span class="synConstant">'h_start'</span>] = h_start
+            coordinate[<span class="synConstant">'h_end'</span>] = h_end
+            coordinate[<span class="synConstant">'w_start'</span>] = w_start
+            coordinate[<span class="synConstant">'w_end'</span>] = w_end
+
+            start_coordinates.append(coordinate)
+    
+    <span class="synStatement">return</span> images, start_coordinates
+
+<span class="synStatement">def</span> <span class="synIdentifier">get_splitImages2originalPositins</span>(images, img_resize, start_coordinates, show=<span class="synIdentifier">True</span>):
+    <span class="synConstant">&quot;&quot;&quot;</span>
+<span class="synConstant">    分割後の画像それぞれのどこに文字があるかどうかを識別する</span>
+<span class="synConstant">    また、それらの結果を元の座標系に戻してpositionsとして返す</span>
+<span class="synConstant">    images:list</span>
+<span class="synConstant">    img_resize:numpy</span>
+<span class="synConstant">    start_coordinates:list</span>
+<span class="synConstant">    &quot;&quot;&quot;</span>
+    positions = []
+    <span class="synStatement">for</span> i, (img, coordinate)  <span class="synStatement">in</span> <span class="synIdentifier">enumerate</span>(<span class="synIdentifier">zip</span>(images, start_coordinates)):
+
+        bb,results = get_box(Image.fromarray(img), tool, show=<span class="synIdentifier">False</span>)
+        w,h = img.shape[<span class="synConstant">0</span>],img.shape[<span class="synConstant">1</span>]
+
+        <span class="synStatement">for</span> box <span class="synStatement">in</span> results:
+            <span class="synStatement">if</span> box.content == <span class="synConstant">' '</span> <span class="synStatement">or</span> box.content == <span class="synConstant">''</span>:
+                <span class="synStatement">continue</span>
+            <span class="synStatement">if</span> (box.position[<span class="synConstant">0</span>][<span class="synConstant">0</span>] == <span class="synConstant">0</span>) <span class="synStatement">and</span> (box.position[<span class="synConstant">0</span>][<span class="synConstant">1</span>] == <span class="synConstant">0</span>) <span class="synStatement">and</span> (box.position[<span class="synConstant">1</span>][<span class="synConstant">0</span>] == w) <span class="synStatement">and</span> (box.position[<span class="synConstant">1</span>][<span class="synConstant">1</span>] == h):
+                <span class="synStatement">continue</span>
+            
+            position = [[p[<span class="synConstant">0</span>],p[<span class="synConstant">1</span>]] <span class="synStatement">for</span> p <span class="synStatement">in</span> box.position]
+            position[<span class="synConstant">0</span>][<span class="synConstant">0</span>] += coordinate[<span class="synConstant">'w_start'</span>]
+            position[<span class="synConstant">0</span>][<span class="synConstant">1</span>] += coordinate[<span class="synConstant">'h_start'</span>]
+            position[<span class="synConstant">1</span>][<span class="synConstant">0</span>] += coordinate[<span class="synConstant">'w_start'</span>]
+            position[<span class="synConstant">1</span>][<span class="synConstant">1</span>] += coordinate[<span class="synConstant">'h_start'</span>]
+            cv2.rectangle(img_resize, position[<span class="synConstant">0</span>], position[<span class="synConstant">1</span>], (<span class="synConstant">0</span>, <span class="synConstant">255</span>, <span class="synConstant">0</span>), <span class="synConstant">1</span>)
+            positions.append(position)
+    <span class="synStatement">if</span> show:
+        display(Image.fromarray(img_resize))
+    <span class="synStatement">return</span> positions
+
+<span class="synStatement">def</span> <span class="synIdentifier">get_mask</span>(img, positions):
+    mask = np.zeros_like(img)
+    <span class="synStatement">for</span> p <span class="synStatement">in</span> positions:
+        cv2.rectangle(mask, p[<span class="synConstant">0</span>], p[<span class="synConstant">1</span>], (<span class="synConstant">255</span>, <span class="synConstant">255</span>, <span class="synConstant">255</span>), thickness=-<span class="synConstant">1</span>)
+    <span class="synStatement">return</span> mask
+
+<span class="synStatement">def</span> <span class="synIdentifier">results2positions</span>(results):
+    positions = []
+    <span class="synStatement">for</span> box <span class="synStatement">in</span> results:
+        <span class="synStatement">if</span> box.content == <span class="synConstant">' '</span> <span class="synStatement">or</span> box.content == <span class="synConstant">''</span>:
+            <span class="synStatement">continue</span>
+        <span class="synStatement">if</span> (box.position[<span class="synConstant">0</span>][<span class="synConstant">0</span>] == <span class="synConstant">0</span>) <span class="synStatement">and</span> (box.position[<span class="synConstant">0</span>][<span class="synConstant">1</span>] == <span class="synConstant">0</span>) <span class="synStatement">and</span> (box.position[<span class="synConstant">1</span>][<span class="synConstant">0</span>] == w) <span class="synStatement">and</span> (box.position[<span class="synConstant">1</span>][<span class="synConstant">1</span>] == h):
+            <span class="synStatement">continue</span>
+        positions.append([box.position[<span class="synConstant">0</span>], box.position[<span class="synConstant">1</span>]])
+    <span class="synStatement">return</span> positions
+
+<span class="synComment"># 画像の拡大</span>
+img_resize = cv2.resize(img_np, (<span class="synIdentifier">int</span>(img_np.shape[<span class="synConstant">0</span>] * <span class="synConstant">4</span>), <span class="synIdentifier">int</span>(img_np.shape[<span class="synConstant">1</span>] * <span class="synConstant">4</span>)), interpolation=cv2.INTER_CUBIC)
+
+<span class="synComment"># 画像を分割する</span>
+images, start_coordinates = split_images(np.array(img_resize), <span class="synConstant">5</span>, <span class="synConstant">5</span>)
+<span class="synComment"># 分割画像のそれぞれをOCRに入れ、どこに文字が有るか判定する</span>
+<span class="synComment"># また、このときに返ってくるpositionsには、分割前の座標系でどこに文字があったのかが示されている</span>
+positions = get_splitImages2originalPositins(images, img_resize, start_coordinates, show=<span class="synIdentifier">False</span>)
+<span class="synComment"># 分割画像から特定された文字の位置がマスクになるようにする</span>
+mask_resize = get_mask(img_resize, positions)
+<span class="synComment"># 元の画像サイズに戻す</span>
+mask_resize = cv2.resize(mask_resize, (img_np.shape[<span class="synConstant">0</span>],img_np.shape[<span class="synConstant">1</span>]))
+
+<span class="synComment"># リサイズ画像を分割せずに、どこに文字が有るかを求める</span>
+img_np, results = get_box(img1, tool, show=<span class="synIdentifier">False</span>)
+positions = results2positions(results)
+<span class="synComment"># リサイズ画像から特定された文字の位置がマスクになるようにする</span>
+original_mask = get_mask(img_np, positions)
+
+<span class="synComment"># mask_resize（分割画像）とoriginal_mask（リサイズ画像）のORを求める</span>
+bitwise_or = cv2.bitwise_or(original_mask[:,:,<span class="synConstant">0</span>], mask_resize[:,:,<span class="synConstant">0</span>])
+</pre>
+
+
+<p>上記を実行することで、画像上に文字があるとされた部分の画素だけが255のマスク画像がbitwise_orに入っていることになります。</p>
+
+<h1>画像上の黒い部分を周りの情報から補完</h1>
+
+<p>次に先程作成したマスク画像と元画像を用いることで、文字の部分を周りの状況から補完していきます。</p>
+
+<p><strong>今回はOpneCVのInpaintingを用いて、文字の除去を行っていきます。</strong>
+<iframe src="https://hatenablog-parts.com/embed?url=http%3A%2F%2Flabs.eecs.tottori-u.ac.jp%2Fsd%2FMember%2Foyamada%2FOpenCV%2Fhtml%2Fpy_tutorials%2Fpy_photo%2Fpy_inpainting%2Fpy_inpainting.html" title="画像のInpainting — OpenCV-Python Tutorials 1 documentation" class="embed-card embed-webcard" scrolling="no" frameborder="0" style="display: block; width: 100%; height: 155px; max-width: 500px; margin: 10px 0px;"></iframe><cite class="hatena-citation"><a href="http://labs.eecs.tottori-u.ac.jp/sd/Member/oyamada/OpenCV/html/py_tutorials/py_photo/py_inpainting/py_inpainting.html">labs.eecs.tottori-u.ac.jp</a></cite></p>
+
+<p>実際に以下のようにして複数のパラメータでInpaintingを実行し、結果を確認できるようにしました。(参考：<a href="https://data-analysis-stats.jp/%E6%A9%9F%E6%A2%B0%E5%AD%A6%E7%BF%92/opencv%E3%81%A7%E7%94%BB%E5%83%8F%E3%81%AEinpainting%E3%81%AE%E8%A7%A3%E8%AA%AC/">OpenCVで画像のInpaintingの解説</a>)</p>
+
+<pre class="code lang-python" data-lang="python" data-unlink><span class="synStatement">def</span> <span class="synIdentifier">get_inpainting</span>(img, mask):
+    img = np.array(img)
+    mask = np.array(mask)
+
+    <span class="synStatement">if</span> mask.ndim == <span class="synConstant">3</span>:
+        mask = mask[:,:,<span class="synConstant">0</span>]
+    
+    dst11 = cv2.inpaint(img, mask , <span class="synConstant">0</span>, cv2.INPAINT_TELEA)
+    dst12 = cv2.inpaint(img, mask , <span class="synConstant">3</span>, cv2.INPAINT_TELEA)
+    dst13 = cv2.inpaint(img, mask , <span class="synConstant">10</span>, cv2.INPAINT_TELEA)
+    dst21 = cv2.inpaint(img, mask , <span class="synConstant">0</span>, cv2.INPAINT_NS)
+    dst22 = cv2.inpaint(img, mask , <span class="synConstant">3</span>, cv2.INPAINT_NS)
+    dst23 = cv2.inpaint(img, mask , <span class="synConstant">10</span>, cv2.INPAINT_NS)
+
+    <span class="synIdentifier">print</span>(<span class="synConstant">&quot;</span><span class="synSpecial">\n</span><span class="synConstant">Output (INPAINT_TELEA, radius=0) : dst11&quot;</span>)
+    display(Image.fromarray(dst11))
+    <span class="synIdentifier">print</span>(<span class="synConstant">&quot;</span><span class="synSpecial">\n</span><span class="synConstant">Output (INPAINT_TELEA, radius=3) : dst12&quot;</span>)
+    display(Image.fromarray(dst11))
+    <span class="synIdentifier">print</span>(<span class="synConstant">&quot;</span><span class="synSpecial">\n</span><span class="synConstant">Output (INPAINT_TELEA, radius=10) : dst13&quot;</span>)
+    display(Image.fromarray(dst11))
+
+    <span class="synIdentifier">print</span>(<span class="synConstant">&quot;</span><span class="synSpecial">\n</span><span class="synConstant">Output (INPAINT_NS, radius=0) : dst21&quot;</span>)
+    display(Image.fromarray(dst21))
+    <span class="synIdentifier">print</span>(<span class="synConstant">&quot;</span><span class="synSpecial">\n</span><span class="synConstant">Output (INPAINT_NS, radius=3) : dst22&quot;</span>)
+    display(Image.fromarray(dst22))
+    <span class="synIdentifier">print</span>(<span class="synConstant">&quot;</span><span class="synSpecial">\n</span><span class="synConstant">Output (INPAINT_NS, radius=10) : dst23&quot;</span>)
+    display(Image.fromarray(dst23))
+
+    <span class="synStatement">return</span> dst11,dst12,dst13,dst21,dst22,dst23
+
+dst11,dst12,dst13,dst21,dst22,dst23 = get_inpainting(img_np, bitwise_or)
+</pre>
+
+
+<p>こちらを実行すると以下の出力が得られます。</p>
+
+<p><figure class="figure-image figure-image-fotolife" title="結果の出力例"><span itemscope itemtype="http://schema.org/Photograph"><img src="https://cdn-ak.f.st-hatena.com/images/fotolife/n/newton800/20220509/20220509103312.png" width="855" height="1200" loading="lazy" title="" class="hatena-fotolife" itemprop="image"></span><figcaption>結果の出力例</figcaption></figure></p>
+
+<p>出力画像を確認するとしっかりと文字が消えており、文字があった部分は背景色と同じ色が補完されていることがわかります。</p>
+
+<h1>まとめ</h1>
+
+<p>今回は画像上に存在する文字を自動的に削除し、背景を補完する仕組みの紹介を行いました。</p>
+
+<p>はじめに画像上の文字を検知し、その検知結果をもとにマスク画像を作成します。そのマスク画像と元画像をInpaintingに入力することで、画像の補完を行いました。</p>
+
+<p><strong>特に文字を検知する部分で、文字検知の取りこぼしが多く見られたので画像を拡大・分割するなどの工夫を実施したところがポイントです。ただし、現状の文字検知の方法でもかなり取りこぼしが多い状態なので、実践で使用する場合にはもう少し工夫が必要になります。</strong></p>
+
+<p>大学の頃は画像系の卒論を書いたこともあり、とても楽しめながら作成することができました。
+最後までお付き合いいただき、ありがとうございます。</p>
+]]></description>
+            <enclosure url="https://cdn.user.blog.st-hatena.com/default_entry_og_image/4268819/1588226000876991" length="0" type="image//default_entry_og_image/4268819/1588226000876991"/>
+        </item>
         <item>
             <title><![CDATA[『本を聴く毎日を送っています』という LT をした]]></title>
             <link>https://masutaka.net/2022-04-09-1/</link>
@@ -5055,84 +5328,6 @@ quit       Close any open TELNET session and exit telnet.  An end of file (in co
 <p>他の方法で網羅できているようなので、まあいいかあと思いました。</p>
 ]]></description>
             <enclosure url="https://cdn-ak.f.st-hatena.com/images/fotolife/m/masutaka26/20210212/20210212181026.png" length="0" type="image/png"/>
-        </item>
-        <item>
-            <title><![CDATA[Terraform の terraform-provider-datadog で古い source から新しい source に更新する際の Warning を解消する方法]]></title>
-            <link>https://developer.feedforce.jp/entry/2021/02/09/114110</link>
-            <guid>https://developer.feedforce.jp/entry/2021/02/09/114110</guid>
-            <pubDate>Tue, 09 Feb 2021 02:41:10 GMT</pubDate>
-            <description><![CDATA[<p>ソーシャルPLUS の開発チーム でインフラエンジニア をしている <a href="http://blog.hatena.ne.jp/mayuki123/" class="hatena-id-icon"><img src="https://cdn.profile-image.st-hatena.com/users/mayuki123/profile.png" width="16" height="16" alt="" class="hatena-id-icon">id:mayuki123</a> です。</p>
-
-<p>ソーシャルPLUS のインフラ環境は基本的に Terraform を利用して管理をしています。今回は、Terraform の <a href="https://github.com/DataDog/terraform-provider-datadog">terraform-provider-datadog</a> で <code>terraform init</code> を実行時の Warning を解消するのに頭を悩ませたので書き残しておきます。</p>
-
-<h2>発生していた事象</h2>
-
-<p>Datadog Provider を利用している所で <code>terraform init</code> を実行すると、下記のWarning が表示されるようになりました。</p>
-
-<pre class="code" data-lang="" data-unlink>Warning: Additional provider information from registry
-
-The remote registry returned warnings for
-registry.terraform.io/terraform-providers/datadog:
-- For users on Terraform 0.13 or greater, this provider has moved to
-DataDog/datadog. Please update your source in required_providers.</pre>
-
-
-<p>Datadog Provider を導入した時は、 Source に <code>terraform-providers/datadog</code> を指定する必要がありましたが、現在は <code>DataDog/datadog</code> が推奨との事で変更する必要があるようです。Terraform のコードで Source を変更すればいとも簡単に解決するだろうとこの時の私は思っていました。</p>
-
-<p><span itemscope itemtype="http://schema.org/Photograph"><img src="https://cdn-ak.f.st-hatena.com/images/fotolife/m/mayuki123/20210208/20210208175250.png" alt="f:id:mayuki123:20210208175250p:plain" title="" class="hatena-fotolife" itemprop="image"></span></p>
-
-<p>Terraform の コードを修正後に <code>terraform init</code> を実行して Provider を更新した後に、 <code>terraform providers</code> を実行してみると State では <code>registry.terraform.io/terraform-providers/datadog</code> を使い続ける事象に陥りました。</p>
-
-<pre class="code" data-lang="" data-unlink>% terraform providers
-Providers required by configuration:
-.
-├── provider[registry.terraform.io/hashicorp/aws] 3.27.0
-├── provider[registry.terraform.io/datadog/datadog] 2.20.0
-
-/// 中略 ///
-
-Providers required by state:
-
-    provider[registry.terraform.io/hashicorp/aws]
-
-    provider[registry.terraform.io/terraform-providers/datadog]
-
-    provider[terraform.io/builtin/terraform]</pre>
-
-
-<p> Terraform v0.14.x で追加されるようになった <code>.terraform.lock.hcl</code> には Provider として <code>registry.terraform.io/datadog/datadog</code> が新しく追加はされますが、 <code>registry.terraform.io/terraform-providers/datadog</code> が残り続けていました。亡霊なのでしょうか。</p>
-
-<h2>解決方法</h2>
-
-<p><code>terraform state replace-provider</code> コマンドを実行する事で、State 上の既存のリソースに対して Terraform の Datadog provider の Source として <code>DataDog/datadog</code> を利用するように変更する必要がありました。</p>
-
-<pre class="code" data-lang="" data-unlink>terraform state replace-provider \
-&#39;registry.terraform.io/terraform-providers/datadog&#39; \
-&#39;registry.terraform.io/datadog/datadog&#39;</pre>
-
-
-<p>実行すると下記のような確認が表示されるので、 <code>yes</code> を入力すると更新されます。</p>
-
-<pre class="code" data-lang="" data-unlink>% terraform state replace-provider &#39;registry.terraform.io/terraform-providers/datadog&#39; &#39;registry.terraform.io/datadog/datadog&#39; 
-Terraform will perform the following actions:
-
-  ~ Updating provider:
-    - registry.terraform.io/terraform-providers/datadog
-    + registry.terraform.io/datadog/datadog
-
-Changing 1 resources:
-
-  datadog_integration_aws.xxxx
-
-Do you want to make these changes?
-Only &#39;yes&#39; will be accepted to continue.
-
-Enter a value: yes</pre>
-
-
-<p><code>terraform state replace-provider</code> コマンドを実行後に <code>terraform init</code> を実行すると Warning は解消されました。Terraform provider の Source の変更はあまり発生しない気はしますが、同じような事象にハマった時にはご参考になればと思います。</p>
-]]></description>
-            <enclosure url="https://cdn-ak.f.st-hatena.com/images/fotolife/m/mayuki123/20210208/20210208175250.png" length="0" type="image/png"/>
         </item>
         <item>
             <title><![CDATA[変化に耐え得る esa のカテゴリ設計を徹底的に考えてみた]]></title>
