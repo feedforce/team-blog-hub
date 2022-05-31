@@ -2,12 +2,201 @@
 <feed xmlns="http://www.w3.org/2005/Atom">
     <id>https://engineers.feedforce.jp</id>
     <title>Feedforce Engineers' Blogs</title>
-    <updated>2022-05-30T01:33:00.630Z</updated>
+    <updated>2022-05-31T01:34:26.252Z</updated>
     <generator>https://github.com/jpmonette/feed</generator>
     <link rel="alternate" href="https://engineers.feedforce.jp"/>
     <subtitle>フィードフォースグループに所属するエンジニアのブログ記事をまとめています。</subtitle>
     <logo>https://engineers.feedforce.jp/logo.png</logo>
     <rights>© Feedforce Inc.</rights>
+    <entry>
+        <title type="html"><![CDATA[LookML Validation を 20 秒から 11 秒に高速化出来た]]></title>
+        <id>https://developer.feedforce.jp/entry/2022/05/30/110000</id>
+        <link href="https://developer.feedforce.jp/entry/2022/05/30/110000"/>
+        <updated>2022-05-30T02:00:00.000Z</updated>
+        <summary type="html"><![CDATA[<p>こんにちは、<a href="http://blog.hatena.ne.jp/masutaka26/" class="hatena-id-icon"><img src="https://cdn.profile-image.st-hatena.com/users/masutaka26/profile.png" width="16" height="16" alt="" class="hatena-id-icon">id:masutaka26</a> です。</p>
+
+<p><a href="https://www.looker.com/">Looker</a> を使い始めて 3 年目に突入しました。変わらず <a href="https://feedmatic.net/">Feedmatic</a> という広告運用コンサルティングのデータ整備をする毎日です。</p>
+
+<p>今回はここ 1 年の懸案だった LookML Validation の堪え難い遅さを改善出来たので、共有します。</p>
+
+<ul class="table-of-contents">
+    <li><a href="#2-年間でコード量が肥大化した">2 年間でコード量が肥大化した</a></li>
+    <li><a href="#LookML-Validation-が堪え難いほど遅くなった">LookML Validation が堪え難いほど遅くなった</a></li>
+    <li><a href="#My-LookML-Validator-is-slow">My LookML Validator is slow!</a><ul>
+            <li><a href="#TLDR">TL;DR</a></li>
+            <li><a href="#Quick-wins">Quick wins</a></li>
+            <li><a href="#Long-answer">Long answer</a></li>
+            <li><a href="#Bonus-note">Bonus note</a></li>
+        </ul>
+    </li>
+    <li><a href="#include-を最適化したら半分弱の時間になった">include を最適化したら半分弱の時間になった</a></li>
+    <li><a href="#まとめ">まとめ</a></li>
+    <li><a href="#余談">余談</a></li>
+</ul>
+
+<h2 id="2-年間でコード量が肥大化した">2 年間でコード量が肥大化した</h2>
+
+<p>2 年前と比べて Feedmatic プロジェクトの <code>.lkml</code> ファイルがものすごく増え、440 個、23,217 行<sup id="fnref:1"><a href="#fn:1" rel="footnote">1</a></sup>にもなりました。Explore は 62 個、<a href="/entry/2021/08/30/150000">テスト用</a>も含めると 150 個もあります。相変わらず<a href="/entry/2022/02/04/180000">ボッチ LookML 開発者</a>ではあるのですが。💦</p>
+
+<p>さて、<a href="/entry/2020/10/23/190000">Looker の JumpStart</a> で教えて頂いた「モデル編成のベストプラクティス」のうちの 1 つにこちらがありました。</p>
+
+<blockquote><p>ユーザーが必要とする答えに簡単にアクセスできる、可能な限り少ない数の explore を使用する。</p></blockquote>
+
+<p>しかし、広告運用の文脈だと、クライアントごとに独自実装が必要なケースが多く、このコード量になってしまいました。💦</p>
+
+<h2 id="LookML-Validation-が堪え難いほど遅くなった">LookML Validation が堪え難いほど遅くなった</h2>
+
+<p>そんな LookML 開発に使用する Looker IDE には LookML Validator が付属しており、git commit 前に強制する設定をしています。</p>
+
+<p><iframe src="https://hatenablog-parts.com/embed?url=https%3A%2F%2Fdocs.looker.com%2Fja%2Fdata-modeling%2Fgetting-started%2Flookml-validation%23validating_your_lookml" title="Editing and validating LookML" class="embed-card embed-webcard" scrolling="no" frameborder="0" style="display: block; width: 100%; height: 155px; max-width: 500px; margin: 10px 0px;"></iframe><cite class="hatena-citation"><a href="https://docs.looker.com/ja/data-modeling/getting-started/lookml-validation#validating_your_lookml">docs.looker.com</a></cite></p>
+
+<p>以前は一瞬で完了していましたが、最近は 20 秒以上かかります。ちょっとコメントを書き換えただけでこれだけ待たされるのは、なかなかの苦行です。</p>
+
+<p>試作した別プロジェクト（41 ファイル、1999 行）はそんなにかからないため、単純にコード量に比例していると思いました。</p>
+
+<p>念のため Looker のサポートに質問したところ、やはりコード量（プロジェクトのサイズ）が影響しているそう。そして Looker インスタンスの CPU やメモリ使用量に問題はないとのこと。</p>
+
+<p>さらに、こちらの記事を紹介して頂きました。🙏</p>
+
+<p><iframe src="https://hatenablog-parts.com/embed?url=https%3A%2F%2Fcommunity.looker.com%2Ftechnical-tips-tricks-1021%2Fmy-lookml-validator-is-slow-23592" title="My LookML Validator is slow! | Looker Community" class="embed-card embed-webcard" scrolling="no" frameborder="0" style="display: block; width: 100%; height: 155px; max-width: 500px; margin: 10px 0px;"></iframe><cite class="hatena-citation"><a href="https://community.looker.com/technical-tips-tricks-1021/my-lookml-validator-is-slow-23592">community.looker.com</a></cite></p>
+
+<h2 id="My-LookML-Validator-is-slow">My LookML Validator is slow!</h2>
+
+<p>長い記事ではないので、ざっと翻訳します。</p>
+
+<h3 id="TLDR">TL;DR</h3>
+
+<p>プロジェクトが大きければ大きいほど、検証には時間がかかります。</p>
+
+<h3 id="Quick-wins">Quick wins</h3>
+
+<ol>
+<li>戦略的に "includes" する
+
+<ol>
+<li>常に他のすべてのビューをインクルードすることは開発上簡単かもしれないが、命名規則を使って必要なファイルだけを戦略的にインクルードすることで、パフォーマンスを向上させることができる</li>
+</ol>
+</li>
+<li>使用しない explore（および join、field など）をコメントアウトまたは削除する</li>
+<li>プロジェクトを複数のプロジェクトに分割することを検討する</li>
+</ol>
+
+
+<p>LookML のベストプラクティスについては、<a href="https://community.looker.com/lookml-5/lookml-best-practices-1636">こちらの記事</a>をご覧ください。</p>
+
+<h3 id="Long-answer">Long answer</h3>
+
+<p>LookML のプロジェクトサイズ（総行数）と不要な <code>include</code> の両方が LookML Validator の性能に影響を及ぼします。</p>
+
+<p>Validation は 2 段階のプロセスで行われます。</p>
+
+<p>1) 1 回目の検証では、プロジェクト内のすべてのファイルを読み込み、どこにも参照されていないファイルも含めて、メモリに読み込み、ソースコードを 1 モデルずつ完全に翻訳して、「コンパイル」エラーを探します。</p>
+
+<p>2) 2 回目の検証は、各モデルで開始し、そのモデルから参照されるファイルのみを解析します。そして、そのモデルに基づいてクエリーを構築し、クエリーエラーや「実行時」エラーを探します。また、これらのパスは、すべての検証で行われることも重要です。</p>
+
+<p>結論として、1 回目の検証は LookML プロジェクトのサイズに、2 回目の検証は不要な <code>include</code> 文に影響されます。したがって、LookML プロジェクトのサイズを適切に保つと同時に、より選択的かつ戦略的な <code>include</code> を推奨するのが良いでしょう。</p>
+
+<h3 id="Bonus-note">Bonus note</h3>
+
+<p>Explore ごとのフィールド数は、検証時間という点で非常に重要です。これはしばしばモデルのパースよりも時間がかかります。</p>
+
+<h2 id="include-を最適化したら半分弱の時間になった">include を最適化したら半分弱の時間になった</h2>
+
+<p>今回は「戦略的に "includes" する」をやってみました。</p>
+
+<p>具体的には 56 個の <code>.explore.lkml</code> ファイルを以下のように変更しました。ワイルドカード付きの <code>include</code> を出来るだけ減らしました。</p>
+
+<pre class="code" data-lang="" data-unlink># 変更前
+include: &#34;/views/**/*.view&#34;
+
+↓
+
+# 変更後
+include: &#34;/views/view1.view&#34;
+include: &#34;/views/view2.view&#34;
+include: &#34;/views/view3.view&#34;
+include: &#34;/views/view4.view&#34;
+include: &#34;/views/view5.view&#34;</pre>
+
+
+<p>結果がこちら。たったこれだけで、20 秒かかっていた LookML validation が 12 秒弱にまで縮まりました。期待以上です！👏😂🎉</p>
+
+<table>
+<thead>
+<tr>
+<th style="text-align:right;"> </th>
+<th style="text-align:right;"> 変更前（秒） </th>
+<th style="text-align:right;"> 変更後（秒） </th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:right;"> 1 </td>
+<td style="text-align:right;"> 20.46 </td>
+<td style="text-align:right;"> 12.39 </td>
+</tr>
+<tr>
+<td style="text-align:right;"> 2 </td>
+<td style="text-align:right;"> 20.44 </td>
+<td style="text-align:right;"> 11.89 </td>
+</tr>
+<tr>
+<td style="text-align:right;"> 3 </td>
+<td style="text-align:right;"> 20.05 </td>
+<td style="text-align:right;"> 11.69 </td>
+</tr>
+<tr>
+<td style="text-align:right;"> 3 </td>
+<td style="text-align:right;"> 20.61 </td>
+<td style="text-align:right;"> 11.65 </td>
+</tr>
+<tr>
+<td style="text-align:right;"> 5 </td>
+<td style="text-align:right;"> 20.48 </td>
+<td style="text-align:right;"> 11.95 </td>
+</tr>
+<tr>
+<td style="text-align:right;"> 平均 </td>
+<td style="text-align:right;"> 20.41 </td>
+<td style="text-align:right;"> 11.91 </td>
+</tr>
+</tbody>
+</table>
+
+
+<p>ついでに、事情があって隠している Explore 10 個<sup id="fnref:2"><a href="#fn:2" rel="footnote">2</a></sup>の削除を確認してみたら、さらに速くなり、9 秒程度まで縮まりました。なるほど。</p>
+
+<h2 id="まとめ">まとめ</h2>
+
+<p>ここ 1 年の懸案だった LookML Validation のパフォーマンスを改善しました。</p>
+
+<p>include を最適化するだけで、ここまで速くなるとは驚きでした。おまけに LookML Validation のプロセスも理解することもできました。</p>
+
+<p>💭 コンパイラ側で良しなにするのは難しいのかな、<a href="https://github.com/looker-open-source/look-at-me-sideways">LAMS</a> で警告してくれれば良いのかな。</p>
+
+<p>引き続き、LookML 開発を妨げる課題があれば、解決していきます。💪</p>
+
+<h2 id="余談">余談</h2>
+
+<p><code>Validate LookML</code> をクリックすると、すぐ <code>Validate LookML</code> に戻ることがあるのですが、なんででしょう...？ファイル保存直後だとほぼ発生します。</p>
+
+<p><img src="https://user-images.githubusercontent.com/170014/170627597-55819ca6-7394-4900-9e33-9ed0c1ce2492.gif" alt="looker" /></p>
+
+<p>Validation が終わる時間くらいまで待つと 2 回クリックしなくて良いみたいです。🙄</p>
+
+<p><img src="https://user-images.githubusercontent.com/170014/170627672-f1bf212b-ab73-48f3-9feb-4e8f751984b6.gif" alt="looker2" /></p>
+<div class="footnotes">
+<hr/>
+<ol>
+<li id="fn:1">
+<p>コメントと空行を除く<a href="#fnref:1" rev="footnote">&#8617;</a></p></li>
+<li id="fn:2">
+<p><code>.explore.lkml</code> 10 個、<code>.view.lkml</code> 10 個、<code>.layer.lkml</code> 31 個<a href="#fnref:2" rev="footnote">&#8617;</a></p></li>
+</ol>
+</div>
+
+]]></summary>
+    </entry>
     <entry>
         <title type="html"><![CDATA[画像上の文字を自動削除する仕組みを作ってみた]]></title>
         <id>https://developer.feedforce.jp/entry/2022/05/09/114054</id>
