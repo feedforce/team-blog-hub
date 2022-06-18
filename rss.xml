@@ -4,7 +4,7 @@
         <title>Feedforce Engineers' Blogs</title>
         <link>https://engineers.feedforce.jp</link>
         <description>フィードフォースグループに所属するエンジニアのブログ記事をまとめています。</description>
-        <lastBuildDate>Fri, 17 Jun 2022 01:32:09 GMT</lastBuildDate>
+        <lastBuildDate>Sat, 18 Jun 2022 01:34:15 GMT</lastBuildDate>
         <docs>https://validator.w3.org/feed/docs/rss2.html</docs>
         <generator>https://github.com/jpmonette/feed</generator>
         <image>
@@ -13,6 +13,111 @@
             <link>https://engineers.feedforce.jp</link>
         </image>
         <copyright>© Feedforce Inc.</copyright>
+        <item>
+            <title><![CDATA[Looker で困った時の解決手段まとめ]]></title>
+            <link>https://developer.feedforce.jp/entry/2022/06/17/110000</link>
+            <guid>https://developer.feedforce.jp/entry/2022/06/17/110000</guid>
+            <pubDate>Fri, 17 Jun 2022 02:00:00 GMT</pubDate>
+            <description><![CDATA[<p>こんにちは、<a href="http://blog.hatena.ne.jp/masutaka26/" class="hatena-id-icon"><img src="https://cdn.profile-image.st-hatena.com/users/masutaka26/profile.png" width="16" height="16" alt="" class="hatena-id-icon">id:masutaka26</a> です。</p>
+
+<p>今回は少し前に社内に共有した記事を、このブログでも共有します。Looker は Ruby や Python 等のプログラミング言語よりはユーザーが少ないはずで、質問相手がいないと本当に困ります。この記事がその一助になれば幸いです。</p>
+
+<ul class="table-of-contents">
+    <li><a href="#ググる">ググる</a></li>
+    <li><a href="#チャット">チャット</a></li>
+    <li><a href="#問い合わせフォーム">問い合わせフォーム</a></li>
+    <li><a href="#Looker-Community-en">Looker Community (en)</a></li>
+    <li><a href="#Looker-Community-ja">Looker Community (ja)</a></li>
+    <li><a href="#Slack-Looker-User-Group---Japan">Slack Looker User Group - Japan</a></li>
+    <li><a href="#番外編-製品についてのアイディアがありますか">番外編: 製品についてのアイディアがありますか？</a></li>
+    <li><a href="#まとめ">まとめ</a></li>
+</ul>
+
+<h2 id="ググる">ググる</h2>
+
+<p>さすがにこれは基本ですね。💦</p>
+
+<p><a href="https://docs.looker.com/ja">公式ドキュメント</a> に誘導されることもしばしばです。これが結構よく出来ています。<code>looker table calculation</code> などと英語でググると、解決にたどり着きやすいかもしれません。</p>
+
+<p>マニアックなテクニックとして、ググった URL の後ろに <code>&amp;gl=us&amp;hl=en&amp;gws_rd=cr</code> を付け、検索対象を英語にして、日本語のノイズを減らす方法もあります。</p>
+
+<p><a href="https://www.google.com/search?q=looker+table+calculation&oq=looker+table+calculation&aqs=chrome..69i57.26j0j7&sourceid=chrome&ie=UTF-8">https://www.google.com/search?q=looker+table+calculation&oq=looker+table+calculation&aqs=chrome..69i57.26j0j7&sourceid=chrome&ie=UTF-8</a></p>
+
+<p>↓</p>
+
+<p><a href="https://www.google.com/search?q=looker+table+calculation&oq=looker+table+calculation&aqs=chrome..69i57.26j0j7&sourceid=chrome&ie=UTF-8&gl=us&hl=en&gws_rd=cr">https://www.google.com/search?q=looker+table+calculation&oq=looker+table+calculation&aqs=chrome..69i57.26j0j7&sourceid=chrome&ie=UTF-8&gl=us&hl=en&gws_rd=cr</a></p>
+
+<p>私はこんなブックマークレットを使っています。ちなみに名前は <code>en</code> です。</p>
+
+<pre class="code" data-lang="" data-unlink>javascript:location.href=location.href+&#39;&amp;gl=us&amp;hl=en&amp;gws_rd=cr&#39;</pre>
+
+
+<h2 id="チャット">チャット</h2>
+
+<p>Admin 権限を持ったユーザーだけが使用できます。</p>
+
+<p>日本語可ですが、日々混んでいるので急ぎでなければ次の「問い合わせフォーム」が良いと思います。</p>
+
+<p><span itemscope itemtype="http://schema.org/Photograph"><img src="https://cdn-ak.f.st-hatena.com/images/fotolife/m/masutaka26/20220616/20220616165108.png" width="313" height="400" loading="lazy" title="" class="hatena-fotolife" itemprop="image"></span></p>
+
+<h2 id="問い合わせフォーム">問い合わせフォーム</h2>
+
+<p><a href="https://help.looker.com/hc/en-us/requests">https://help.looker.com/hc/en-us/requests</a> から <code>Create a New Request</code> をクリックします。Looker ユーザーなら誰でも利用可能なのかな？日本語可です。</p>
+
+<p>このフォームは割と最近知ったのですが、問い合わせてみたら翌日返信が来て、速やかに解決できました。急がない時はチャットより良いと思います。サポートの方も時間に追われなくて良さそうです。</p>
+
+<p>今までのチャット履歴もここで確認出来ます。これは知らなかった。</p>
+
+<h2 id="Looker-Community-en">Looker Community (en)</h2>
+
+<p>誰でも利用可能です。日本語不可。頻繁に投稿があります。</p>
+
+<p><a href="https://community.looker.com/">https://community.looker.com/</a></p>
+
+<p><span itemscope itemtype="http://schema.org/Photograph"><img src="https://cdn-ak.f.st-hatena.com/images/fotolife/m/masutaka26/20220616/20220616173918.png" width="1200" height="489" loading="lazy" title="" class="hatena-fotolife" itemprop="image"></span></p>
+
+<h2 id="Looker-Community-ja">Looker Community (ja)</h2>
+
+<p>誰でも利用可能な日本語コミュニティです。稀に投稿があります。</p>
+
+<p><a href="https://community.looker.com/%E3%83%98%E3%83%AB%E3%83%97%E3%81%A8%E3%82%B5%E3%83%9D%E3%83%BC%E3%83%88-101">コミュニティフォーラム (Japanese) > ヘルプとサポート</a></p>
+
+<p><span itemscope itemtype="http://schema.org/Photograph"><img src="https://cdn-ak.f.st-hatena.com/images/fotolife/m/masutaka26/20220616/20220616174114.png" width="1200" height="458" loading="lazy" title="" class="hatena-fotolife" itemprop="image"></span></p>
+
+<p>⚠️ <a href="https://community.looker.com/%E3%82%B3%E3%83%9F%E3%83%A5%E3%83%8B%E3%83%86%E3%82%A3%E3%83%95%E3%82%A9%E3%83%BC%E3%83%A9%E3%83%A0-japanese-161">コミュニティフォーラム (Japanese) のトップ</a> で <code>Ask question / Create topic</code> ボタンをクリックすると en のほうにトピックが作られてしまいます。注意です。</p>
+
+<p><span itemscope itemtype="http://schema.org/Photograph"><img src="https://cdn-ak.f.st-hatena.com/images/fotolife/m/masutaka26/20220616/20220616174411.png" width="1116" height="774" loading="lazy" title="" class="hatena-fotolife" itemprop="image"></span></p>
+
+<p>このフォームが正解です。</p>
+
+<p><span itemscope itemtype="http://schema.org/Photograph"><img src="https://cdn-ak.f.st-hatena.com/images/fotolife/m/masutaka26/20220616/20220616174446.png" width="1200" height="690" loading="lazy" title="" class="hatena-fotolife" itemprop="image"></span></p>
+
+<h2 id="Slack-Looker-User-Group---Japan">Slack Looker User Group - Japan</h2>
+
+<p>日本語の Slack コミュニティもあります。<a href="https://community.looker.com/%E3%83%8B%E3%83%A5%E3%83%BC%E3%82%B9%E3%81%A8%E5%91%8A%E7%9F%A5-100/looker%E3%83%A6%E3%83%BC%E3%82%B6%E3%83%BC%E4%BC%9Aslack%E3%81%AE%E3%81%94%E6%A1%88%E5%86%85-28903">今年の初め (2022-01-14) に作られました</a>。</p>
+
+<p><a href="https://join.slack.com/t/lookerusergroup-japan/shared_invite/zt-1auagto9i-cT2lV~cejC7MgxMrzvveow">この招待リンク</a>から参加出来ます。</p>
+
+<h2 id="番外編-製品についてのアイディアがありますか">番外編: 製品についてのアイディアがありますか？</h2>
+
+<p>新しい機能のアイディアを POST 出来る場所です。Admin 権限を持ったユーザーだけが使用できます。日本語不可です。</p>
+
+<p>不具合も報告されることがあり、たまに 前述の「問い合わせフォーム」に誘導されています。それで知りました。</p>
+
+<p><span itemscope itemtype="http://schema.org/Photograph"><img src="https://cdn-ak.f.st-hatena.com/images/fotolife/m/masutaka26/20220616/20220616175411.png" width="391" height="500" loading="lazy" title="" class="hatena-fotolife" itemprop="image"></span></p>
+
+<h2 id="まとめ">まとめ</h2>
+
+<p>私が知る限りの「Looker で困った時の解決手段」をまとめました。</p>
+
+<p>以前紹介した情報収集も日々継続すれば、Looker のスキルはかなり高まる実感があります。</p>
+
+<p><iframe src="https://hatenablog-parts.com/embed?url=https%3A%2F%2Fdeveloper.feedforce.jp%2Fentry%2F2021%2F08%2F16%2F150000" title="私が１年かけて辿り着いた Looker の情報収集方法を紹介する - Feedforce Developer Blog" class="embed-card embed-blogcard" scrolling="no" frameborder="0" style="display: block; width: 100%; height: 190px; max-width: 500px; margin: 10px 0px;"></iframe></p>
+
+<p>それでは良い Looker ライフを！(^^)/</p>
+]]></description>
+            <enclosure url="https://cdn-ak.f.st-hatena.com/images/fotolife/m/masutaka26/20201023/20201023184859.png" length="0" type="image/png"/>
+        </item>
         <item>
             <title><![CDATA[LookML Validation を 20 秒から 11 秒に高速化出来た]]></title>
             <link>https://developer.feedforce.jp/entry/2022/05/30/110000</link>
