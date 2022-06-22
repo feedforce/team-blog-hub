@@ -2,12 +2,195 @@
 <feed xmlns="http://www.w3.org/2005/Atom">
     <id>https://engineers.feedforce.jp</id>
     <title>Feedforce Engineers' Blogs</title>
-    <updated>2022-06-21T01:36:57.362Z</updated>
+    <updated>2022-06-22T01:33:52.540Z</updated>
     <generator>https://github.com/jpmonette/feed</generator>
     <link rel="alternate" href="https://engineers.feedforce.jp"/>
     <subtitle>フィードフォースグループに所属するエンジニアのブログ記事をまとめています。</subtitle>
     <logo>https://engineers.feedforce.jp/logo.png</logo>
     <rights>© Feedforce Inc.</rights>
+    <entry>
+        <title type="html"><![CDATA[LAMS を導入して、LookML の再利用性を高められた]]></title>
+        <id>https://developer.feedforce.jp/entry/2022/06/21/130000</id>
+        <link href="https://developer.feedforce.jp/entry/2022/06/21/130000"/>
+        <updated>2022-06-21T04:00:00.000Z</updated>
+        <summary type="html"><![CDATA[<p>こんにちは、<a href="http://blog.hatena.ne.jp/masutaka26/" class="hatena-id-icon"><img src="https://cdn.profile-image.st-hatena.com/users/masutaka26/profile.png" width="16" height="16" alt="" class="hatena-id-icon">id:masutaka26</a> です。<a href="https://developer.feedforce.jp/entry/2022/06/17/110000">先週</a>に引き続いてのブログ更新です。</p>
+
+<p>Ruby や JavaScript などのプログラミング言語では、依存関係を管理することでコードの再利用性を高めるとともに、バグの少ないコードを書くことが出来ます。ただ、<a href="https://docs.looker.com/ja/data-modeling/learning-lookml/what-is-lookml">LookML</a> はプログラミング言語ではないため、同じ方法が使えません。</p>
+
+<p>今回は LAMS という LookML Linter を導入することで、LookML の再利用性を高める糸口を見つけました。LAMS を紹介しつつ、その知見を共有します。</p>
+
+<ul class="table-of-contents">
+    <li><a href="#LAMS-とは">LAMS とは</a></li>
+    <li><a href="#導入方法">導入方法</a></li>
+    <li><a href="#ルールの免除">ルールの免除</a></li>
+    <li><a href="#LookML-の再利用性を高められた-F1-ルール">LookML の再利用性を高められた F1 ルール</a></li>
+    <li><a href="#注意事項">注意事項</a></li>
+    <li><a href="#まとめ">まとめ</a></li>
+</ul>
+
+<h2 id="LAMS-とは">LAMS とは</h2>
+
+<p>LAMS (Look At Me Sideways) は LookML のスタイルガイドと Linter がセットになったツールです。準公式のツールなのかな？</p>
+
+<p><iframe src="https://hatenablog-parts.com/embed?url=https%3A%2F%2Fgithub.com%2Flooker-open-source%2Flook-at-me-sideways" title="GitHub - looker-open-source/look-at-me-sideways: A style guide and linter for Looker&#39;s LookML data modeling language" class="embed-card embed-webcard" scrolling="no" frameborder="0" style="display: block; width: 100%; height: 155px; max-width: 500px; margin: 10px 0px;"></iframe><cite class="hatena-citation"><a href="https://github.com/looker-open-source/look-at-me-sideways">github.com</a></cite></p>
+
+<p>LookML IDE に付属する LookML validator が文法的な誤りを検出するのに対して、LAMS はメンテナンス性の高い、もう一歩進んだ LookML を提案します。</p>
+
+<p>2022-06-21 現在、4 グループ、32 個のルールが定義されています。</p>
+
+<p>🔗 <a href="https://looker-open-source.github.io/look-at-me-sideways/rules.html">LAMS Style Guide</a></p>
+
+<ul>
+<li>Key Dimensions (K1 ~ K6)</li>
+<li>Other Fields (F1 ~ F6)</li>
+<li>Derived Tables (T1 ~ T15)</li>
+<li>Explores (E1 ~ E5)</li>
+</ul>
+
+
+<h2 id="導入方法">導入方法</h2>
+
+<p>Linter を後から導入するのは辛いので、可能ならリポジトリを作るタイミングで導入するのが良いと思います。</p>
+
+<p><a href="https://github.com/looker-open-source/look-at-me-sideways#deployment-examples">README の Deployment Examples</a> には、ローカルマシンで実行する方法や、GitHub Actions や CircleCI などで CI する方法がまとまっています。</p>
+
+<p>今回は GitHub Actions を採用しました。git push するたびに LAMS が実行され、結果を Pull request 上で確認出来ます。参考までにコードを貼っておきます。</p>
+
+<p><strong>.github/workflows/ci.yml</strong></p>
+
+<pre class="code lang-yaml" data-lang="yaml" data-unlink><span class="synIdentifier">name</span><span class="synSpecial">:</span> CI
+
+<span class="synIdentifier">on</span><span class="synSpecial">:</span> push
+
+<span class="synIdentifier">jobs</span><span class="synSpecial">:</span>
+  <span class="synIdentifier">lams</span><span class="synSpecial">:</span>
+    <span class="synIdentifier">name</span><span class="synSpecial">:</span> LAMS LookML Linter
+    <span class="synIdentifier">runs-on</span><span class="synSpecial">:</span> ubuntu-latest
+    <span class="synIdentifier">steps</span><span class="synSpecial">:</span>
+    <span class="synStatement">- </span><span class="synIdentifier">uses</span><span class="synSpecial">:</span> actions/checkout@v3
+    <span class="synStatement">- </span><span class="synIdentifier">uses</span><span class="synSpecial">:</span> actions/setup-node@v3
+      <span class="synIdentifier">with</span><span class="synSpecial">:</span>
+        <span class="synIdentifier">node-version</span><span class="synSpecial">:</span> <span class="synConstant">'16'</span><span class="synComment"> # Use LTS https://nodejs.org/en/</span>
+    <span class="synStatement">- </span><span class="synIdentifier">name</span><span class="synSpecial">:</span> Install LAMS
+      <span class="synIdentifier">run</span><span class="synSpecial">:</span> npm install -g @looker/look-at-me-sideways@2
+    <span class="synStatement">- </span><span class="synIdentifier">name</span><span class="synSpecial">:</span> Run LAMS
+      <span class="synIdentifier">env</span><span class="synSpecial">:</span>
+        <span class="synIdentifier">LOOKER_LICENSE_KEY</span><span class="synSpecial">:</span> ${{ secrets.LOOKER_LICENSE_KEY }}
+      <span class="synIdentifier">run</span><span class="synSpecial">:</span> make lams
+</pre>
+
+
+<p><strong>Makefile</strong> <sup id="fnref:1"><a href="#fn:1" rel="footnote">1</a></sup></p>
+
+<pre class="code makefile" data-lang="makefile" data-unlink>LAMS := lams
+LOOKER_LICENSE_KEY := ${LOOKER_LICENSE_KEY}
+REPORT_USER := feedmatic_report@example.com
+SOURCE := **/{*.model,*.explore,*.view,*.layer,manifest}.lkml
+
+.PHONY: lams
+lams:
+    @$(LAMS) --reporting=yes --report-license-key=$(LOOKER_LICENSE_KEY) --report-user=$(REPORT_USER) --source=&#39;$(SOURCE)&#39;</pre>
+
+
+<h2 id="ルールの免除">ルールの免除</h2>
+
+<p>manifest.lkml にこのように書くと、プロジェクト全体で任意のルールを免除することが出来ます。</p>
+
+<pre class="code" data-lang="" data-unlink># LAMS
+# rule_exemptions: {
+#  F2: &#34;Any explanatory message you would like&#34;
+#  F3: &#34;Another explanatory message for a different rule&#34;
+# }</pre>
+
+
+<p>dimension, measure, derived_table 単位でも免除することが出来ます。基本はこちらで免除し、無理そうなら manifest.lkml で免除すると良いでしょう。</p>
+
+<p>初めから全てのルールをパスすることは少ないと思うので、必要に応じて免除すると良いでしょう。また、LAMS はあくまでスタイルガイドなので、必ずしも全てのルールに対応する必要はありません。</p>
+
+<h2 id="LookML-の再利用性を高められた-F1-ルール">LookML の再利用性を高められた F1 ルール</h2>
+
+<p>32 個のルールのうち、今回は個人的に一番意義というか、感心した <a href="https://looker-open-source.github.io/look-at-me-sideways/rules.html#f1">F1</a> ルールを紹介します。</p>
+
+<p>例えば orders.view から users.view の <code>count</code> measure を参照する、以下のような LookML があったとします。</p>
+
+<p>LookML 書き始めの頃はこのように書きがちかと思いますが、F1 ルールでは NG です。orders.view が users.view に依存してしまうことで、orders.view の再利用がし辛くなるからです。そもそもこのケースでは LookML validation もエラーになるはずです。<sup id="fnref:2"><a href="#fn:2" rel="footnote">2</a></sup></p>
+
+<pre class="code" data-lang="" data-unlink>view: users {...}
+
+view: orders {
+  ...
+  measure: orders_per_user {
+    sql: ${count} / NULLIF(${users.count},0)
+  }
+}
+
+explore: orders {} # Errors :(
+
+explore: users {
+  join: orders {...}
+}</pre>
+
+
+<p>解決方法がこちらです。まず、依存フィールドだけを抽出した users_orders.view を作ります。この view では sql_table_name や derived_table を設定しません。</p>
+
+<pre class="code" data-lang="" data-unlink>view: users {...}
+view: orders {...}
+
+view: users_orders {
+  # No need for a sql_table_name or derived_table
+  measure: orders_per_user {
+    sql: ${orders.count} / NULLIF(${users.count},0)
+  }
+}</pre>
+
+
+<p>こうすることで少なくとも orders.explore は users.view に依存しないクリーンな LookML になりました。</p>
+
+<pre class="code" data-lang="" data-unlink>explore: orders {} # Doesn&#39;t break like before!</pre>
+
+
+<p>次に users.explore で魔法を使います。users.view と users_orders.view の Join で通常指定するはずの <code>sql_on ... ;;</code> の代わりに、空の SQL <code>sql: ;;</code> を指定します。</p>
+
+<pre class="code" data-lang="" data-unlink>explore: users {
+  join: orders {...}
+  join: users_orders {
+    sql: ;;
+    # Use `sql` instead of `sql_on` and put some whitespace in it
+    relationship: one_to_one
+    view_label: &#34;Orders&#34; # For cleaner explore UI
+  }
+}</pre>
+
+
+<p>え？と思うかもしれませんが、これは妥当な LookML です。</p>
+
+<p>Users explore が生成する SQL を確認すると分かりますが、<code>orders_per_user</code> measure を選択しても Join 句は増えません。しかしこの measure が参照するテーブルは既存の users と orders だけなので、構文エラーになりません。</p>
+
+<p>初見での理解は難しくなりますが、orders.view の再利用性が高まるのは大きなメリットです。</p>
+
+<h2 id="注意事項">注意事項</h2>
+
+<p><a href="https://looker-open-source.github.io/look-at-me-sideways/rules.html#k1">K1</a> と <a href="https://looker-open-source.github.io/look-at-me-sideways/rules.html#k2">K2</a> のように、一部のルールには依存関係があり、一方を免除するためには両方免除する必要があります。</p>
+
+<p>あと、まだ <a href="https://docs.looker.com/ja/data-modeling/learning-lookml/refinements">Refinements</a> に対応していません。Issue <a href="https://github.com/looker-open-source/look-at-me-sideways/issues/46">#46</a> によると、<a href="https://github.com/fabio-looker/node-lookml-parser">パーサー</a>側は対応したそうで、あとは LAMS 本体の対応するだけだそうです。</p>
+
+<h2 id="まとめ">まとめ</h2>
+
+<p>LookML の Linter である LAMS を紹介しました。うまく使うことで、再利用性やメンテナンス性の高い LookML を書くことが出来るかもしれません。</p>
+
+<p>それでは良い Looker ライフを！(^^)/</p>
+<div class="footnotes">
+<hr/>
+<ol>
+<li id="fn:1">
+<p>Makefile を作ったのは、ローカルで実行しやすくするためです。<a href="#fnref:1" rev="footnote">&#8617;</a></p></li>
+<li id="fn:2">
+<p><a href="https://help.looker.com/hc/en-us/articles/360023586293-Error-Unknown-or-Inaccessible-Field">F1 ルールに従わずにエラーを回避する方法はあります。</a><a href="#fnref:2" rev="footnote">&#8617;</a></p></li>
+</ol>
+</div>
+
+]]></summary>
+    </entry>
     <entry>
         <title type="html"><![CDATA[Looker で困った時の解決手段まとめ]]></title>
         <id>https://developer.feedforce.jp/entry/2022/06/17/110000</id>
