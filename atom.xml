@@ -2,7 +2,7 @@
 <feed xmlns="http://www.w3.org/2005/Atom">
     <id>https://engineers.feedforce.jp</id>
     <title>Feedforce Engineers' Blogs</title>
-    <updated>2022-06-22T01:33:52.540Z</updated>
+    <updated>2022-06-23T01:36:52.236Z</updated>
     <generator>https://github.com/jpmonette/feed</generator>
     <link rel="alternate" href="https://engineers.feedforce.jp"/>
     <subtitle>フィードフォースグループに所属するエンジニアのブログ記事をまとめています。</subtitle>
@@ -172,7 +172,7 @@ view: users_orders {
 
 <p><a href="https://looker-open-source.github.io/look-at-me-sideways/rules.html#k1">K1</a> と <a href="https://looker-open-source.github.io/look-at-me-sideways/rules.html#k2">K2</a> のように、一部のルールには依存関係があり、一方を免除するためには両方免除する必要があります。</p>
 
-<p>あと、まだ <a href="https://docs.looker.com/ja/data-modeling/learning-lookml/refinements">Refinements</a> に対応していません。Issue <a href="https://github.com/looker-open-source/look-at-me-sideways/issues/46">#46</a> によると、<a href="https://github.com/fabio-looker/node-lookml-parser">パーサー</a>側は対応したそうで、あとは LAMS 本体の対応するだけだそうです。</p>
+<p>あと、まだ <a href="https://docs.looker.com/reference/view-params/extension-for-view">Extension</a> と <a href="https://docs.looker.com/ja/data-modeling/learning-lookml/refinements">Refinements</a> に対応していません。Issue <a href="https://github.com/looker-open-source/look-at-me-sideways/issues/46">#46</a> によると、<a href="https://github.com/fabio-looker/node-lookml-parser">パーサー</a>側は対応したそうで、あとは LAMS 本体を対応するだけだそうです。割と致命的な課題...。</p>
 
 <h2 id="まとめ">まとめ</h2>
 
