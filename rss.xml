@@ -4,7 +4,7 @@
         <title>Feedforce Engineers' Blogs</title>
         <link>https://engineers.feedforce.jp</link>
         <description>フィードフォースグループに所属するエンジニアのブログ記事をまとめています。</description>
-        <lastBuildDate>Thu, 30 Jun 2022 01:34:43 GMT</lastBuildDate>
+        <lastBuildDate>Fri, 01 Jul 2022 01:35:03 GMT</lastBuildDate>
         <docs>https://validator.w3.org/feed/docs/rss2.html</docs>
         <generator>https://github.com/jpmonette/feed</generator>
         <image>
@@ -326,6 +326,7 @@ view: users_orders {
     <li><a href="#include-を最適化したら半分弱の時間になった">include を最適化したら半分弱の時間になった</a></li>
     <li><a href="#まとめ">まとめ</a></li>
     <li><a href="#余談">余談</a></li>
+    <li><a href="#追記-LAMS-を使って-wildcard-include-を禁止する">追記: LAMS を使って wildcard include を禁止する</a></li>
 </ul>
 
 <h2 id="2-年間でコード量が肥大化した">2 年間でコード量が肥大化した</h2>
@@ -479,6 +480,29 @@ include: &#34;/views/view5.view&#34;</pre>
 <p>Validation が終わる時間くらいまで待つと 2 回クリックしなくて良いみたいです。🙄</p>
 
 <p><img src="https://user-images.githubusercontent.com/170014/170627672-f1bf212b-ab73-48f3-9feb-4e8f751984b6.gif" alt="looker2" /></p>
+
+<h2 id="追記-LAMS-を使って-wildcard-include-を禁止する">追記: LAMS を使って wildcard include を禁止する</h2>
+
+<p>LookML の Linter として LAMS というものがあります。</p>
+
+<p><iframe src="https://hatenablog-parts.com/embed?url=https%3A%2F%2Fdeveloper.feedforce.jp%2Fentry%2F2022%2F06%2F21%2F130000" title="LAMS を導入して、LookML の再利用性を高められた - Feedforce Developer Blog" class="embed-card embed-blogcard" scrolling="no" frameborder="0" style="display: block; width: 100%; height: 190px; max-width: 500px; margin: 10px 0px;"></iframe><cite class="hatena-citation"><a href="https://developer.feedforce.jp/entry/2022/06/21/130000">developer.feedforce.jp</a></cite></p>
+
+<p>このカスタムルールを定義することで、今回のようなワイルドカード付きの <code>include</code> を禁止することが出来ます。</p>
+
+<p>manifest.lkml にこのように書くだけです。</p>
+
+<pre class="code" data-lang="" data-unlink># LAMS
+# rule: NO_WINC {
+#  description: &#34;Prohibit wildcard include to avoid increasing LookML verification time&#34;
+#  match: &#34;$.files.*.include.*&#34;
+#  expr_rule: ($let file_path ($get ::project files ::path:2 $file_path))
+#             ($if ($match &#34;\\*&#34; ::match)
+#                 ($concat &#34;Found wildcard include &#39;&#34; ::match &#34;&#39; in &#34; ::file_path &#34;&#34;)
+#               true) ;;
+# }</pre>
+
+
+<p><a href="https://looker-open-source.github.io/look-at-me-sideways/customizing-lams">Customizing LAMS</a> にさらりと書いてありますが、指摘されたファイル名を出す方法が分からなかったので、Issue <a href="https://github.com/looker-open-source/look-at-me-sideways/issues/95">#95</a> で質問したら分かりました。これは分からない。💦</p>
 <div class="footnotes">
 <hr/>
 <ol>
