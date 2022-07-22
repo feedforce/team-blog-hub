@@ -2,12 +2,56 @@
 <feed xmlns="http://www.w3.org/2005/Atom">
     <id>https://engineers.feedforce.jp</id>
     <title>Feedforce Engineers' Blogs</title>
-    <updated>2022-07-21T01:35:16.327Z</updated>
+    <updated>2022-07-22T01:33:29.741Z</updated>
     <generator>https://github.com/jpmonette/feed</generator>
     <link rel="alternate" href="https://engineers.feedforce.jp"/>
     <subtitle>フィードフォースグループに所属するエンジニアのブログ記事をまとめています。</subtitle>
     <logo>https://engineers.feedforce.jp/logo.png</logo>
     <rights>© Feedforce Inc.</rights>
+    <entry>
+        <title type="html"><![CDATA[Looker User Meetup Online #8 で『BigQuery経由で使うGoogleスプレッドシートのスキーマ管理』の話をした]]></title>
+        <id>https://developer.feedforce.jp/entry/2022/07/21/210000</id>
+        <link href="https://developer.feedforce.jp/entry/2022/07/21/210000"/>
+        <updated>2022-07-21T12:00:00.000Z</updated>
+        <summary type="html"><![CDATA[<p>こんばんは <a href="http://blog.hatena.ne.jp/masutaka26/" class="hatena-id-icon"><img src="https://cdn.profile-image.st-hatena.com/users/masutaka26/profile.png" width="16" height="16" alt="" class="hatena-id-icon">id:masutaka26</a> です。</p>
+
+<p>本日、<a href="https://looker-japan-user-group.connpass.com/event/253923/">Looker User Meetup Online #8</a> で『BigQuery経由で使うGoogleスプレッドシートのスキーマ管理』の話をしてきました。Looker User Meetup は 5 回目の参加、発表は初めてです。</p>
+
+<iframe src="https://docs.google.com/presentation/d/e/2PACX-1vTlQkD3R2OS415gr51ieTs1pyy3cK0ck8By1PYJ8SZtrFDjWyLP1eD_s7Q4UDH_yvmTDNdHFpZQf0IU/embed?start=false&loop=false&delayms=3000" frameborder="0" width="960" height="410" allowfullscreen="true" mozallowfullscreen="true" webkitallowfullscreen="true"></iframe>
+
+
+<p>いくつかネタはあったのですが、今回のテーマは「Lookerまでのデータデリバリー、みんなどうしてる？」ということもあり、この 2 年で確立した方法を紹介することとなりました。</p>
+
+<p>bq CLI ではなく、terraform で管理している方もいらっしゃいました。terraform の更新に追随するのはそれなりに大変だと思いますが、これならスキーマ定義と、実際のスキーマの差異検知は出来そうですね。</p>
+
+<p>「dbt seed」を使っている方もいらっしゃるようでした。今回 2 つの発表があった dbt ですが、全く触ったことがありません。😇</p>
+
+<p>あと、P24 で「BigQueryは一番左のシートしか参照できない」と書きましたが、誤りでした。範囲にでシート名も指定すれば出来ることを確認しました。P10 で華麗に「シート範囲」を無視してますね。💦</p>
+
+<p><a href="https://gist.github.com/masutaka/142ca20b802401d12012fe952f2ea1f3">P18 の Gist</a> との差分は以下になります。</p>
+
+<pre class="code lang-diff" data-lang="diff" data-unlink><span class="synType">diff --git a/define.json b/define.json</span>
+<span class="synPreProc">index 9429e16..11d391c 100644</span>
+<span class="synType">--- a/define.json</span>
+<span class="synType">+++ b/define.json</span>
+<span class="synStatement">@@ -1,7 +1,8 @@</span>
+ {
+   &quot;autodetect&quot;: false,
+   &quot;googleSheetsOptions&quot;: {
+<span class="synSpecial">-    &quot;skipLeadingRows&quot;: 1</span>
+<span class="synIdentifier">+    &quot;skipLeadingRows&quot;: 1,</span>
+<span class="synIdentifier">+    &quot;range&quot;: &quot;マスターデータ!A:E&quot;</span>
+   },
+   &quot;ignoreUnknownValues&quot;: false,
+   &quot;maxBadRecords&quot;: 0,
+</pre>
+
+
+<p>一人開発の弊害ではありますが、こうやってアウトプットすることでこそ得られるフィードバックとも言えます。ある意味期待通りです。😄</p>
+
+<p>次回以降も需要があれば発表したいと思います。</p>
+]]></summary>
+    </entry>
     <entry>
         <title type="html"><![CDATA[LAMS を導入して、LookML の再利用性を高められた]]></title>
         <id>https://developer.feedforce.jp/entry/2022/06/21/130000</id>
@@ -5268,43 +5312,6 @@ disapp_disapp.to_csv(dirname+<span class="synConstant">'disapp_disapp.csv'</span
 <p><iframe src="https://hatenablog-parts.com/embed?url=https%3A%2F%2Fdeveloper.feedforce.jp%2Fentry%2F2021%2F03%2F02%2F172959" title="データ指向アプリケーションデザイン 第二章 旅行記 - Feedforce Developer Blog" class="embed-card embed-blogcard" scrolling="no" frameborder="0" style="display: block; width: 100%; height: 190px; max-width: 500px; margin: 10px 0px;"></iframe><cite class="hatena-citation"><a href="https://developer.feedforce.jp/entry/2021/03/02/172959">developer.feedforce.jp</a></cite></p>
 
 <p>それでは、みなさま、良い旅を！</p>
-]]></summary>
-    </entry>
-    <entry>
-        <title type="html"><![CDATA[データ指向アプリケーションデザイン 第二章 旅行記]]></title>
-        <id>https://developer.feedforce.jp/entry/2021/03/02/172959</id>
-        <link href="https://developer.feedforce.jp/entry/2021/03/02/172959"/>
-        <updated>2021-03-02T08:29:59.000Z</updated>
-        <summary type="html"><![CDATA[<p>こんにちは！
-<a href="http://blog.hatena.ne.jp/kano-e/" class="hatena-id-icon"><img src="https://cdn.profile-image.st-hatena.com/users/kano-e/profile.png" width="16" height="16" alt="" class="hatena-id-icon">id:kano-e</a> です。</p>
-
-<p>今日は『データ指向アプリケーションデザイン』という本の読書記録を公開しにきました。</p>
-
-<p>こちらの本、章毎にその章を象徴するような地図が挿絵として挿入されています。<br />
-地図が描かれている本て良いですよね。主人公たちの物語が進む旅に、地図を眺めに戻って「今この辺りかな」なんて思いを馳せたりするのが楽しくて、好きです。</p>
-
-<p>というわけで、この『データ指向アプリケーションデザイン』でも、そのように「今はこの地図のこの辺りだなあ」なんて思いながら読み進めていました。</p>
-
-<p>その読書記録、あるいは旅の記録が以下の画像です。</p>
-
-<p><figure class="figure-image figure-image-fotolife" title="データ指向アプリケーションデザイン 第二章 旅行記"><span itemscope itemtype="http://schema.org/Photograph"><img src="https://cdn-ak.f.st-hatena.com/images/fotolife/k/kano-e/20191210/20191210215742.jpg" alt="f:id:kano-e:20191210215742j:plain" title="" class="hatena-fotolife" itemprop="image"></span><figcaption>データ指向アプリケーションデザイン 第二章 旅行記</figcaption></figure></p>
-
-<p>第二章の章題は「データモデルとクエリ言語」。<br />
-様々なデータモデルを俯瞰して眺めるような旅になりました。</p>
-
-<p><div class="hatena-asin-detail"><a href="https://www.amazon.co.jp/exec/obidos/ASIN/4873118700/hatena-blog-22/"><img src="https://m.media-amazon.com/images/I/51T+k4VRzpL.jpg" class="hatena-asin-detail-image" alt="データ指向アプリケーションデザイン ―信頼性、拡張性、保守性の高い分散システム設計の原理" title="データ指向アプリケーションデザイン ―信頼性、拡張性、保守性の高い分散システム設計の原理"></a><div class="hatena-asin-detail-info"><p class="hatena-asin-detail-title"><a href="https://www.amazon.co.jp/exec/obidos/ASIN/4873118700/hatena-blog-22/">データ指向アプリケーションデザイン ―信頼性、拡張性、保守性の高い分散システム設計の原理</a></p><ul><li><span class="hatena-asin-detail-label">作者:</span><a href="http://d.hatena.ne.jp/keyword/Martin%20Kleppmann" class="keyword">Martin Kleppmann</a></li><li><span class="hatena-asin-detail-label">発売日:</span> 2019/07/18</li><li><span class="hatena-asin-detail-label">メディア:</span> 単行本（ソフトカバー）</li></ul></div><div class="hatena-asin-detail-foot"></div></div></p>
-
-<p>アプリケーションは常に変化し続けます。その中で、どのようにデータというものと向き合ってゆくのか。そんな内容が書かれている面白い本です。<br />
-ぜひ一緒にこの本を旅しましょう。</p>
-
-<p>旅の記録を書きとめるのに使ったホワイトボードはこちら。</p>
-
-<p><div class="hatena-asin-detail"><a href="https://www.amazon.co.jp/exec/obidos/ASIN/B00V47UVK2/hatena-blog-22/"><img src="https://m.media-amazon.com/images/I/41AGC8LpKML.jpg" class="hatena-asin-detail-image" alt="nu board (ヌーボード) A4判 NGA403FN08" title="nu board (ヌーボード) A4判 NGA403FN08"></a><div class="hatena-asin-detail-info"><p class="hatena-asin-detail-title"><a href="https://www.amazon.co.jp/exec/obidos/ASIN/B00V47UVK2/hatena-blog-22/">nu board (ヌーボード) A4判 NGA403FN08</a></p><ul><li><span class="hatena-asin-detail-label">発売日:</span> 2015/04/01</li><li><span class="hatena-asin-detail-label">メディア:</span> オフィス用品</li></ul></div><div class="hatena-asin-detail-foot"></div></div></p>
-
-<p>このタイプの nu board には透明シートがあるので、そのシートの下に地図のコピーを置いて、文字や旅路を辿った線は透明シートの上に書いています。<br />
-大きくてのびのび書き込めて便利です。</p>
-
-<p>それではみなさん、良い旅を！</p>
 ]]></summary>
     </entry>
     <entry>
