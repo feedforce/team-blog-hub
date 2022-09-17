@@ -4,7 +4,7 @@
         <title>Feedforce Engineers' Blogs</title>
         <link>https://engineers.feedforce.jp</link>
         <description>フィードフォースグループに所属するエンジニアのブログ記事をまとめています。</description>
-        <lastBuildDate>Fri, 16 Sep 2022 01:36:39 GMT</lastBuildDate>
+        <lastBuildDate>Sat, 17 Sep 2022 01:33:33 GMT</lastBuildDate>
         <docs>https://validator.w3.org/feed/docs/rss2.html</docs>
         <generator>https://github.com/jpmonette/feed</generator>
         <image>
@@ -13,6 +13,268 @@
             <link>https://engineers.feedforce.jp</link>
         </image>
         <copyright>© Feedforce Inc.</copyright>
+        <item>
+            <title><![CDATA[OSS 版 Spectacles を使って、LookML の data tests や validation などを GitHub Actions で継続的に実行させてみた]]></title>
+            <link>https://developer.feedforce.jp/entry/2022/09/16/130000</link>
+            <guid>https://developer.feedforce.jp/entry/2022/09/16/130000</guid>
+            <pubDate>Fri, 16 Sep 2022 04:00:00 GMT</pubDate>
+            <description><![CDATA[<p>こんにちは。<a href="https://twitter.com/masutaka/status/1550357627779284992">自称 Looker エバンジェリスト</a>の <a href="http://blog.hatena.ne.jp/masutaka26/" class="hatena-id-icon"><img src="https://cdn.profile-image.st-hatena.com/users/masutaka26/profile.png" width="16" height="16" alt="" class="hatena-id-icon">id:masutaka26</a> です。</p>
+
+<p>今日は Spectacles というツールを導入して、Looker インスタンスの健全性を高められた話を紹介します。</p>
+
+<ul class="table-of-contents">
+    <li><a href="#Spectacles-とは">Spectacles とは</a><ul>
+            <li><a href="#4-種類のテスト">4 種類のテスト</a></li>
+            <li><a href="#基本的な振る舞い">基本的な振る舞い</a></li>
+        </ul>
+    </li>
+    <li><a href="#どのテストを採用しどのような課題を解決したのか">どのテストを採用し、どのような課題を解決したのか</a><ul>
+            <li><a href="#SQL-validation">SQL validation</a></li>
+            <li><a href="#Assert-validation">Assert validation</a></li>
+            <li><a href="#Content-validation">Content validation</a></li>
+            <li><a href="#LookML-validation">LookML validation</a></li>
+        </ul>
+    </li>
+    <li><a href="#どのような-GitHub-Actions-にしたのか">どのような GitHub Actions にしたのか</a><ul>
+            <li><a href="#CI-workflow">CI workflow</a></li>
+            <li><a href="#Schedule-workflow">Schedule workflow</a></li>
+        </ul>
+    </li>
+    <li><a href="#落ち穂拾い">落ち穂拾い</a><ul>
+            <li><a href="#作業ブランチのゴミが残ることがある">作業ブランチのゴミが残ることがある</a></li>
+            <li><a href="#マシンユーザーを作るか作らないか">マシンユーザーを作るか作らないか</a></li>
+        </ul>
+    </li>
+    <li><a href="#まとめ">まとめ</a></li>
+</ul>
+
+<h2 id="Spectacles-とは">Spectacles とは</h2>
+
+<p>Spectacles は Looker のサードパーティ CI ツールです。継続的に各種テストを実行し、Looker インスタンスを健全に保つことが出来ます。</p>
+
+<p><a href="https://www.spectacles.dev/">クラウド版</a>と OSS 版があり、それぞれ過去にクラスメソッドや、Zenn の記事で紹介されたことがあります。</p>
+
+<ul>
+<li><a href="https://dev.classmethod.jp/articles/spectacles-looker-validation/">SpectaclesでLooker（LookML）のテストをやってみた | DevelopersIO</a></li>
+<li><a href="https://zenn.dev/skryo/articles/4f060327da2bf6">LookerのCIツールであるSpectaclesを導入した話</a></li>
+</ul>
+
+
+<p>今回は OSS 版を使いました。</p>
+
+<p><iframe src="https://hatenablog-parts.com/embed?url=https%3A%2F%2Fgithub.com%2Fspectacles-ci%2Fspectacles" title="GitHub - spectacles-ci/spectacles: A continuous integration tool for Looker and LookML." class="embed-card embed-webcard" scrolling="no" frameborder="0" style="display: block; width: 100%; height: 155px; max-width: 500px; margin: 10px 0px;" loading="lazy"></iframe><cite class="hatena-citation"><a href="https://github.com/spectacles-ci/spectacles">github.com</a></cite></p>
+
+<h3 id="4-種類のテスト">4 種類のテスト</h3>
+
+<p>2022 年 9 月時点で 4 種類のテストが実装されています。</p>
+
+<ul>
+<li><a href="https://docs.spectacles.dev/cli/tutorials/validators#the-sql-validator">SQL validation</a>
+
+<ul>
+<li>全ての Dimension の <a href="https://cloud.google.com/looker/docs/reference/param-field-sql">sql</a> パラメーターについて、実際にクエリを実行し、その有効性を検証する</li>
+<li>data warehouse のリソースを過剰に使わないよう工夫されている。例えば BigQuery の料金は発生しない<sup id="fnref:1"><a href="#fn:1" rel="footnote">1</a></sup></li>
+</ul>
+</li>
+<li><a href="https://docs.spectacles.dev/cli/tutorials/validators#the-assert-validator">Assert validation</a>
+
+<ul>
+<li>LookML IDE 上でも実行できる LookML data tests を実行する</li>
+</ul>
+</li>
+<li><a href="https://docs.spectacles.dev/cli/tutorials/validators#the-content-validator">Content validation</a>
+
+<ul>
+<li>開発メニューの Content Validator 相当の検証を行い、エラーのある Dashboard や Look を特定する</li>
+</ul>
+</li>
+<li><a href="https://docs.spectacles.dev/cli/tutorials/validators/#the-lookml-validator">LookML validation</a>
+
+<ul>
+<li>LookML IDE 上でも実行できる LookML validation を実行する</li>
+</ul>
+</li>
+</ul>
+
+
+<h3 id="基本的な振る舞い">基本的な振る舞い</h3>
+
+<p>Spectacles は Looker API を使用し、指定した Looker インスタンス上で、LookML data tests や validation などを実行します。</p>
+
+<pre class="code" data-lang="" data-unlink>Spectacles -(Looker API)-&gt; Your Looker Instance</pre>
+
+
+<p>いわゆるユニットテストでは、テスト環境でソースコードを checkout し、そこでテストを実行しますが、Spectacles はその点は全く違います。</p>
+
+<p>つまり GitHub Actions 等の CI で動かす場合、LookML コードの checkout は不要ということです。</p>
+
+<h2 id="どのテストを採用しどのような課題を解決したのか">どのテストを採用し、どのような課題を解決したのか</h2>
+
+<h3 id="SQL-validation">SQL validation</h3>
+
+<p>いきなりですが、こちらは今回採用出来ませんでした。</p>
+
+<p>我々の環境で全ての Explore をテスト対象にすると、かなりの数のテストが失敗します。<code>hidden: yes</code> な Dimension がおそらく全てです。想定内です。</p>
+
+<pre class="code" data-lang="" data-unlink>$ spectacles sql --project my_project_name --profile -v</pre>
+
+
+<p>それならばと、<code>--ignore-hidden</code> オプションを付けると、今度はこんなエラーが発生します。どうやら 1 つも Dimension が表示されない Explore があるようです。こちらも想定内です。</p>
+
+<pre class="code" data-lang="" data-unlink>Explore object is missing dimensions, meaning this query won&#39;t have fields and will error. Often this happens because you didn&#39;t include dimensions when you built the project.</pre>
+
+
+<p><code>--explore</code> オプションでエラーが発生しない Explore を指定すればよいのですが、Explore が 150 個以上ある関係で、切り分けができていません。</p>
+
+<p>sql パラメーターは壊れていても、実際に Explore で当該 Dimension が使われないとエラーにならないのと、そのエラーが報告されるとも限らないので、いずれは再挑戦したいです。</p>
+
+<h3 id="Assert-validation">Assert validation</h3>
+
+<p>我々の Looker インスタンスでは、BigQuery の外部テーブルに Google スプレッドシートを指定したテーブルを数多く参照しています。つまり人間が編集するデータです。このようなデータはオペミスにより壊れることがあり、primary_key も芋づる式に壊れることがあります。</p>
+
+<p>primary_key はほぼ全てテストを書いています<sup id="fnref:2"><a href="#fn:2" rel="footnote">2</a></sup>が、約 250 個と数が多いです。一方で LookML IDE 上での data tests は同時実行数が 1 に制限されているようで、テストに 10 分以上かかります。commit 前のテストを必須にできない状態でした。そのため、時々テストを手動実行しないと、壊れたことに気づけない課題がありました。</p>
+
+<p>以上の課題を解決するために、定期的に LookML data tests を実行し、手動実行せずに気付けるようになりました。</p>
+
+<h3 id="Content-validation">Content validation</h3>
+
+<p>今までは私の注意力で Dashboard 約 140 個と Look 約 30 個のエラー数ゼロを継続できていましたが、まさに属人的でした。</p>
+
+<p>これも定期的に実行し、Content Validator を手動実行することなく気付けるようになりました。</p>
+
+<h3 id="LookML-validation">LookML validation</h3>
+
+<p>時々 LookML IDE を介さず、ローカル環境で git commit してデプロイすることがあります。そのケースで大きな変更をすることはないものの、validation が通らない LookML がデプロイされる確率はゼロではありません。</p>
+
+<p>こちらは git push のタイミングで実行することで、健全性を高めることが出来ました。</p>
+
+<h2 id="どのような-GitHub-Actions-にしたのか">どのような GitHub Actions にしたのか</h2>
+
+<p>git push のタイミングで実行する CI workflow と、定期的に実行する Schedule workflow を作りました。</p>
+
+<h3 id="CI-workflow">CI workflow</h3>
+
+<p>git push のたびに、当該 commit のブランチに対して、LookML validation のテストをしています<sup id="fnref:3"><a href="#fn:3" rel="footnote">3</a></sup>。</p>
+
+<pre class="code lang-yaml" data-lang="yaml" data-unlink><span class="synIdentifier">name</span><span class="synSpecial">:</span> CI
+
+<span class="synIdentifier">on</span><span class="synSpecial">:</span>
+  <span class="synIdentifier">push</span><span class="synSpecial">:</span>
+    <span class="synIdentifier">branches-ignore</span><span class="synSpecial">:</span><span class="synComment"> # ①</span>
+      <span class="synStatement">- </span><span class="synConstant">'dev-**'</span>           <span class="synComment"> # LookML IDE の個人用開発ブランチ</span>
+      <span class="synStatement">- </span><span class="synConstant">'tmp_spectacles_**'</span><span class="synComment"> # spectacles の --commit-ref オプションが作るブランチ</span>
+
+<span class="synIdentifier">jobs</span><span class="synSpecial">:</span>
+  <span class="synIdentifier">validate_lookml</span><span class="synSpecial">:</span>
+    <span class="synIdentifier">name</span><span class="synSpecial">:</span> Validate LookML files
+    <span class="synIdentifier">runs-on</span><span class="synSpecial">:</span> ubuntu-latest
+    <span class="synIdentifier">timeout-minutes</span><span class="synSpecial">:</span> <span class="synConstant">5</span><span class="synComment"> # デフォルトは 360 分。料金のスパイクを防ぐ</span>
+    <span class="synIdentifier">concurrency</span><span class="synSpecial">:</span><span class="synComment"> # ② spectacles が複数同時に実行しないようにする</span>
+      spectacles_should_be_run_in_series
+    <span class="synIdentifier">steps</span><span class="synSpecial">:</span>
+    <span class="synStatement">- </span><span class="synIdentifier">uses</span><span class="synSpecial">:</span> actions/setup-python@v4
+      <span class="synIdentifier">with</span><span class="synSpecial">:</span>
+        <span class="synIdentifier">python-version</span><span class="synSpecial">:</span> <span class="synConstant">'3.x'</span>
+    <span class="synStatement">- </span><span class="synIdentifier">name</span><span class="synSpecial">:</span> Install Spectacles
+      <span class="synIdentifier">run</span><span class="synSpecial">:</span> pip install spectacles
+    <span class="synStatement">- </span><span class="synIdentifier">name</span><span class="synSpecial">:</span> Run LookML Validator
+      <span class="synIdentifier">env</span><span class="synSpecial">:</span>
+        <span class="synIdentifier">LOOKER_BASE_URL</span><span class="synSpecial">:</span> <span class="synConstant">&quot;https://my_instance_name.looker.com&quot;</span>
+        <span class="synIdentifier">LOOKER_CLIENT_ID</span><span class="synSpecial">:</span> ${{ secrets.SPECTACLES_LOOKER_CLIENT_ID }}<span class="synComment"> # ③</span>
+        <span class="synIdentifier">LOOKER_CLIENT_SECRET</span><span class="synSpecial">:</span> ${{ secrets.SPECTACLES_LOOKER_CLIENT_SECRET }}<span class="synComment"> # ③</span>
+      <span class="synIdentifier">run</span><span class="synSpecial">:</span> spectacles lookml --project my_project_name --commit-ref <span class="synConstant">&quot;$GITHUB_SHA&quot;</span> -v
+</pre>
+
+
+<p>①で特定のブランチを除外しています。特に今回のケースでは、<code>tmp_spectacles_**</code> を設定しないと <code>validate_lookml</code> ジョブが無限に起動し続けるため、絶対に必要です。</p>
+
+<p>②も結構重要で、CI workflow と次に示す Schedule workflow から起動される spectacles プロセスの同時実行数を 1 に制限しています。</p>
+
+<p>Spectacles は③と紐づく Looker ユーザーが実際に開発モードで <code>tmp_spectacles_**</code> というブランチを作り、切り替えます。Looker では 1 人のユーザーが同時に利用できるブランチは 1 つだけです。Spectacles の複数起動は問題が発生するため、今回の制限を設定しました。<a href="https://docs.spectacles.dev/cli/guides/how-to-deploy-spectacles/">公式ドキュメント</a>でも言及されています。</p>
+
+<h3 id="Schedule-workflow">Schedule workflow</h3>
+
+<p>早朝と夕方に master（デフォルト）ブランチ上で、Content validation と LookML data tests を実行しています。</p>
+
+<pre class="code lang-yaml" data-lang="yaml" data-unlink><span class="synIdentifier">name</span><span class="synSpecial">:</span> Schedule
+
+<span class="synIdentifier">on</span><span class="synSpecial">:</span>
+  <span class="synIdentifier">schedule</span><span class="synSpecial">:</span>
+    <span class="synStatement">- </span><span class="synIdentifier">cron</span><span class="synSpecial">:</span> <span class="synConstant">&quot;00 21 * * 0-4&quot;</span><span class="synComment"> # 平日の  6:00 JST</span>
+    <span class="synStatement">- </span><span class="synIdentifier">cron</span><span class="synSpecial">:</span> <span class="synConstant">&quot;30  7 * * 1-5&quot;</span><span class="synComment"> # 平日の 16:30 JST</span>
+
+<span class="synIdentifier">jobs</span><span class="synSpecial">:</span>
+  <span class="synIdentifier">schedule</span><span class="synSpecial">:</span>
+    <span class="synIdentifier">name</span><span class="synSpecial">:</span> Scheduled job
+    <span class="synIdentifier">runs-on</span><span class="synSpecial">:</span> ubuntu-latest
+    <span class="synIdentifier">timeout-minutes</span><span class="synSpecial">:</span> <span class="synConstant">30</span><span class="synComment"> # デフォルトは 360 分。料金のスパイクを防ぐ</span>
+    <span class="synIdentifier">concurrency</span><span class="synSpecial">:</span><span class="synComment"> # ① spectacles が複数同時に実行しないようにする</span>
+      spectacles_should_be_run_in_series
+    <span class="synIdentifier">env</span><span class="synSpecial">:</span>
+      <span class="synIdentifier">LOOKER_BASE_URL</span><span class="synSpecial">:</span> <span class="synConstant">&quot;https://my_instance_name.looker.com&quot;</span>
+      <span class="synIdentifier">LOOKER_CLIENT_ID</span><span class="synSpecial">:</span> ${{ secrets.SPECTACLES_LOOKER_CLIENT_ID }}
+      <span class="synIdentifier">LOOKER_CLIENT_SECRET</span><span class="synSpecial">:</span> ${{ secrets.SPECTACLES_LOOKER_CLIENT_SECRET }}
+    <span class="synIdentifier">steps</span><span class="synSpecial">:</span>
+    <span class="synStatement">- </span><span class="synIdentifier">uses</span><span class="synSpecial">:</span> actions/setup-python@v4
+      <span class="synIdentifier">with</span><span class="synSpecial">:</span>
+        <span class="synIdentifier">python-version</span><span class="synSpecial">:</span> <span class="synConstant">'3.x'</span>
+    <span class="synStatement">- </span><span class="synIdentifier">name</span><span class="synSpecial">:</span> Install Spectacles
+      <span class="synIdentifier">run</span><span class="synSpecial">:</span> pip install spectacles
+    <span class="synStatement">- </span><span class="synIdentifier">name</span><span class="synSpecial">:</span> Run Content Validator
+      <span class="synIdentifier">run</span><span class="synSpecial">:</span> spectacles content --project my_project_name -v
+    <span class="synStatement">- </span><span class="synIdentifier">name</span><span class="synSpecial">:</span> Run LookML data tests
+      <span class="synIdentifier">run</span><span class="synSpecial">:</span> spectacles assert --project my_project_name -v
+</pre>
+
+
+<p>ブランチの時や、master ブランチへのマージ直後ではまだ Dashboard や Look がエラーになることがあるため、Content validation はこのタイミングにしています。</p>
+
+<p>LookML data tests も 10 分以上かかることと、git push の粒度でやらないと不安というわけではないため、このタイミングにしています。BigQuery の料金もかかりますからね。</p>
+
+<h2 id="落ち穂拾い">落ち穂拾い</h2>
+
+<h3 id="作業ブランチのゴミが残ることがある">作業ブランチのゴミが残ることがある</h3>
+
+<p>Spectacles が途中で異常終了すると、LookML IDE と GitHub に <code>tmp_spectacles_b016c8a4dd</code> といった、Spectacles が作る作業ブランチが残ることがあります。気づいたら削除してあげましょう。</p>
+
+<p>正常終了の場合は残りません。</p>
+
+<h3 id="マシンユーザーを作るか作らないか">マシンユーザーを作るか作らないか</h3>
+
+<p>Looker はユーザー課金モデルであるため、Spectacles のためにユーザーを作ることに躊躇するかもしれません。私もそうでした。おまけに Developer 相当の権限が必要なため、そこそこの料金です。</p>
+
+<p><a href="https://docs.spectacles.dev/app/guides/how-to-create-an-api-key">Create a Looker API Key | Spectacles Docs</a></p>
+
+<blockquote><p>We strongly recommend creating <strong>a dedicated Spectacles user in Looker</strong> to ensure a human user doesn't accidentally change the Git branch or turn off development mode in the middle of a validation.</p></blockquote>
+
+<p>ですが、公式ドキュメントで強く奨励されているとおり、Spectacles 専用のユーザーを作って下さい。</p>
+
+<p>人間のユーザーは権限が大きすぎますし、前述のとおり Spectacles は実際に開発モードでブランチを作って切り替えるため、人間の作業とコンフリクトします。</p>
+
+<h2 id="まとめ">まとめ</h2>
+
+<p>Spectacles というツールを導入して、Looker インスタンスの健全性を高められた話をしました。</p>
+
+<p>導入したのは先月ですが、導入の翌日にタイミング良く Schedule workflow のテストが落ち、primary_key が壊れたことに気づけたことにはニッコリしました。</p>
+
+<p>私のようなボッチ LookML 開発者は、いかに作業を機械に任せるかが重要だと思います。心の平穏も大事です。また、あとから CI を導入するのは結構大変なので、始めから開発計画に組み込むことをオススメします。</p>
+
+<p>それでは良い Looker ライフを！(^^)/</p>
+<div class="footnotes">
+<hr/>
+<ol>
+<li id="fn:1">
+<p><a href="https://docs.spectacles.dev/app/explanation/limiting-resource-consumption/">Limiting Resource Consumption | Spectacles Docs</a><a href="#fnref:1" rev="footnote">&#8617;</a></p></li>
+<li id="fn:2">
+<p><a href="https://developer.feedforce.jp/entry/2021/08/30/150000">Looker で Join 先の view の primary_key をいい感じにテストする方法をようやく見つけた - Feedforce Developer Blog</a><a href="#fnref:2" rev="footnote">&#8617;</a></p></li>
+<li id="fn:3">
+<p>実際には他のジョブや、失敗時の Slack 通知ジョブもありますが、分かりやすくするために省略しています。<a href="#fnref:3" rev="footnote">&#8617;</a></p></li>
+</ol>
+</div>
+
+]]></description>
+            <enclosure url="https://cdn-ak.f.st-hatena.com/images/fotolife/m/masutaka26/20220914/20220914170914.png" length="0" type="image/png"/>
+        </item>
         <item>
             <title><![CDATA[Looker User Meetup Online #8 で『BigQuery経由で使うGoogleスプレッドシートのスキーマ管理』の話をした]]></title>
             <link>https://developer.feedforce.jp/entry/2022/07/21/210000</link>
@@ -5323,37 +5585,6 @@ disapp_disapp.to_csv(dirname+<span class="synConstant">'disapp_disapp.csv'</span
 
 ]]></description>
             <enclosure url="https://cdn-ak.f.st-hatena.com/images/fotolife/r/ryz310/20201004/20201004001621.jpg" length="0" type="image/jpg"/>
-        </item>
-        <item>
-            <title><![CDATA[データ指向アプリケーションデザイン 第三章 旅行記]]></title>
-            <link>https://developer.feedforce.jp/entry/2021/03/04/180304</link>
-            <guid>https://developer.feedforce.jp/entry/2021/03/04/180304</guid>
-            <pubDate>Thu, 04 Mar 2021 09:03:04 GMT</pubDate>
-            <description><![CDATA[<p>こんにちは。<a href="http://blog.hatena.ne.jp/kano-e/" class="hatena-id-icon"><img src="https://cdn.profile-image.st-hatena.com/users/kano-e/profile.png" width="16" height="16" alt="" class="hatena-id-icon">id:kano-e</a> です。</p>
-
-<p>先日 <a href="https://developer.feedforce.jp/entry/2021/03/02/172959">データ指向アプリケーションデザイン 第二章 旅行記</a> という記事を公開しました。<br />
-今日はその続き、第三章です。</p>
-
-<p>第三章も第二章と同じく、地図への書き込みという形で読書記録を作りました。</p>
-
-<p>第三章の章題は「ストレージと抽出」です。<br />
-その旅路は以下の画像の通り。</p>
-
-<p><figure class="figure-image figure-image-fotolife" title="データ指向アプリケーションデザイン 第三章 旅行記"><span itemscope itemtype="http://schema.org/Photograph"><img src="https://cdn-ak.f.st-hatena.com/images/fotolife/k/kano-e/20191216/20191216212951.jpg" alt="f:id:kano-e:20191216212951j:plain" title="" class="hatena-fotolife" itemprop="image"></span><figcaption>データ指向アプリケーションデザイン 第三章 旅行記</figcaption></figure></p>
-
-<p>第三章では分散データ洋に浮かぶ島を舞台に、トランザクション共和国のログストラクチャ、B-Tree領、そして分析王国のデータウェアハウス領まで旅をしました。</p>
-
-<p>この旅の記録が、ツールの選定やチューニングの際の道標になるのでは、と思います。</p>
-
-<p><div class="hatena-asin-detail"><a href="https://www.amazon.co.jp/exec/obidos/ASIN/4873118700/hatena-blog-22/"><img src="https://m.media-amazon.com/images/I/51T+k4VRzpL.jpg" class="hatena-asin-detail-image" alt="データ指向アプリケーションデザイン ―信頼性、拡張性、保守性の高い分散システム設計の原理" title="データ指向アプリケーションデザイン ―信頼性、拡張性、保守性の高い分散システム設計の原理"></a><div class="hatena-asin-detail-info"><p class="hatena-asin-detail-title"><a href="https://www.amazon.co.jp/exec/obidos/ASIN/4873118700/hatena-blog-22/">データ指向アプリケーションデザイン ―信頼性、拡張性、保守性の高い分散システム設計の原理</a></p><ul><li><span class="hatena-asin-detail-label">作者:</span><a href="http://d.hatena.ne.jp/keyword/Martin%20Kleppmann" class="keyword">Martin Kleppmann</a></li><li><span class="hatena-asin-detail-label">発売日:</span> 2019/07/18</li><li><span class="hatena-asin-detail-label">メディア:</span> 単行本（ソフトカバー）</li></ul></div><div class="hatena-asin-detail-foot"></div></div></p>
-
-<p>よろしければ第二章の記録もどうぞ。</p>
-
-<p><iframe src="https://hatenablog-parts.com/embed?url=https%3A%2F%2Fdeveloper.feedforce.jp%2Fentry%2F2021%2F03%2F02%2F172959" title="データ指向アプリケーションデザイン 第二章 旅行記 - Feedforce Developer Blog" class="embed-card embed-blogcard" scrolling="no" frameborder="0" style="display: block; width: 100%; height: 190px; max-width: 500px; margin: 10px 0px;"></iframe><cite class="hatena-citation"><a href="https://developer.feedforce.jp/entry/2021/03/02/172959">developer.feedforce.jp</a></cite></p>
-
-<p>それでは、みなさま、良い旅を！</p>
-]]></description>
-            <enclosure url="https://cdn-ak.f.st-hatena.com/images/fotolife/k/kano-e/20191216/20191216212951.jpg" length="0" type="image/jpg"/>
         </item>
         <item>
             <title><![CDATA[ActiveJob の retry_on に jitter というオプションがあるの知ってますか？]]></title>
