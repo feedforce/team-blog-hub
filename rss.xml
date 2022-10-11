@@ -4,7 +4,7 @@
         <title>Feedforce Engineers' Blogs</title>
         <link>https://engineers.feedforce.jp</link>
         <description>フィードフォースグループに所属するエンジニアのブログ記事をまとめています。</description>
-        <lastBuildDate>Mon, 10 Oct 2022 01:35:25 GMT</lastBuildDate>
+        <lastBuildDate>Tue, 11 Oct 2022 01:34:21 GMT</lastBuildDate>
         <docs>https://validator.w3.org/feed/docs/rss2.html</docs>
         <generator>https://github.com/jpmonette/feed</generator>
         <image>
@@ -13,6 +13,28 @@
             <link>https://engineers.feedforce.jp</link>
         </image>
         <copyright>© Feedforce Inc.</copyright>
+        <item>
+            <title><![CDATA[StreamlitとDeepLabv3を用いて物体切り抜きができるか検証したという話をした]]></title>
+            <link>https://developer.feedforce.jp/entry/2022/10/11/095230</link>
+            <guid>https://developer.feedforce.jp/entry/2022/10/11/095230</guid>
+            <pubDate>Tue, 11 Oct 2022 00:52:30 GMT</pubDate>
+            <description><![CDATA[<p>こんにちは <a href="http://blog.hatena.ne.jp/newton800/" class="hatena-id-icon"><img src="https://cdn.profile-image.st-hatena.com/users/newton800/profile.png" width="16" height="16" alt="" class="hatena-id-icon">id:newton800</a> です。</p>
+
+<p>先週末に社内勉強会 <a href="https://developer.feedforce.jp/archive/category/FFTT">FFTT</a>で「StreamlitとDeepLabv3を用いて物体切り抜きができるか検証した」という話をしました。</p>
+
+<p>最近個人的に使用頻度が増加している<a href="https://streamlit.io/">Streamlit</a>というフロントエンドの知識なしに実装ができるPythonのWebフレームワークの紹介をしてみたかったというのが背景です。ただし、Streamlitに触れている部分は本当に一部だけで、ほとんどはどんな感じで試行錯誤しながら試作を作っていくのかみたいな話になってしまいました。</p>
+
+<iframe src="https://docs.google.com/presentation/d/e/2PACX-1vQ6P2ZVvWxk_ZKgfgKVVQRSH1w1rZVfDojE0Khj2ZSp1Mrn9TKaz4n4-pDhHUr7s4Wg9xWbLpfJlv59/embed?start=false&loop=false&delayms=3000" frameborder="0" width="960" height="569" allowfullscreen="true" mozallowfullscreen="true" webkitallowfullscreen="true"></iframe>
+
+
+<p>年に1~2度ほど回ってくるFFTTの発表のために考えたネタなので、社内で何か活用したりする機会はないですが、自分的にはなかなか気に入っている自由研究です。</p>
+
+<p>次のFFTTではどんなネタを発表しようかな。。。</p>
+
+<p>P.S. Feedforce Developer Blogが <a href="http://blog.hatena.ne.jp/masutaka26/" class="hatena-id-icon"><img src="https://cdn.profile-image.st-hatena.com/users/masutaka26/profile.png" width="16" height="16" alt="" class="hatena-id-icon">id:masutaka26</a>の記事ばかりになっているので、負けじと記事を書いていきたいです</p>
+]]></description>
+            <enclosure url="https://cdn.user.blog.st-hatena.com/default_entry_og_image/4268819/1588226000876991" length="0" type="image//default_entry_og_image/4268819/1588226000876991"/>
+        </item>
         <item>
             <title><![CDATA[自分のブログを CloudFront + Heroku から Cloud Run に移行した話をした]]></title>
             <link>https://developer.feedforce.jp/entry/2022/09/30/180000</link>
