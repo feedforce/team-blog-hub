@@ -2,7 +2,7 @@
 <feed xmlns="http://www.w3.org/2005/Atom">
     <id>https://engineers.feedforce.jp</id>
     <title>Feedforce Engineers' Blogs</title>
-    <updated>2022-10-11T01:34:21.623Z</updated>
+    <updated>2022-10-12T01:26:54.605Z</updated>
     <generator>https://github.com/jpmonette/feed</generator>
     <link rel="alternate" href="https://engineers.feedforce.jp"/>
     <subtitle>フィードフォースグループに所属するエンジニアのブログ記事をまとめています。</subtitle>
@@ -28,6 +28,18 @@
 
 <p>P.S. Feedforce Developer Blogが <a href="http://blog.hatena.ne.jp/masutaka26/" class="hatena-id-icon"><img src="https://cdn.profile-image.st-hatena.com/users/masutaka26/profile.png" width="16" height="16" alt="" class="hatena-id-icon">id:masutaka26</a>の記事ばかりになっているので、負けじと記事を書いていきたいです</p>
 ]]></summary>
+    </entry>
+    <entry>
+        <title type="html"><![CDATA[このブログを『CloudFront+Heroku』から『Cloud Run』に移して知った Google のドメイン豆知識]]></title>
+        <id>https://masutaka.net/2022-10-01-1/</id>
+        <link href="https://masutaka.net/2022-10-01-1/"/>
+        <updated>2022-10-01T04:49:29.000Z</updated>
+        <summary type="html"><![CDATA[昨日社内勉強会でこんな発表をしました。いつもどおり右上の History を更新しました。
+スライド: 39 にもありますが、GCP の Cloud Run への移行の他に、ドメインも Amazon Route 53 から Google Domains に移行しました。これで上から下まで全部 Google になりました。
+少し気になって Cloud Run のカスタムドメインとして設定した masutaka.net を辿ったら面白いことを知ったので、この記事にメモとして残します。
+masutaka.net を辿る旅 dig コマンドを使うと、masutaka.net が Google Domains のネームサーバーを使っていることを確認できます。
+$ dig -t NS masutaka.net (snip) ;; ANSWER SECTION: masutaka.net. 21399 IN NS ns-cloud-b4.googledomains.com. masutaka.net. 21399 IN NS ns-cloud-b1.googledomains.com. masutaka.net. 21399 IN NS ns-cloud-b2.googledomains.com. masutaka.net. 21399 IN NS ns-cloud-b3.googledomains.com. (snip) 普通に dig するとこうです。
+$ dig masutaka.net (snip) ;; ANSWER SECTION: masutaka.]]></summary>
     </entry>
     <entry>
         <title type="html"><![CDATA[自分のブログを CloudFront + Heroku から Cloud Run に移行した話をした]]></title>
@@ -5058,6 +5070,450 @@ $ <span class="synIdentifier">DOCKER_BUILDKIT</span>=<span class="synConstant">1
 </div>]]></summary>
     </entry>
     <entry>
+        <title type="html"><![CDATA[Self-Attentionを用いてGoogle 無料リスティングの「拡張リスティングの不承認」に挑んだ話]]></title>
+        <id>https://developer.feedforce.jp/entry/2021/03/11/101244</id>
+        <link href="https://developer.feedforce.jp/entry/2021/03/11/101244"/>
+        <updated>2021-03-11T01:12:44.000Z</updated>
+        <summary type="html"><![CDATA[<p>こんにちは
+株式会社フィードフォース2020年入社の機械学習エンジニア
+<a href="https://twitter.com/feed_yao">&#x516B;&#x767E;&#x4FCA;&#x54C9;@Feedforce (@feed_yao) | Twitter</a>と申します。</p>
+
+<p>最近はロードバイク にはまっており、ロードバイク購入後一ヶ月で一日100km走行に成功しました。</p>
+
+<p>今回、<b>Google無料リスティングで不承認アカウントが発生する要因を調査する分析</b>を行いました。</p>
+
+<ul class="table-of-contents">
+    <li><a href="#Google-無料リスティングとは">Google 無料リスティングとは？</a></li>
+    <li><a href="#なぜ今回分析が必要とされたのか">なぜ今回分析が必要とされたのか？</a></li>
+    <li><a href="#結果と考察">結果と考察</a></li>
+    <li><a href="#Self-Attentionを採用した理由">Self-Attentionを採用した理由</a></li>
+    <li><a href="#実装手順">実装手順</a><ul>
+            <li><a href="#使用データのフォーマット">使用データのフォーマット</a></li>
+            <li><a href="#必要ライブラリのインストールインポート">必要ライブラリのインストール・インポート</a></li>
+            <li><a href="#データの前処理">データの前処理</a></li>
+            <li><a href="#学習">学習</a></li>
+            <li><a href="#評価出力">評価・出力</a></li>
+        </ul>
+    </li>
+    <li><a href="#まとめ">まとめ</a></li>
+</ul>
+
+<h1 id="Google-無料リスティングとは">Google 無料リスティングとは？</h1>
+
+<p>2020年10月にGoogleから公開された<b>Googleショッピングタブに無料で商品掲載ができる「無料リスティング」のことです。</b></p>
+
+<p>Google 検索にサイトがインデックス登録されても料金が発生しないのと同様に、EC事業者は無料で利用可能になりました。
+Google 無料リスティングについての詳細は以下のサイトが参考になります。</p>
+
+<p><iframe src="https://hatenablog-parts.com/embed?url=https%3A%2F%2Flab.ecbooster.jp%2Fabout-google-free-listings%2F" title="Googleに無料で自社商品が掲載できる「無料リスティング」とは？" class="embed-card embed-webcard" scrolling="no" frameborder="0" style="display: block; width: 100%; height: 155px; max-width: 500px; margin: 10px 0px;"></iframe><cite class="hatena-citation"><a href="https://lab.ecbooster.jp/about-google-free-listings/">lab.ecbooster.jp</a></cite></p>
+
+<h1 id="なぜ今回分析が必要とされたのか">なぜ今回分析が必要とされたのか？</h1>
+
+<p>無料リスティングでは自社製品を無料でGoogleに掲載できます。
+しかしながら、課題として<b>一部商品掲載が不承認となるケースが見受けられました。</b></p>
+
+<p>不承認となってしまうと自社商品の掲載ができていない状況が発生しています。不承認となる理由としては、「Googleが定める基準に対して、登録している商品データの属性数が足りない、内容が仕様に沿っていない場合、商品データの品質が低いため不承認になり、Googleの検索結果に表示させることができません。」とされています。</p>
+
+<p>これらを<b>定量的に分析することで不承認となる理由を見つけ出す試み</b>が始まりました。</p>
+
+<p>そのため今回の分析の目的は、<b>商品の属性情報（title,description）から承認・不承認の要因を見つけ出し、不承認の商品を承認へと改善するための施策を考案する</b>ことです。</p>
+
+<h1 id="結果と考察">結果と考察</h1>
+
+<p>今回の目的である「商品の属性情報（title,description）から承認・不承認の要因を見つけ出し、不承認の商品を承認へと改善するための施策を考案する」は、<b>達成できませんでした。</b></p>
+
+<p>目的が達成できなかった理由として考えられる要因は、<b>承認・不承認は商品のtitle,descriptionだけでは判断されていない</b>ということです。商品ごとのtitle,descriptionのみで承認・不承認が判断されているのではなく、商品データ全体またはアカウント全体のデータを総合的に見て、判断されている可能性が高いということがわかりました。</p>
+
+<p>承認・不承認予測のAccuracyとしては5割〜６割ほどで、承認・不承認を予測するという点でも低い精度となってしまいました。</p>
+
+<h1 id="Self-Attentionを採用した理由">Self-Attentionを採用した理由</h1>
+
+<p>今回はSelf-Attentionという手法を用いてこの課題解決を試みました。</p>
+
+<p>Self-Attentionとは、<b>文章全体で重要とされるキーワードが予測結果と一緒に確認できるようになる</b>手法です。</p>
+
+<p>Self-Attentionの仕組みについては詳しく書かれている方が多くいますので、ここでは割愛します。</p>
+
+<p>最初は、word2vecを用いて文章特徴量を作成し、承認・不承認を予測して終了という一連の流れを想定していました。</p>
+
+<p>しかし、<b>今回の目的は</b>承認・不承認を予測したいわけではなく、<b>どの単語が承認・不承認と関わっているのかを確認し、不承認となっているアカウントを承認にすること</b>です。
+もし仮にword2vecを用いた手法を採用すると予測結果の要因や理由が明確にならないので、不承認のアカウントを承認に改善する施策を考えることはできません。</p>
+
+<p>そのため今回は、<b>Self-Attentionを用いて分類モデルを構築することで、承認・不承認の要因が文章内のどこにあるのかを分析する</b>ために、この手法を選択しました。</p>
+
+<h1 id="実装手順">実装手順</h1>
+
+<p>本来の目的は達成できませんでしたが、Self-Attentionでの分類モデルの実装はできましたので、実装方法を記載します。
+今回はkerasを用いてSelf-Attention + LSTMで予測を行いました。
+検証環境はGoogle Colaboratoryを想定しています。</p>
+
+<h2 id="使用データのフォーマット">使用データのフォーマット</h2>
+
+<p>今回使用できるデータとしては以下のようなデータになっています。</p>
+
+<p>各アカウント・各商品ごとに商品IDが割り振られており、それぞれの商品にtitle,descriptionが割り振られています。</p>
+
+<p><b>承認・不承認のラベルは、アカウントごとに付加されています。
+</b></p>
+
+<p><span itemscope itemtype="http://schema.org/Photograph"><img src="https://cdn-ak.f.st-hatena.com/images/fotolife/n/newton800/20210224/20210224172435.png" alt="f:id:newton800:20210224172435p:plain" title="" class="hatena-fotolife" itemprop="image"></span></p>
+
+<h2 id="必要ライブラリのインストールインポート">必要ライブラリのインストール・インポート</h2>
+
+<pre class="code lang-python" data-lang="python" data-unlink>!pip install text_vectorian
+!pip install mojimoji
+!apt install aptitude
+!aptitude install mecab libmecab-dev mecab-ipadic-utf8 git make curl xz-utils <span class="synIdentifier">file</span> -y
+!pip install mecab-python3==<span class="synConstant">0.7</span>
+</pre>
+
+
+
+
+<pre class="code lang-python" data-lang="python" data-unlink><span class="synPreProc">import</span> pandas <span class="synStatement">as</span> pd
+<span class="synPreProc">import</span> numpy <span class="synStatement">as</span> np
+<span class="synPreProc">import</span> keras
+<span class="synPreProc">import</span> os
+<span class="synPreProc">import</span> warnings
+warnings.simplefilter(<span class="synConstant">'ignore'</span>)
+<span class="synPreProc">import</span> subprocess
+<span class="synPreProc">import</span> mojimoji
+<span class="synPreProc">import</span> re
+<span class="synPreProc">import</span> MeCab
+<span class="synPreProc">import</span> matplotlib.pyplot <span class="synStatement">as</span> plt
+
+<span class="synPreProc">from</span> keras.layers <span class="synPreProc">import</span> Dense, Dropout, LSTM, Embedding, BatchNormalization
+<span class="synPreProc">from</span> keras.layers.wrappers <span class="synPreProc">import</span> Bidirectional
+<span class="synPreProc">from</span> keras.callbacks <span class="synPreProc">import</span> EarlyStopping, ModelCheckpoint
+<span class="synPreProc">from</span> keras <span class="synPreProc">import</span> Input, Model, utils
+<span class="synPreProc">from</span> keras.preprocessing.sequence <span class="synPreProc">import</span> pad_sequences
+<span class="synPreProc">from</span> keras.callbacks <span class="synPreProc">import</span> EarlyStopping
+
+<span class="synPreProc">from</span> text_vectorian <span class="synPreProc">import</span> SentencePieceVectorian
+<span class="synPreProc">from</span> keras_self_attention <span class="synPreProc">import</span> SeqSelfAttention
+<span class="synPreProc">from</span> sklearn.model_selection <span class="synPreProc">import</span> train_test_split
+<span class="synPreProc">from</span> sklearn.metrics <span class="synPreProc">import</span> classification_report
+</pre>
+
+
+<h2 id="データの前処理">データの前処理</h2>
+
+<pre class="code lang-python" data-lang="python" data-unlink><span class="synComment"># データの読み込み</span>
+app = pd.read_csv(<span class="synConstant">'data/app.csv'</span>) <span class="synComment"># 承認データ</span>
+disapp = pd.read_csv(<span class="synConstant">'data/disapp.csv'</span>) <span class="synComment"># 不承認データ</span>
+
+app[<span class="synConstant">'target'</span>] = <span class="synConstant">'app'</span> <span class="synComment"># targetにlabelを代入する</span>
+disapp[<span class="synConstant">'target'</span>] = <span class="synConstant">'disapp'</span>
+
+<span class="synComment"># 今回は、titleとdescriptionを用いて予測するので、それら二つの変数を一つにまとめる</span>
+app[<span class="synConstant">'sentence'</span>] = app[<span class="synConstant">'title'</span>] + app[<span class="synConstant">'description'</span>] 
+disapp[<span class="synConstant">'sentence'</span>] = disapp[<span class="synConstant">'title'</span>] + disapp[<span class="synConstant">'description'</span>]
+
+<span class="synComment"># これまで別々に処理していたappとdisappをまとめてdfとする</span>
+df = app.append(disapp)
+</pre>
+
+
+<p>今回のデータは特殊で、承認・不承認は商品ごとについているラベルではなくアカウントと紐づいたラベルとなっています。それらを各商品と承認・不承認が紐づいているとして各商品ごとに予測することを行ってます。</p>
+
+<p>ここで注意が必要なのは、データの分割方法です。<b>アカウントを無視してデータを分割してしまうとリークを起こす可能性があります</b>（リークとは、本来予測では使用できないデータが学習時に入ってしまっていることです）。</p>
+
+<p><b>そのため同じアカウントのデータが訓練データ、検証データ、テストデータに渡って存在しないようにしなければなりません</b>。</p>
+
+<p>例えば、アカウントAの商品データは全て訓練データとする,アカウントBの商品データは全てテストデータにするといったようなことを意味しています。</p>
+
+<p>アカウントごとにデータを分割するには、各アカウントごとの商品数がある程度同じである方がlabelが不均衡にならないと考え、データ数を揃える処理を施しました。
+（これらはGroupKFoldを使用すれば解決できると考えられますが、分析実施時はGroupKFoldを知らなかった）</p>
+
+<pre class="code lang-python" data-lang="python" data-unlink><span class="synComment"># アカウントごとに商品数が異なるので50以上商品数がある場合は50までの商品を使用する</span>
+<span class="synComment"># アカウントごとに商品数を揃えることで、labelが不均衡になることを緩和している</span>
+<span class="synComment"># アカウントごとにlabelがふられるが、商品ごとに予測結果を出す時のみ実施</span>
+cutted_df = pd.DataFrame([])
+<span class="synStatement">for</span> acc <span class="synStatement">in</span> df.account_name.unique():
+  data = df[df.account_name == acc]
+  <span class="synStatement">if</span> data.shape[<span class="synConstant">0</span>] &gt; <span class="synConstant">50</span>: 
+    data = data[:<span class="synConstant">50</span>]
+  cutted_df = pd.concat([cutted_df,data],<span class="synConstant">0</span>)  
+
+df = cutted_df.sample(frac=<span class="synConstant">1</span>,random_state=<span class="synConstant">1</span>).reset_index(drop=<span class="synIdentifier">True</span>)
+</pre>
+
+
+<p>次は、データの前処理についてです。</p>
+
+<p>自然言語処理の前処理で有効と言われている半角->全角、数字は全て0にする、スペース文字の消去を行いました。
+また、これまでlabelが'app'または'disapp'だったのでそれらを入力できる形式に変換しています。</p>
+
+<pre class="code lang-python" data-lang="python" data-unlink>
+<span class="synStatement">def</span> <span class="synIdentifier">PreprocessData</span>(df,dirname):
+  <span class="synComment"># データの前処理関数</span>
+  <span class="synComment"># 辞書型を返す</span>
+
+  mecab = MeCab.Tagger(<span class="synConstant">'-Ochasen'</span>)
+
+  <span class="synComment"># textデータの前処理</span>
+  df = TextPreprocess(df)
+
+  label2index = {k: i <span class="synStatement">for</span> i, k <span class="synStatement">in</span> <span class="synIdentifier">enumerate</span>(df.target.unique())}
+  index2label = {i: k <span class="synStatement">for</span> i, k <span class="synStatement">in</span> <span class="synIdentifier">enumerate</span>(df.target.unique())}
+
+  class_count = <span class="synIdentifier">len</span>(label2index)
+  labels = utils.to_categorical([label2index[label] <span class="synStatement">for</span> label <span class="synStatement">in</span> df.target], num_classes=class_count)
+
+  features,sentences,vectorian,account = MakeFeatures(df)
+
+  <span class="synStatement">return</span> {
+      <span class="synConstant">'class_count'</span>: class_count,
+      <span class="synConstant">'label2index'</span>: label2index,
+      <span class="synConstant">'index2label'</span>: index2label,
+      <span class="synConstant">'labels'</span>: labels,
+      <span class="synConstant">'features'</span>: features,
+      <span class="synConstant">'sentences'</span>:sentences,
+      <span class="synConstant">'input_len'</span>: vectorian.max_tokens_len,
+      <span class="synConstant">'vectorian'</span>:vectorian,
+      <span class="synConstant">'account'</span>:account
+  }
+
+<span class="synStatement">def</span> <span class="synIdentifier">TextPreprocess</span>(df):
+  <span class="synStatement">for</span> i <span class="synStatement">in</span> df.index:
+    sen = df.loc[i,<span class="synConstant">'sentence'</span>]
+    sen = mojimoji.han_to_zen(sen)
+    sen = re.sub(<span class="synConstant">r'\d+'</span>,<span class="synConstant">'0'</span>,sen)
+    df.loc[i,<span class="synConstant">'sentence'</span>] = sen.replace(<span class="synConstant">'</span><span class="synSpecial">\u3000</span><span class="synConstant">'</span>,<span class="synConstant">''</span>)
+  <span class="synStatement">return</span> df
+
+<span class="synStatement">def</span> <span class="synIdentifier">MakeFeatures</span>(df):
+  vectorian = SentencePieceVectorian()
+
+  features = []
+  sentences = []
+  accounts = []
+  <span class="synStatement">for</span> feature,account <span class="synStatement">in</span> <span class="synIdentifier">zip</span>(df[<span class="synConstant">'sentence'</span>],df[<span class="synConstant">'account_name'</span>]):
+    f = vectorian.fit(feature).indices
+    features.append(f)
+    sentences.append(feature)
+    accounts.append(account)
+
+  features = pad_sequences(features, maxlen=vectorian.max_tokens_len)
+
+  <span class="synStatement">return</span> features,sentences,vectorian,accounts
+</pre>
+
+
+<p>では、ここまでの前処理を流します。</p>
+
+<pre class="code lang-python" data-lang="python" data-unlink>data = PreprocessData(df,dirname) <span class="synComment"># dirnameは、出力結果などを入れたいpath入れてください</span>
+</pre>
+
+
+<p>次はtrain_test_splitを行いますが、先ほども記述した通り通常の手法ではリークするので、以下のようにしました。
+（上述の通りGroupKFoldの実施で回避できる）</p>
+
+<pre class="code lang-python" data-lang="python" data-unlink><span class="synStatement">def</span> <span class="synIdentifier">CollectData</span>(data,account):
+  features = []
+  sentences = []
+  labels = []
+  
+  <span class="synStatement">for</span> ac <span class="synStatement">in</span> account:
+    where_ = np.where(np.array(data[<span class="synConstant">'account'</span>]) == ac)
+    features.extend(np.array(data[<span class="synConstant">'features'</span>])[where_])
+    sentences.extend(np.array(data[<span class="synConstant">'sentences'</span>])[where_])
+    labels.extend(np.array(data[<span class="synConstant">'labels'</span>])[where_])
+  <span class="synStatement">return</span> np.array(features),np.array(sentences),np.array(labels)
+
+train_account,test_account = train_test_split(<span class="synIdentifier">list</span>(<span class="synIdentifier">set</span>(data[<span class="synConstant">'account'</span>])),test_size=<span class="synConstant">0.2</span>,random_state=<span class="synConstant">1</span>)
+train_account,val_account = train_test_split(train_account,test_size=<span class="synConstant">0.25</span>,random_state=<span class="synConstant">1</span>)
+
+train_features,train_sen,train_labels = CollectData(data,train_account)
+val_features,val_sen,val_labels = CollectData(data,val_account)
+test_features,test_sen,test_labels = CollectData(data,test_account)
+</pre>
+
+
+<p>通常のデータセットであれば、以下のようにすることでデータの分割が行えます。</p>
+
+<pre class="code lang-python" data-lang="python" data-unlink>(train_features,val_features,
+ train_labels,val_labels,
+ train_sen,val_sen) = train_test_split(data[<span class="synConstant">'features'</span>], data[<span class="synConstant">'labels'</span>], data[<span class="synConstant">'sentences'</span>], test_size=<span class="synConstant">0.2</span>, random_state=<span class="synConstant">1</span>)
+
+(train_features,test_features,
+ train_labels,test_labels,
+ train_sen,test_sen) = train_test_split(train_features, train_labels, train_sen, test_size=<span class="synConstant">0.25</span>, random_state=<span class="synConstant">1</span>)
+</pre>
+
+
+<p>ここまででデータの整形が完了です。</p>
+
+<h2 id="学習">学習</h2>
+
+<p>次は、モデルの定義を行います。</p>
+
+<pre class="code lang-python" data-lang="python" data-unlink><span class="synStatement">def</span> <span class="synIdentifier">_create_model</span>(input_shape, hidden, class_count,vectorian):
+    input_tensor = Input(input_shape)
+    common_input = vectorian.get_keras_layer(trainable=<span class="synIdentifier">True</span>)(input_tensor)
+    x1 = SeqSelfAttention(name=<span class="synConstant">'attention'</span>)(common_input)
+    x1 = Bidirectional(LSTM(hidden))(x1)
+    x1 = Dropout(<span class="synConstant">0.5</span>)(x1)
+    x1 = Dense(<span class="synConstant">32</span>)(x1)
+    x1 = Dropout(<span class="synConstant">0.5</span>)(x1)
+    x1 = Dense(<span class="synConstant">16</span>)(x1)
+    x1 = Dropout(<span class="synConstant">0.5</span>)(x1)
+    output_tensor = Dense(class_count, activation=<span class="synConstant">'softmax'</span>, name=<span class="synConstant">'class'</span>)(x1)
+
+    model = Model(input_tensor, output_tensor)
+    model.compile(loss=<span class="synConstant">'categorical_crossentropy'</span>, optimizer=<span class="synConstant">'nadam'</span>, metrics=[<span class="synConstant">'acc'</span>])
+
+    <span class="synStatement">return</span> model
+
+hidden = <span class="synConstant">356</span>
+model = _create_model(train_features[<span class="synConstant">0</span>].shape, hidden, data[<span class="synConstant">'class_count'</span>],data[<span class="synConstant">'vectorian'</span>])
+model.summary()
+</pre>
+
+
+<p>作成したモデルにデータを流して学習を進めます。</p>
+
+<pre class="code lang-python" data-lang="python" data-unlink>model_filename=<span class="synConstant">'{0}/model.h5'</span>.format(dirname)
+
+history = model.fit(train_features, train_labels,
+                    epochs=<span class="synConstant">50</span>,
+                    batch_size=<span class="synConstant">32</span>,
+                    validation_data=(val_features, val_labels),
+                    shuffle=<span class="synIdentifier">False</span>,
+                    callbacks = [
+                        EarlyStopping(patience=<span class="synConstant">5</span>, monitor=<span class="synConstant">'val_acc'</span>, mode=<span class="synConstant">'max'</span>),
+                        ModelCheckpoint(filepath=model_filename, monitor=<span class="synConstant">'val_acc'</span>, mode=<span class="synConstant">'max'</span>, save_best_only=<span class="synIdentifier">True</span>)
+                    ])
+</pre>
+
+
+<h2 id="評価出力">評価・出力</h2>
+
+<p>ModelCheckpointで保存したmodelを読み取り、さらにSelf-Attentionの結果を得られるようにします。</p>
+
+<pre class="code lang-python" data-lang="python" data-unlink><span class="synPreProc">from</span> keras.models <span class="synPreProc">import</span> load_model
+model = load_model(model_filename, custom_objects=SeqSelfAttention.get_custom_objects())
+model = Model(inputs=model.input, outputs=[model.output, model.get_layer(<span class="synConstant">'attention'</span>).output])
+</pre>
+
+
+<p>modelにtest dataを入れて結果を取得します。</p>
+
+<pre class="code lang-python" data-lang="python" data-unlink>out = model.predict(test_features)
+
+y = out[<span class="synConstant">0</span>] <span class="synComment"># 予測labelのsoftmaxが入っている</span>
+weight = out[<span class="synConstant">1</span>] <span class="synComment"># Self-Attentionのweighが入っている</span>
+
+pred = np.argmax(y,<span class="synConstant">1</span>) <span class="synComment"># 予測値</span>
+<span class="synIdentifier">max</span> = np.max(y,<span class="synConstant">1</span>) <span class="synComment"># 信頼値</span>
+
+df_y = pd.DataFrame(np.array([np.argmax(test_labels,<span class="synConstant">1</span>),pred,<span class="synIdentifier">max</span>*<span class="synConstant">100</span>]).T,columns=[<span class="synConstant">'true'</span>,<span class="synConstant">'pred'</span>,<span class="synConstant">'trust'</span>]) <span class="synComment"># 結果をまとめておくと精度確認に使える</span>
+</pre>
+
+
+<p>精度の確認を行います。</p>
+
+<p>ただ、testを入力し得られた結果を出力するだけでは精度が得られなかったので、信頼値が高いものだけを選別し、出力するようにしました。
+信頼値を90~55の間で出力し、<b>最もAccuracyが高い時の信頼値以上のものを出力</b>としました。</p>
+
+<p> 一方で信頼値を上げすぎるとわずかな出力しか得られないので、元のtestデータ数の1/3はデータ数が出力として確保できるような条件を加えました。</p>
+
+<pre class="code lang-python" data-lang="python" data-unlink>report = classification_report(pred, np.argmax(test_labels,<span class="synConstant">1</span>),output_dict=<span class="synIdentifier">True</span>,target_names=[data[<span class="synConstant">'index2label'</span>][i] <span class="synStatement">for</span> i <span class="synStatement">in</span> [<span class="synConstant">0</span>,<span class="synConstant">1</span>]])
+FirstReport_df = pd.DataFrame(report).T
+
+<span class="synIdentifier">print</span>(FirstReport_df)
+FirstReport_df.to_csv(dirname+<span class="synConstant">'NotCutReport.csv'</span>)
+
+<span class="synComment"># 信頼値が高い予測だけを出力とすることで確からしいものだけをみる</span>
+AppSupport = FirstReport_df.loc[<span class="synConstant">'app'</span>,<span class="synConstant">'support'</span>] <span class="synComment"># 予測した数を取得</span>
+DisappSupport = FirstReport_df.loc[<span class="synConstant">'disapp'</span>,<span class="synConstant">'support'</span>]
+
+<span class="synStatement">for</span> UpperLimit <span class="synStatement">in</span> <span class="synIdentifier">range</span>(<span class="synConstant">90</span>,<span class="synConstant">55</span>,-<span class="synConstant">1</span>):
+  max_acc = <span class="synConstant">0</span>
+  <span class="synStatement">for</span> i <span class="synStatement">in</span> <span class="synIdentifier">range</span>(<span class="synConstant">50</span>,UpperLimit,<span class="synConstant">1</span>):
+    df_y_cut = df_y[df_y.trust &gt; i]
+    report = classification_report(df_y_cut.pred, df_y_cut.true ,output_dict=<span class="synIdentifier">True</span>)
+    report_df = pd.DataFrame(report).T
+    acc = report_df.loc[<span class="synConstant">'accuracy'</span>,<span class="synConstant">'precision'</span>]
+    <span class="synStatement">if</span> max_acc &lt; acc:
+      max_acc = acc
+      max_i = i
+  df_y_cut = df_y[df_y.trust &gt; max_i]
+  report = classification_report(df_y_cut.pred, df_y_cut.true ,output_dict=<span class="synIdentifier">True</span>,target_names=[data[<span class="synConstant">'index2label'</span>][i] <span class="synStatement">for</span> i <span class="synStatement">in</span> [<span class="synConstant">0</span>,<span class="synConstant">1</span>]])
+  report_df = pd.DataFrame(report).T
+  <span class="synStatement">if</span> (report_df.loc[<span class="synConstant">'app'</span>,<span class="synConstant">'support'</span>] &gt; HighSupport/<span class="synConstant">3</span>) <span class="synStatement">and</span> (report_df.loc[<span class="synConstant">'disapp'</span>,<span class="synConstant">'support'</span>] &gt; LowSupport/<span class="synConstant">3</span>):
+    <span class="synComment"># 元の予測値の1/3のデータ数が確保できていればクリア</span>
+    <span class="synIdentifier">print</span>(<span class="synConstant">'UpperLimit:'</span> + <span class="synIdentifier">str</span>(UpperLimit))
+    <span class="synIdentifier">print</span>(<span class="synConstant">'max_i:'</span> + <span class="synIdentifier">str</span>(max_i))
+    <span class="synIdentifier">print</span>(report_df)
+    report_df.to_csv(dirname+<span class="synConstant">'Report.csv'</span>)
+    <span class="synStatement">break</span>
+</pre>
+
+
+<p>最後にSelf-AttentionのWeightをcsvで出力します。</p>
+
+<p>得られた出力結果は、予測値-承認と真値-承認、予測値-承認と真値-不承認、予測値-不承認と真値-承認、予測値-不承認と真値-不承認のように予測値と真値の結果に応じて4つに分けてcsvで出力するようになっています。</p>
+
+<pre class="code lang-python" data-lang="python" data-unlink>app_app = pd.DataFrame([])
+app_disapp = pd.DataFrame([])
+disapp_app = pd.DataFrame([])
+disapp_disapp = pd.DataFrame([])
+
+<span class="synStatement">for</span> i <span class="synStatement">in</span> <span class="synIdentifier">range</span>(<span class="synIdentifier">len</span>(test_features)):
+  input_text = test_sen[i]
+  tokens = data[<span class="synConstant">'vectorian'</span>].tokenizer._tokenizer.encode_as_pieces(input_text)
+
+  conf = out[<span class="synConstant">0</span>][i] * <span class="synConstant">100</span>
+  wei = out[<span class="synConstant">1</span>][i]
+
+  <span class="synStatement">if</span> np.max(conf) &lt;= max_i:
+    <span class="synStatement">continue</span>
+
+  pred = [data[<span class="synConstant">'index2label'</span>][np.argmax(conf)]]
+  labels = [data[<span class="synConstant">'index2label'</span>][np.argmax(test_labels[i])]]
+
+  weights = [w.max() <span class="synStatement">for</span> w <span class="synStatement">in</span> wei[-<span class="synIdentifier">len</span>(tokens):]]
+
+  df = pd.DataFrame([tokens, weights], index=[<span class="synConstant">'token'</span>, <span class="synConstant">'weight'</span>]).T
+
+  mean = np.asarray(weights).mean()
+  <span class="synStatement">for</span> j <span class="synStatement">in</span> df.index:
+    <span class="synStatement">if</span> df.loc[j,<span class="synConstant">'weight'</span>] - mean &lt;= <span class="synConstant">0</span>:
+      df.loc[j,<span class="synConstant">'weight'</span>] = <span class="synConstant">0</span>
+    <span class="synStatement">else</span>:
+      df.loc[j,<span class="synConstant">'weight'</span>] = df.loc[j,<span class="synConstant">'weight'</span>] - mean
+  
+  pred += df.token.values.tolist()
+  labels += df.weight.values.tolist()
+
+  final = pd.DataFrame(np.array([pred,labels]).T,columns=[<span class="synConstant">'pred'</span>,input_text])
+
+  <span class="synStatement">if</span> (pred[<span class="synConstant">0</span>] == <span class="synConstant">'app'</span>) &amp; (labels[<span class="synConstant">0</span>] == <span class="synConstant">'app'</span>):
+    app_app = pd.concat([app_app,final],<span class="synConstant">1</span>)
+  <span class="synStatement">elif</span> (pred[<span class="synConstant">0</span>]  == <span class="synConstant">'app'</span>) &amp; (labels[<span class="synConstant">0</span>] == <span class="synConstant">'disapp'</span>):
+    app_disapp = pd.concat([app_disapp,final],<span class="synConstant">1</span>)
+  <span class="synStatement">elif</span> (pred[<span class="synConstant">0</span>]  == <span class="synConstant">'disapp'</span>) &amp; (labels[<span class="synConstant">0</span>] == <span class="synConstant">'app'</span>):
+    disapp_app = pd.concat([disapp_app,final],<span class="synConstant">1</span>)
+  <span class="synStatement">elif</span> (pred[<span class="synConstant">0</span>]  == <span class="synConstant">'disapp'</span>) &amp; (labels[<span class="synConstant">0</span>] == <span class="synConstant">'diaspp'</span>):
+    disapp_disapp = pd.concat([disapp_disapp,final],<span class="synConstant">1</span>)
+
+app_app.to_csv(dirname+<span class="synConstant">'app_app.csv'</span>,index=<span class="synIdentifier">False</span>)
+app_disapp.to_csv(dirname+<span class="synConstant">'app_disapp.csv'</span>,index=<span class="synIdentifier">False</span>)
+disapp_app.to_csv(dirname+<span class="synConstant">'disapp_app.csv'</span>,index=<span class="synIdentifier">False</span>)
+disapp_disapp.to_csv(dirname+<span class="synConstant">'disapp_disapp.csv'</span>,index=<span class="synIdentifier">False</span>)
+</pre>
+
+
+<h1 id="まとめ">まとめ</h1>
+
+<p>Self-Attentionを用いて無料リスティングの不承認理由を解き明かそうと分析しました。
+しかし、<b>title,descriptionのみからは承認と不承認を分類することができず、不承認理由の解明には貢献できせんでした。</b></p>
+
+<p>Self-Attentionとデータセットの相性が悪いという可能性も考えられるので、tfidf+lgbも試みましたが、こちらもうまくいきませんでした。やはりこちらの結果からもtitle,descriptionのみからは承認と不承認を分類することができないということが考えられます。</p>
+]]></summary>
+    </entry>
+    <entry>
         <title type="html"><![CDATA[自作の gem の名前を考えるのは難しい]]></title>
         <id>https://ryz310.hateblo.jp/entry/2021/03/07/202519</id>
         <link href="https://ryz310.hateblo.jp/entry/2021/03/07/202519"/>
@@ -6844,6 +7300,266 @@ quit       Close any open TELNET session and exit telnet.  An end of file (in co
 </ol>
 </div>
 
+]]></summary>
+    </entry>
+    <entry>
+        <title type="html"><![CDATA[新卒機械学習エンジニアがAI Quest2020に参加しました]]></title>
+        <id>https://developer.feedforce.jp/entry/2020/12/04/083224</id>
+        <link href="https://developer.feedforce.jp/entry/2020/12/04/083224"/>
+        <updated>2020-12-03T23:32:24.000Z</updated>
+        <summary type="html"><![CDATA[<p>この記事は <a href="https://adventar.org/calendars/5560">Feedforce Advent Calendar 2020</a> の 4 日目の記事です。</p>
+
+<p>昨日は<a href="https://masutaka.net/chalow/">ますたかさん</a>の<a href="https://masutaka.net/chalow/2020-12-03-1.html">優先度より優先順位のほうが偉い</a>でした。優先度をつける時って高高高高高高ってなってしまうのわかります...。</p>
+
+<p>では、本題。</p>
+
+<p>今回AI Questという長期のプログラムに参加しました。そこで実際に行ったことや、学んだことを記録として残したいと思います。
+AI Questに参加してみたいと思っている方は、是非参考にしてください。
+（事実を列挙しただけなので読み物としては、面白味が少ないです...）</p>
+
+<p>先に書いておくと</p>
+
+<h1>長文失礼しました</h1>
+
+<h1>自己紹介</h1>
+
+<p>私は、2020年に株式会社フィードフォースに新卒で入社した八百です。データ分析チームで機械学習エンジニアとして、業務に携わっています。
+大学では、YOLOv2を用いて360度カメラで撮影された画像の物体検出を研究していました。最近、金魚を飼い始めました。
+<iframe src="https://hatenablog-parts.com/embed?url=https%3A%2F%2Ftwitter.com%2Ffeed_yao" title="八百俊哉@Feedforce (@feed_yao) | Twitter" class="embed-card embed-webcard" scrolling="no" frameborder="0" style="display: block; width: 100%; height: 155px; max-width: 500px; margin: 10px 0px;"></iframe><cite class="hatena-citation"><a href="https://twitter.com/feed_yao">twitter.com</a></cite></p>
+
+<h1>参加したきっかけ</h1>
+
+<p>弊社のデータ分析チームには機械学習経験者が私しかおらず、その私も学部で機械学習の卒論を書いた程度の知識しかありませんでした。そのような状態で社内のプロダクトにいきなり機械学習を導入するということがとてもハードルが高く、実際どのような工程を踏んで進めたら良いのかわかりませんでした。</p>
+
+<p>そんな時に上司の加藤さんがAI Questというプログラムを紹介してくださいました。</p>
+
+<blockquote><p>AI Questは、参加者同士が学び合い、高め合いながら
+AI活用を通した企業の課題解決方法を身につけるプログラムです。</p></blockquote>
+
+<p>面白そうだし、現在抱えている「どのようにして機械学習をプロダクトに導入したら良いのか」という疑問が解消できる良い機会だと思い、応募しました。</p>
+
+<h1>アセスメント課題を解く</h1>
+
+<p>参加するにあたり、まずは自身のプロフィール（志望動機など）を提出し、その後アセスメント課題というものを解きました。このアセスメント課題は、任意課題となっていましたが、やった方が合格率が高いのではないかと思い、挑戦しました。（実際のところどうなのかはわかりません。）</p>
+
+<p>内容としては、「民泊サービスにおける物件データを利用した宿泊価格予測モデルの作成」でした。基本的にはkaggleのようなコンペ形式でファイルを提出するとスコアが返ってくるというようなものです。また、それらのスコアは参加者全員に公開されており、参加者全体のうち自分がに何位なのかということを確認することができます。</p>
+
+<p>私はこれまでNNしか扱ったことがなかったので、NNを用いて宿泊価格を回帰しました。しかし、思ったようにスコアは向上しませんでした。その時は精度が上がらない原因は、モデルにあるだろうと勝手に決めてしまって、モデルの最適化ばかりに時間を使っていました。（ネットワーク構造を変更してみたり、optimizarを調整してみたり）</p>
+
+<p>それでもスコアは向上せず、アセスメント課題の締め切りの日数がだんだんと迫ってきていました。焦りを感じた私は、大学の頃にお世話になっていた先生に連絡を取り、相談してみました。</p>
+
+<p>すると、「コンペは、入力データチューニングすることによってスコアが上がる」ということを教えていただきました。</p>
+
+<p>大学の卒論では画像処理を行っていたので、入力データをチューニングする？？？って感じでしたが、kaggle notebookや様々な方のブログを通して、Data engineeringというものを知りました。</p>
+
+<p>そこからは様々なデータ加工を<a href="https://www.kaggle.com/learn/overview">kaggle cources</a>という無料の学習教材でData engineeringを学習し、実践してみました。</p>
+
+<p>その結果、無事AI Questに参加できるということが決定しました!!</p>
+
+<p><span itemscope itemtype="http://schema.org/Photograph"><img src="https://cdn-ak.f.st-hatena.com/images/fotolife/n/newton800/20201201/20201201154012.png" alt="f:id:newton800:20201201154012p:plain" title="" class="hatena-fotolife" itemprop="image"></span></p>
+
+<p>メールが届いた時は社内のいろんな人に自慢したい気持ちでしたが、弊社はほとんどの方がリモートワークなので席が近い複数の人に自慢したと思います。</p>
+
+<p>また、業務時間を用いてAI Questに挑戦してもよいということだったので、ここで落選してしまうと、、、って感じだったので良かったです。</p>
+
+<p>そこからは、AI QuestのSlackに招待されたり、SIGNATEアカウントを作成したりちょっとした雑務をやる感じでした。その中でも重要なのが、どのコースを受講するかを選択するところです。</p>
+
+<p>AI Questは大きく2つのタームに分かれていて、それぞれのタームごとに個人が参加したいコースを4つのうちから1つ選ぶというものです。</p>
+
+<p>ちなみに第一タームの４コースは以下のようになっていました。</p>
+
+<p><span itemscope itemtype="http://schema.org/Photograph"><img src="https://cdn-ak.f.st-hatena.com/images/fotolife/n/newton800/20201201/20201201154054.png" alt="f:id:newton800:20201201154054p:plain" title="" class="hatena-fotolife" itemprop="image"></span></p>
+
+<p>弊社は広告配信するためのフィードを作成しているプロダクトがあるので、自動的に最適な価格に変更できたらより良い広告配信に携われるのではないかと考えてPBL_02の小売価格最適化を選択しました。</p>
+
+<h1>AI Questが始まった！！</h1>
+
+<p>初回は、開会式と今後のについての説明をZoomで行いました。そこでアイスブレイクとして参加者同士で、自己紹介を行う時間が用意されていました。</p>
+
+<p>今後の流れとしては、ビジネス課題、AI課題、最終課題の3つのフェーズで区切られて、それぞれのフェーズごとに期限つきの課題が課せられるというものです。</p>
+
+<h1>ビジネス課題を解く</h1>
+
+<p>第一課題では主に要求定義、要件定義を行いました。私は新卒ということもあり業務上、そのようなことをやった経験がなく、ビジネス課題を通して新しい知識を身に付けたいと思っていました。</p>
+
+<p>課題の詳細としては以下のようなものです。</p>
+
+<ol>
+<li>要求定義
+
+<ol>
+<li>必要な情報の洗い出し、情報の取得応報の検討</li>
+</ol>
+</li>
+<li>要件定義
+
+<ol>
+<li>AI化業務の具体化、PoCにおける要件定義項目の検討</li>
+<li>2.1で検討したPoCにおける要件定義項目ごとの要件検討</li>
+</ol>
+</li>
+</ol>
+
+
+<p>といった感じです。</p>
+
+<p>まずPoCという言葉を初めて知りました。</p>
+
+<blockquote><p>PoCとは、Proof of Conceptの略で、「概念実証」という意味です。新しい概念や理論、原理、アイディアの実証を目的とした、試作開発の前段階における検証やデモンストレーションを指します。</p></blockquote>
+
+<p>なるほど。開発する前の試行錯誤のことをPoCというのか...といった知識レベルでの参加でした。</p>
+
+<p>ここは、自身で考えたものを提出することで、模範解答がダウンロードできるので、模範解答と自身で作成したものを比較することで、何が足りていなかったのかを確認する事ができました。</p>
+
+<p>この時私が学んだこととしては、まず機械学習を導入するにあたりどれくらいの精度または利益が生まれることを想定しているのかを事前に相談しておく必要があるということです。
+クライアントが機械学習への期待が高すぎると、実際に完成しても「それだけしか効果ないんですか？」みたいな感じになりかねないです。そのためにまず初めに、効果として具体的な目標数値をすり合わせておく必要があります。
+また、ヒアリングで聞いておいたら良いことや、モデル作成のために行わなければいけない工程を一通り体験できたのは、良い経験になったと思います。</p>
+
+<h1>AI課題を解く</h1>
+
+<p>私はPBL_02の小売価格最適化を選択していたので、粗利が最大となるように約700個の商品の価格を決めるという課題でした。</p>
+
+<p>また、提出回数は24回と定められており、この24回というのは6ヶ月×4週間ということを意味しています。そのため、6ヶ月間かけて週ごとのデータを用いてPoCを実施しているということですね。</p>
+
+<p>そして最終的な粗利が最大となった人がコンペ形式で入賞するというものになっています。</p>
+
+<h2>データ収集編</h2>
+
+<p>今回の課題で面白いところは、最初のデータは各商品につき一つずつしか存在していないということです。なんというデータ管理なんでしょうか...</p>
+
+<p>最適な価格を予想するとなると、各商品ごとに様々な価格で販売して、どれくらい売れたかのデータがすでにあることを想定していましたが、まさかの一個でした。</p>
+
+<p>言葉ではデータは伝えにくいので図示すると以下のような感じになっています。</p>
+
+<p><figure class="figure-image figure-image-fotolife" title="私がイメージしていたデータ構造"><span itemscope itemtype="http://schema.org/Photograph"><img src="https://cdn-ak.f.st-hatena.com/images/fotolife/n/newton800/20201201/20201201154140.png" alt="f:id:newton800:20201201154140p:plain" title="" class="hatena-fotolife" itemprop="image"></span><figcaption>私がイメージしていたデータ構造</figcaption></figure></p>
+
+<p><figure class="figure-image figure-image-fotolife" title="実際に配布されたデータ"><span itemscope itemtype="http://schema.org/Photograph"><img src="https://cdn-ak.f.st-hatena.com/images/fotolife/n/newton800/20201201/20201201154215.png" alt="f:id:newton800:20201201154215p:plain" title="" class="hatena-fotolife" itemprop="image"></span><figcaption>実際に配布されたデータ</figcaption></figure></p>
+
+<p>あれ？これ最適価格を予想できなく無いか...？？</p>
+
+<p>三日くらい、これどうやったら最適価格を作成できるんだと悩んでいました。</p>
+
+<p>しかし、ここで一人で悩むだけで終わらないのがAI Questです。同じ課題を解いている人がたくさんいるので、他の人に聞けば良いのです。</p>
+
+<p>AI Questでは毎週土曜日にサロンと言って参加者同士でコミュニケーションをとり、現在悩んでいることや解決の糸口の共有などを行う機会が設けられていました。こちらは自由参加で予定が空いている人が参加するという感じになっています。</p>
+
+<p>このサロンでどのようにして最適価格を予想しているのか、他の人に聞いてみると、以下の解答が得られました。</p>
+
+<p>「今回の課題は、予測価格を提出するといくら売れたかのフィードバックが得られます。そのため、初めは適当な数字で価格を設定して提出すると、データが増える。」</p>
+
+<p>ということでした。</p>
+
+<p>なるほど。最初はデータは一つしかないが、提出回数の24回の内の何回かはデータ集めのために適当な価格で提出する必要がありました。</p>
+
+<p>データ集めのイメージとしては下の画像の感じです。これらを複数回繰り返すことで機械学習に必要なデータを収集していきました。</p>
+
+<p><figure class="figure-image figure-image-fotolife" title="データ収集のイメージ"><span itemscope itemtype="http://schema.org/Photograph"><img src="https://cdn-ak.f.st-hatena.com/images/fotolife/n/newton800/20201201/20201201154251.png" alt="f:id:newton800:20201201154251p:plain" title="" class="hatena-fotolife" itemprop="image"></span><figcaption>データ収集のイメージ</figcaption></figure></p>
+
+<p>また、適当な値といっても、ランダムな値を入力すると24回の提出を無駄にすることになるので、各商品の（原価×X）円というものを3回ほど行い最初のデータ収集を行いました。</p>
+
+<h2>売り上げ個数予測モデル作成編</h2>
+
+<p>次に売り上げ個数を予測するモデルを作成しました。粗利最大化するのに売り上げ個数を予測する理由は、粗利 = 販売個数×(価格 - 原価)なので、価格を入力として販売個数が出力されるモデルを作成すれば、粗利が最大となる各商品の値段がわかるからです。</p>
+
+<p>ここでは各商品ごとの属性データ（レビューや商品のサイズ、商品説明文の長さなど）と価格を入力することで売り上げ個数を予測するモデル(xgboost)を作成しました。</p>
+
+<p>この時、最適と思われる価格とその価格を提出した際に得られるフィードバックデータでデータ数がどんどん増えるので、予測精度は向上していきました。また、それに伴って粗利も向上していました。</p>
+
+<p>しかし、途中から精度、粗利が横這いで停滞してしまった時がありました。その時は、モデルを見直したり、他の予測モデルと組み合わせてみたりと様々なことをして粗利向上を目指しましたが、効果は得られませんでした。</p>
+
+<p>複数回粗利改善が失敗した時に、さすがに提出データがおかしいのではないか？と思い始め、改めてこれまで提出したデータとそれによって得られていたフィードバックを確認してみました。すると!!!</p>
+
+<p><span itemscope itemtype="http://schema.org/Photograph"><img src="https://cdn-ak.f.st-hatena.com/images/fotolife/n/newton800/20201201/20201201154320.png" alt="f:id:newton800:20201201154320p:plain" title="" class="hatena-fotolife" itemprop="image"></span></p>
+
+<p>同じ価格で提出しているではありませんか！！！
+すでに既知の価格で提出することは、その価格での販売個数はすでにわかっているものになるので、無意味な提出となってしまいます。</p>
+
+<p>このようなことを複数回にわたって行ってしまっていたので、精度は上がらず、粗利も停滞してしまいました。
+もう少し早めにデータ全体を確認しておけば、防げたミスだったので、データの確認を怠ってはいけないということを学びました。</p>
+
+<h2>ルールベース編</h2>
+
+<p>ここからはルールベースを用いて最適価格を求めていきました。この段階で改めてこれまでフィードバックで得られたデータを元に各商品ごとに価格と粗利をプロットして状況を確認しました。
+その結果大きく2種類の粗利曲線に分類できることがわかりました。</p>
+
+<p><figure class="figure-image figure-image-fotolife" title="画像a:粗利最大点が定まってきている"><span itemscope itemtype="http://schema.org/Photograph"><img src="https://cdn-ak.f.st-hatena.com/images/fotolife/n/newton800/20201201/20201201154407.png" alt="f:id:newton800:20201201154407p:plain" title="" class="hatena-fotolife" itemprop="image"></span><figcaption>画像a:粗利最大点が定まってきている</figcaption></figure></p>
+
+<p><figure class="figure-image figure-image-fotolife" title="画像b:粗利最大点が見つかっていない"><span itemscope itemtype="http://schema.org/Photograph"><img src="https://cdn-ak.f.st-hatena.com/images/fotolife/n/newton800/20201201/20201201154449.png" alt="f:id:newton800:20201201154449p:plain" title="" class="hatena-fotolife" itemprop="image"></span><figcaption>画像b:粗利最大点が見つかっていない</figcaption></figure></p>
+
+<p>上の画像（画像a）では大体粗利最大の位置が定まってきています。下の画像（画像b）では、まだ粗利が最大点は見つかっていないようです。</p>
+
+<p>これら2パターンに場合分けを行い、それぞれにルールを用意することで次の提案価格を探索していきました。</p>
+
+<h3>画像aに対する次の提案価格を探索するルール</h3>
+
+<p>画像aのようになっている商品ではある程度、粗利の最大点がわかってきているので、現在粗利が最大となっている箇所の付近から探索しました。その方法としては、現在粗利が最大となっている価格点から両隣の価格点で間が広い価格との真ん中を新たな価格とするというものです。
+言葉で説明しても伝わりづらいので、図示すると以下の感じです。</p>
+
+<p><figure class="figure-image figure-image-fotolife" title="ルールベースで粗利が最大となる価格を求めるロジック"><span itemscope itemtype="http://schema.org/Photograph"><img src="https://cdn-ak.f.st-hatena.com/images/fotolife/n/newton800/20201201/20201201154534.png" alt="f:id:newton800:20201201154534p:plain" title="" class="hatena-fotolife" itemprop="image"></span><figcaption>ルールベースで粗利が最大となる価格を求めるロジック</figcaption></figure></p>
+
+<p>価格点の差が大きい箇所の方が、探索が不十分であるという仮定のもとで成り立っています。</p>
+
+<h3>画像bに対する次の提案価格を探索するルール</h3>
+
+<p>画像bの場合は、まだ最大点が見えていないので、価格と粗利の関係を二次回帰で曲線を引き、最大点となる価格を探索していきました。</p>
+
+<p>ここで24回の提出が終えたという感じです。
+結果は....
+<span itemscope itemtype="http://schema.org/Photograph"><img src="https://cdn-ak.f.st-hatena.com/images/fotolife/n/newton800/20201201/20201201154621.png" alt="f:id:newton800:20201201154621p:plain" title="" class="hatena-fotolife" itemprop="image"></span></p>
+
+<p>17位でした...
+70人参加していたので25%には入ったという感じでしょうか...</p>
+
+<p> 早めに同じ価格で提出して無意味なフィードバックを得ていることに気がついておけば...と後悔が残る結果になってしまいました。</p>
+
+<p>この課題でAI課題は終了です。
+AI課題を振り返ってやって良かったと思うことは、毎週サロンに参加したことです。サロンでは、自分一人では思いつかないようなアイデアを誰かが持っていたり、それらを共有し合うことで次のステップが見えてきたりします。見学しているだけでも楽しいので、とりあえず参加して見るのも良いかもしれないです。
+また、土曜日の昼過ぎのゴールデンタイムに開催されていたので、用事がある時などは、中抜けしたりもしていました。。。</p>
+
+<p>そのほかにも、実務では挑戦していなかった新しい手法にも挑戦することができました。これまでアンサンブルで予測モデルは作成したことがなかったんですが、作成できるようになったり、Optunaでパラメータ調整に挑戦することができたのは良かったと思います。（Kaggleでも学べますが...）</p>
+
+<p>逆によくなかったと思うこともあります。それは、データの確認とゴールまでの経路を考えるということです。
+データの確認に関しては、分析着手する際はかなり入念にやっていたのですが、フィードバックデータが増えてから、データの確認を行わずに進めてしまっていました。そんなこともあり、同じ価格で提出してしまうという凡ミスをしてしまいました。データは定期的に確認しないといけないということを学びました。</p>
+
+<p>もう一つは、ゴールまでの経路を考えるということです。PoCの実施なので右往左往することもありますが、私の場合は無計画すぎたと思います。特に今回は24回しか検証できないので、どこまでデータを集めて、どこまで機械学習を使い、どこからルールベースでやるのかといった大まかなロードマップは作成しておいた方が良いと思いました。これは、少なからず経験も必要だと思うので、あと何回でこの精度まで持っていくという目標を持ちながら、日々の分析業務を行っていきたいです。</p>
+
+<h1>最終課題を解く</h1>
+
+<p>最終課題では、これまでPoC結果を元に、実企業での意思決定の場を想定し、本番実装の意思決定をしてもらえるようなプレゼンテーション資料を作成するというものです。</p>
+
+<p>そしてプレゼン資料を作成し、提出すると次は他の参加者が作成したプレゼン資料を評価するというものでした。他の参加者の資料を見るまでは、自分のプレゼン資料はそれなりにわかりやすいと思っていたのですが、他の参加者のスライドを拝見して自身のスライドの未熟さに気がつきました。</p>
+
+<p>今回参加されている方々は、社会人歴が私よりも長い方が多かったので、実業務をやっている上で身についていることも多いと思います。また、他の参加者の方が作成したプレゼンをレビューすることで現在の私と何が違ったのかを何が足りなかったのかがわかったので良い経験になりました。</p>
+
+<p>具体的に私自身のプレゼンが何が良くて何が足りていなかったのか振り返って見たいと思います。</p>
+
+<p><strong>よかったところ</strong></p>
+
+<p>事実は簡潔にわかりやすくかけていた
+今回のプレゼンは、経営者向けのプレゼンなので機械学習の仕組みを解説することよりも全体的にどう動いているのかや、導入することでどれほどの粗利改善効果が見込めるのかといった、これまでの分析・予測から結果がはっきりしているものについては、丁寧にわかりやすく記述できていました。
+また、ヒアリングで得た内容や業務フローの変化についても事実としてすでに出ていたものなので、まとめられていました。</p>
+
+<p><strong>足りていなかったところ</strong></p>
+
+<p>事実としてまだ取得されていない情報が一切記載できなかった。粗利改善効果などは計算から求めることができたが、価格設定の工数削減割合や、業務の属人化が解消が期待できるなど、分析・予測から導き出せない効果が記載できなかった。工数の削減目安などは、業務を通して得られるものなのか、それともなんらかのロジックがあるのかといった解説がなかったのでそれらをどのように算出したのかは気になりました。</p>
+
+<p>次に足りていなかったことは、導入を検討する場合の予算の話です。これらもどのようにして計算しているのかは謎ですが、初期費用として？？？円、継続運用するのにかかる費用（サポート代）として？？？円などのような記載が足りていませんでした。確かに意思決定する場合は、予算の話があった方が導入判断は容易になるだろうと思います。</p>
+
+<p>また、予算に伴い今後プロジェクトを進めていくスケジュールも記載できていませんでした。ソフトがいつぐらいで完成して、そこから運用に定着するまでにどれくらいの期間が必要なのかも意思決定する際にはあった方が良いなと気がつきました。</p>
+
+<p>上記3つのことが足りていなかったことです。これら全てに共通して言えることは、分析・予測から求められない見込みが記載できていなかったということです。何を持ってその見込み計算を行っているのかはわかりませんが、見込みが足りていないということがわかったので、今後資料作成の際には、先輩方に頼りながら見込みの記載方法も勉強していきます。</p>
+
+<h1>第一タームを振り返る</h1>
+
+<p>第一タームを振り返り、「どのようにして機械学習をプロダクトに導入したら良いのか」が解決できたのか。
+機械学習モデルの作成する前のフロー（要件定義・PoC計画）とモデル作成後のフロー（スライド作成）では、フィードバックや他の参加者の方の方法を参考にすることで、自分自身に何が足りていなかったのかを学ぶことができました。ただ現在は、足りていないことに気がついた段階で、実践はできていない状況です。これらの足りていなかった部分を第二タームや業務で実践することで、身につけていきたいと考えています。</p>
+
+<p>具体的な行動としては、
+1. モデル作成前に目標数値を定める
+1. PoC計画を緻密に立てる（あくまで試行錯誤なので柔軟性は忘れてはいけない）
+1. プレゼン資料には、事実だけでなく、見込みも記載する</p>
+
+<p>明日の <a href="https://adventar.org/calendars/5560">Feedforce Advent Calendar 2020</a> は、いくみんさんが「9月からダラダラと書き終わらなかったやつを納めます...」ということなので、楽しみですね。</p>
 ]]></summary>
     </entry>
     <entry>
