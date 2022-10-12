@@ -102,4 +102,15 @@ export const members: Member[] = [
     githubUsername: "tsub",
     websiteUrl: "https://tsub.me",
   },
+  {
+    name: "yaonyan",
+    role: "データサイエンティスト",
+    bio: "かっこいいワンフレーズ自己紹介などない",
+    avatarSrc: "https://s.gravatar.com/avatar/bea1d48ae8ab2b9480d5bbbe6bdd6a33?s=256",
+    sources: [
+      "https://developer.feedforce.jp/rss/author/newton800",
+    ],
+    twitterUsername: "feed_yao",
+    githubUsername: "yaoshunya",
+  }
 ];
