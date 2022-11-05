@@ -4,7 +4,7 @@
         <title>Feedforce Engineers' Blogs</title>
         <link>https://engineers.feedforce.jp</link>
         <description>フィードフォースグループに所属するエンジニアのブログ記事をまとめています。</description>
-        <lastBuildDate>Fri, 04 Nov 2022 01:33:46 GMT</lastBuildDate>
+        <lastBuildDate>Sat, 05 Nov 2022 01:33:13 GMT</lastBuildDate>
         <docs>https://validator.w3.org/feed/docs/rss2.html</docs>
         <generator>https://github.com/jpmonette/feed</generator>
         <image>
@@ -64,6 +64,10 @@ $ dig masutaka.net (snip) ;; ANSWER SECTION: masutaka.]]></description>
 <p>Cloud Run もそうですが、<a href="https://domains.google/intl/ja_jp/">Google Domains</a> や <a href="https://cloud.google.com/monitoring">Cloud Monitoring</a> の外形監視（稼働時間チェック）など、便利でライトに使える GCP を知ることが出来たことも収穫でした。</p>
 
 <p>それでは良い週末を！(^^)/</p>
+
+<p><strong>2022-11-04 追記：</strong>
+個人ブログにオチを書きました。
+<a href="https://masutaka.net/2022-11-04-1/">Heroku から Cloud Run に移行して、料金は本当に3分の1になったのか | マスタカの ChangeLog メモ</a></p>
 ]]></description>
             <enclosure url="https://cdn-ak.f.st-hatena.com/images/fotolife/m/masutaka26/20220930/20220930173417.png" length="0" type="image/png"/>
         </item>
