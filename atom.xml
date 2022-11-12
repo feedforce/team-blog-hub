@@ -2,12 +2,174 @@
 <feed xmlns="http://www.w3.org/2005/Atom">
     <id>https://engineers.feedforce.jp</id>
     <title>Feedforce Engineers' Blogs</title>
-    <updated>2022-11-11T01:32:59.012Z</updated>
+    <updated>2022-11-12T01:32:53.283Z</updated>
     <generator>https://github.com/jpmonette/feed</generator>
     <link rel="alternate" href="https://engineers.feedforce.jp"/>
     <subtitle>フィードフォースグループに所属するエンジニアのブログ記事をまとめています。</subtitle>
     <logo>https://engineers.feedforce.jp/logo.png</logo>
     <rights>© Feedforce Inc.</rights>
+    <entry>
+        <title type="html"><![CDATA[Looker のキャッシュの仕組みを思い出して実装を整理した]]></title>
+        <id>https://developer.feedforce.jp/entry/2022/11/11/111100</id>
+        <link href="https://developer.feedforce.jp/entry/2022/11/11/111100"/>
+        <updated>2022-11-11T02:11:00.000Z</updated>
+        <summary type="html"><![CDATA[<p>こんにちは。<a href="https://twitter.com/masutaka/status/1550357627779284992">自称 Looker エバンジェリスト</a>の <a href="http://blog.hatena.ne.jp/masutaka26/" class="hatena-id-icon"><img src="https://cdn.profile-image.st-hatena.com/users/masutaka26/profile.png" width="16" height="16" alt="" class="hatena-id-icon">id:masutaka26</a> です。</p>
+
+<p>フィードフォースで Looker を使っているサービスで最近 BigQuery の料金が上がってきました。</p>
+
+<p>本当に使われているのならとても良いことですが、Looker のキャッシュが有効に使われずに BigQuery 料金が増えていたら嫌だなと思い、キャッシュの仕組みを思い出しつつ実装を整理してみました。</p>
+
+<ul class="table-of-contents">
+    <li><a href="#Looker-のキャッシュおさらい">Looker のキャッシュおさらい</a></li>
+    <li><a href="#今回のサービスでのキャッシュ設定">今回のサービスでのキャッシュ設定</a></li>
+    <li><a href="#変更後のキャッシュ設定">変更後のキャッシュ設定</a></li>
+    <li><a href="#さらなる足掻きからの失敗">さらなる足掻きからの失敗</a></li>
+    <li><a href="#もっと足掻いてからの困惑">もっと足掻いてからの困惑</a></li>
+    <li><a href="#まとめ">まとめ</a></li>
+    <li><a href="#さらなるキャッシュへの理解">さらなるキャッシュへの理解</a></li>
+</ul>
+
+<h2 id="Looker-のキャッシュおさらい">Looker のキャッシュおさらい</h2>
+
+<p>Looker にはキャッシュの仕組みがあり、LookML 開発者が適切に設定することで、データベースのクエリ実行を減らすことができます。</p>
+
+<p>全く同じ SQL の実行結果がキャッシュされていれば、データベースにクエリ実行せずにキャッシュを返します。</p>
+
+<p>Looker ユーザーとしてはダッシュボードの表示速度向上のメリットがあり、LookML 開発者としては（BigQuery 等であれば）料金削減に繋がります。</p>
+
+<p>キャッシュの有効期限はデフォルトで 1 時間です。これは <a href="https://cloud.google.com/looker/docs/reference/param-model-persist-for">persist_for (for models)</a> のデフォルト値です。</p>
+
+<h2 id="今回のサービスでのキャッシュ設定">今回のサービスでのキャッシュ設定</h2>
+
+<p>良くも悪くも設定は最小限で、PDT（永続的派生テーブル）の実装箇所だけでした。</p>
+
+<p>例えば Google や Criteo などの広告媒体数値が入ったテーブルを参照する、all_media explore があります。このようなキャッシュ設定でした。</p>
+
+<pre class="code" data-lang="" data-unlink>datagroup: cache_all_media {
+  # 最新の日付か総レコード数に変化があったら検知する。
+  sql_trigger: SELECT CONCAT(MAX(date), &#39;_&#39;, COUNT(*)) FROM @{table_all_media} ;;
+  max_cache_age: &#34;1 hour&#34;
+}
+
+explore: all_media {
+  persist_with: cache_all_media # (1)
+
+  # ...
+}
+
+view: all_media {
+  derived_table: {
+    # めちゃめちゃ長い SQL
+    sql: SELECT
+           ...
+         FROM @{table_all_media}
+         GROUP BY ... ;;
+    datagroup_trigger: cache_all_media # (2)
+    partition_keys: [&#34;date&#34;]
+  }
+
+  # ...
+}</pre>
+
+
+<p>(1) で <code>cache_all_media</code> datagroup と <code>all_media</code> explore が <a href="https://cloud.google.com/looker/docs/reference/param-explore-persist-with">persist_with (for Explores)</a> で紐付くことで、以下の振る舞いが生まれます。</p>
+
+<ul>
+<li><code>sql_trigger</code> によりテーブルの変更が検知されると、キャッシュが破棄される</li>
+<li><code>max_cache_age</code> を超えたキャッシュは破棄される</li>
+</ul>
+
+
+<p>つまりキャッシュの生存期間は最長でも 1 時間です。その前に PDT が再作成されればもっと短くなります。</p>
+
+<p>どちらかと言えば、データベースを優先する設定です。このテーブルは 1 日に 3 回しか更新されないため、最適化の余地がありそうです。</p>
+
+<p>(2) で <code>cache_all_media</code> datagroup と <code>all_media</code> view も <a href="https://cloud.google.com/looker/docs/reference/param-view-datagroup-trigger">datagroup_trigger</a> で紐付いていますが、これは derived_table を永続化するための設定です。<code>sql_trigger</code> によりテーブルの変更が検知されると、PDT が再作成されるとともに、キャッシュが破棄されます。</p>
+
+<p>※ 余談: <code>persist_with</code> を設定していたことをすっかり忘れていたこともあり、調査前は (1) の理解が出来ていませんでした。😇</p>
+
+<h2 id="変更後のキャッシュ設定">変更後のキャッシュ設定</h2>
+
+<p>紆余曲折あり、<code>max_cache_age</code> を少し増やしただけにしました。</p>
+
+<pre class="code" data-lang="" data-unlink>datagroup: cache_all_media {
+  # 最新の日付か総レコード数に変化があったら検知する。
+  sql_trigger: SELECT CONCAT(MAX(date), &#39;_&#39;, COUNT(*)) FROM @{table_all_media} ;;
+  max_cache_age: &#34;2 hours&#34;
+}</pre>
+
+
+<p>本当は "24 hours" にして「PDT 再作成のタイミングでのみキャッシュを破棄」したかったのですが、他の Explore でも参照される関係で、<code>max_cache_age</code> を思い切って増やせませんでした。</p>
+
+<h2 id="さらなる足掻きからの失敗">さらなる足掻きからの失敗</h2>
+
+<p><code>max_cache_age</code> を 1 時間から 2 時間に増やした程度では、BigQuery 料金を抑えられたように見えませんでした。</p>
+
+<p>仕方がないので、all_media explore 以外の Explore で <code>cache_all_media</code> datagroup を使うのを止めて、専用 persist_with + datagroup を設定しました。</p>
+
+<p>このような LookML を 40 個書きました。😱</p>
+
+<pre class="code" data-lang="" data-unlink>datagroup: cache_corp_xxx {
+  sql_trigger:  SELECT
+                  STRING_AGG(CONCAT(table, &#39;_&#39;, date, &#39;_&#39;, count) ORDER BY table)
+                FROM (
+                  SELECT &#39;all_media&#39; AS table, MAX(date) AS date, COUNT(*) AS count FROM @{table_all_media} UNION ALL
+                  SELECT &#39;UA_1&#39;, MAX(date), COUNT(*) FROM @{table_ga_xxx} UNION ALL
+                  SELECT &#39;UA_2&#39;, MAX(date), COUNT(*) FROM @{table_ga_xxx2}
+                ) ;;
+  max_cache_age: &#34;24 hours&#34; # テーブル更新のタイミングでのみ、キャッシュを破棄する。
+}
+
+explore: corp_xxx {
+  persist_with: cache_corp_xxx
+
+  # ...
+}</pre>
+
+
+<p>結果的には大失敗。40 個の datagroup が 5 分に 1 回トリガーされる関係で、Looker を使わない土日でも BigQuery 料金が変わらなくなってしまいました。</p>
+
+<p>※ 補足: 「可能な限り Explore を少なくする」が Looker のベストプラクティスなので、40 個もの Explore は本来はアンチパターンです。ですが、今回のサービスはお客様にダッシュボードを提供する上に、やむを得ず個別実装が発生することもあります。そのような経緯で結果的にこの数になっています。</p>
+
+<h2 id="もっと足掻いてからの困惑">もっと足掻いてからの困惑</h2>
+
+<p>それならばと、利用頻度が高い Explore だけに、専用 persist_with + datagroup を設定すれば良いのでは？と思いました。<a href="https://cloud.google.com/looker/docs/usage-reports-with-system-activity-explores">System Activity の History Explore</a> から、このようなフィールドを選択すれば利用頻度の高い Explore が分かります。</p>
+
+<p><span itemscope itemtype="http://schema.org/Photograph"><img src="https://cdn-ak.f.st-hatena.com/images/fotolife/m/masutaka26/20221110/20221110171713.png" width="1200" height="692" loading="lazy" title="" class="hatena-fotolife" itemprop="image"></span></p>
+
+<p>設定してから一週間。BigQuery 料金はあまり変わりませんでした。😇</p>
+
+<p><a href="https://cloud.google.com/looker/docs/system-activity-dashboards#dashboard_performance_dashboard">Database Performance ダッシュボード</a>の Results from Cache<sup id="fnref:1"><a href="#fn:1" rel="footnote">1</a></sup>は 18% から 20% に向上しました。もっと高いほうが良いのか、どうなのか...。</p>
+
+<p><span itemscope itemtype="http://schema.org/Photograph"><img src="https://cdn-ak.f.st-hatena.com/images/fotolife/m/masutaka26/20221110/20221110165849.png" width="390" height="388" loading="lazy" title="" class="hatena-fotolife" itemprop="image"></span></p>
+
+<p>System Activity の History Explore からダッシュボードを作ってもみましたが、設定変更とキャッシュヒット率の相関性は見いだせませんでした。</p>
+
+<p><span itemscope itemtype="http://schema.org/Photograph"><img src="https://cdn-ak.f.st-hatena.com/images/fotolife/m/masutaka26/20221110/20221110171721.png" width="1200" height="763" loading="lazy" title="" class="hatena-fotolife" itemprop="image"></span></p>
+
+<p>とはいえ、BigQuery 料金はそこまで増えなかったので、とりあえず続けています。</p>
+
+<h2 id="まとめ">まとめ</h2>
+
+<p>BigQuery 料金が増えたことをきっかけにして、Looker のキャッシュ設定を見直しました。</p>
+
+<p>実装は整理できましたが、BigQuery 料金の変化はなく、キャッシュ難しい...という気持ちです。</p>
+
+<h2 id="さらなるキャッシュへの理解">さらなるキャッシュへの理解</h2>
+
+<p>中の人が翻訳して下さった記事がとても良いです。</p>
+
+<p><a href="https://community.looker.com/%E3%82%B3%E3%83%A9%E3%83%A0-103/%E3%82%AF%E3%82%A8%E3%83%AA%E3%81%AE%E3%83%AD%E3%82%B0%E3%81%8B%E3%82%89%E3%82%AD%E3%83%A3%E3%83%83%E3%82%B7%E3%83%A5%E3%82%92%E7%90%86%E8%A7%A3%E3%81%99%E3%82%8B-28549">クエリのログからキャッシュを理解する | Looker Community</a></p>
+<div class="footnotes">
+<hr/>
+<ol>
+<li id="fn:1">
+<p>キャッシュから返されたクエリの割合<a href="#fnref:1" rev="footnote">&#8617;</a></p></li>
+</ol>
+</div>
+
+]]></summary>
+    </entry>
     <entry>
         <title type="html"><![CDATA[StreamlitとDeepLabv3を用いて物体切り抜きができるか検証したという話をした]]></title>
         <id>https://developer.feedforce.jp/entry/2022/10/11/095230</id>
@@ -4937,25 +5099,6 @@ predictor.fit(
 <p>自分はとても恵まれていると思います。日々感謝感謝です。そんな話をすると、それだけじゃないよ、頑張ってるよ、と言ってくれる同僚も居ます。とてもありがたいことです。</p>
 
 <p>感謝の気持ちを力に変えて、ソーシャルPLUS をさらによいプロダクトにしていきたいと思いますので、今後ともよろしくお願いいたします。</p>
-]]></summary>
-    </entry>
-    <entry>
-        <title type="html"><![CDATA[エンジニア向けミートアップを開催します！]]></title>
-        <id>https://developer.feedforce.jp/entry/2021/03/15/113230</id>
-        <link href="https://developer.feedforce.jp/entry/2021/03/15/113230"/>
-        <updated>2021-03-15T02:32:30.000Z</updated>
-        <summary type="html"><![CDATA[<p>こんにちは。人事チームからエンジニアミートアップについてお知らせです。</p>
-
-<p>3月26日（金）19：00から、エンジニア向けのミートアップを開催することになりました！
-選考とは関係ないので、純粋に「どんなエンジニアがいるかみてみたい」「会社の雰囲気を知りたい」
-という方もぜひご参加いただけたら嬉しいです。</p>
-
-<p>初回のLT登壇者は <a href="https://twitter.com/daido1976">@daido1976</a>です！</br>
-詳しくは下記記事をご覧ください。</p>
-
-<p><iframe src="https://hatenablog-parts.com/embed?url=https%3A%2F%2Fmedia.feedforce.jp%2Fn%2Fn53b8be5eae4a" title="現場エンジニアと気軽に話せる！エンジニアミートアップを開催します｜フィードフォースのnote" class="embed-card embed-webcard" scrolling="no" frameborder="0" style="display: block; width: 100%; height: 155px; max-width: 500px; margin: 10px 0px;"></iframe><cite class="hatena-citation"><a href="https://media.feedforce.jp/n/n53b8be5eae4a">media.feedforce.jp</a></cite></p>
-
-<p>ご参加お待ちしています！</p>
 ]]></summary>
     </entry>
     <entry>
