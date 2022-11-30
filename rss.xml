@@ -4,7 +4,7 @@
         <title>Feedforce Engineers' Blogs</title>
         <link>https://engineers.feedforce.jp</link>
         <description>フィードフォースグループに所属するエンジニアのブログ記事をまとめています。</description>
-        <lastBuildDate>Tue, 29 Nov 2022 01:31:42 GMT</lastBuildDate>
+        <lastBuildDate>Wed, 30 Nov 2022 01:31:46 GMT</lastBuildDate>
         <docs>https://validator.w3.org/feed/docs/rss2.html</docs>
         <generator>https://github.com/jpmonette/feed</generator>
         <image>
@@ -1734,7 +1734,7 @@ p_{x,y} = \left\{
 
 <p>この記事は Looker Advent Calendar 2021 の 13 日目の記事です。</p>
 
-<p><iframe src="https://hatenablog-parts.com/embed?url=https%3A%2F%2Fqiita.com%2Fadvent-calendar%2F2021%2Flooker" title="Calendar for Looker | Advent Calendar 2021 - Qiita" class="embed-card embed-webcard" scrolling="no" frameborder="0" style="display: block; width: 100%; height: 155px; max-width: 500px; margin: 10px 0px;"></iframe><cite class="hatena-citation"><a href="https://qiita.com/advent-calendar/2021/looker">qiita.com</a></cite></p>
+<p><iframe src="https://hatenablog-parts.com/embed?url=https%3A%2F%2Fqiita.com%2Fadvent-calendar%2F2021%2Flooker" title="Calendar for Looker | Advent Calendar 2021 - Qiita" class="embed-card embed-webcard" scrolling="no" frameborder="0" style="display: block; width: 100%; height: 155px; max-width: 500px; margin: 10px 0px;" loading="lazy"></iframe><cite class="hatena-citation"><a href="https://qiita.com/advent-calendar/2021/looker">qiita.com</a></cite></p>
 
 <p>昨日は Yappli 阿部さんの「<a href="https://tech.yappli.io/entry/2021/12/12/Sexy_Tech_for_You_9">Lookerの目標値やストップワードを、Googleスプレッドシート連携でお手軽管理【Sexy Tech for You #9】</a>」でした。Looker を使うとこのような LookML を書くだけで、ビジネスユーザーが SQL を書くことなく、本業に集中できるのはとても良いですよね。</p>
 
@@ -1812,7 +1812,7 @@ views
 
 <p>以上の知識を持った上で、公式ドキュメントを読むと理解が深まるかもしれません。</p>
 
-<p><iframe src="https://hatenablog-parts.com/embed?url=https%3A%2F%2Fdocs.looker.com%2Fja%2Fdata-modeling%2Flearning-lookml%2Flookml-terms-and-concepts" title="LookMLの用語と概念" class="embed-card embed-webcard" scrolling="no" frameborder="0" style="display: block; width: 100%; height: 155px; max-width: 500px; margin: 10px 0px;"></iframe></p>
+<p><iframe src="https://hatenablog-parts.com/embed?url=https%3A%2F%2Fdocs.looker.com%2Fja%2Fdata-modeling%2Flearning-lookml%2Flookml-terms-and-concepts" title="Looker documentation  |  Google Cloud" class="embed-card embed-webcard" scrolling="no" frameborder="0" style="display: block; width: 100%; height: 155px; max-width: 500px; margin: 10px 0px;" loading="lazy"></iframe></p>
 
 <h2 id="最近使っているディレクトリ構造">最近使っているディレクトリ構造</h2>
 
@@ -1871,7 +1871,7 @@ $ bq mk --external_table_definition=./define.json spreadsheet1_v2.gsheet</pre>
 
 <p>スキーマ定義は公式ドキュメントをご覧下さい。需要があればそんな記事を書きます。</p>
 
-<p><iframe src="https://hatenablog-parts.com/embed?url=https%3A%2F%2Fcloud.google.com%2Fconfig-connector%2Fdocs%2Freference%2Fresource-docs%2Fbigquery%2Fbigquerytable%3Fhl%3Dja" title="BigQueryTable  |  Config Connector Documentation  |  Google Cloud" class="embed-card embed-webcard" scrolling="no" frameborder="0" style="display: block; width: 100%; height: 155px; max-width: 500px; margin: 10px 0px;"></iframe></p>
+<p><iframe src="https://hatenablog-parts.com/embed?url=https%3A%2F%2Fcloud.google.com%2Fconfig-connector%2Fdocs%2Freference%2Fresource-docs%2Fbigquery%2Fbigquerytable%3Fhl%3Dja" title="BigQueryTable  |  Config Connector Documentation  |  Google Cloud" class="embed-card embed-webcard" scrolling="no" frameborder="0" style="display: block; width: 100%; height: 155px; max-width: 500px; margin: 10px 0px;" loading="lazy"></iframe></p>
 
 <p>他の Dataset は ETL ツール<sup id="fnref:2"><a href="#fn:2" rel="footnote">2</a></sup>が作るためコード化はしていません。</p>
 
@@ -1976,7 +1976,7 @@ view: corp_name1 {
 
 <p>こちらのベストプラクティスに従っています。</p>
 
-<p><iframe src="https://hatenablog-parts.com/embed?url=https%3A%2F%2Fcommunity.looker.com%2Flookml-5%2Flookml-data-tests-recommendations-and-best-practices-20815" title="LookML Data Tests: Recommendations and Best Practices | Looker Community" class="embed-card embed-webcard" scrolling="no" frameborder="0" style="display: block; width: 100%; height: 155px; max-width: 500px; margin: 10px 0px;"></iframe></p>
+<p><iframe src="https://hatenablog-parts.com/embed?url=https%3A%2F%2Fcommunity.looker.com%2Flookml-5%2Flookml-data-tests-recommendations-and-best-practices-20815" title="LookML Data Tests: Recommendations and Best Practices | Looker Community" class="embed-card embed-webcard" scrolling="no" frameborder="0" style="display: block; width: 100%; height: 155px; max-width: 500px; margin: 10px 0px;" loading="lazy"></iframe></p>
 
 <p>テスト対象はこんな感じです。</p>
 
@@ -1988,11 +1988,11 @@ view: corp_name1 {
 
 <p>(2) は前回詳しく書きました。</p>
 
-<p><iframe src="https://hatenablog-parts.com/embed?url=https%3A%2F%2Fdeveloper.feedforce.jp%2Fentry%2F2021%2F08%2F30%2F150000" title="Looker で Join 先の view の primary_key をいい感じにテストする方法をようやく見つけた - Feedforce Developer Blog" class="embed-card embed-blogcard" scrolling="no" frameborder="0" style="display: block; width: 100%; height: 190px; max-width: 500px; margin: 10px 0px;"></iframe></p>
+<p><iframe src="https://hatenablog-parts.com/embed?url=https%3A%2F%2Fdeveloper.feedforce.jp%2Fentry%2F2021%2F08%2F30%2F150000" title="Looker で Join 先の view の primary_key をいい感じにテストする方法をようやく見つけた - Feedforce Developer Blog" class="embed-card embed-blogcard" scrolling="no" frameborder="0" style="display: block; width: 100%; height: 190px; max-width: 500px; margin: 10px 0px;" loading="lazy"></iframe></p>
 
 <p>実行に時間がかかることが悩みで以前こんな Topic を作りましたが、反応ゼロでした。みなさん課題ではないのかしら？💦</p>
 
-<p><iframe src="https://hatenablog-parts.com/embed?url=https%3A%2F%2Fcommunity.looker.com%2Flookml-5%2Fis-it-possible-to-run-tests-in-parallel-28222" title="Is it possible to run tests in parallel? | Looker Community" class="embed-card embed-webcard" scrolling="no" frameborder="0" style="display: block; width: 100%; height: 155px; max-width: 500px; margin: 10px 0px;"></iframe></p>
+<p><iframe src="https://hatenablog-parts.com/embed?url=https%3A%2F%2Fcommunity.looker.com%2Flookml-5%2Fis-it-possible-to-run-tests-in-parallel-28222" title="Is it possible to run tests in parallel? | Looker Community" class="embed-card embed-webcard" scrolling="no" frameborder="0" style="display: block; width: 100%; height: 155px; max-width: 500px; margin: 10px 0px;" loading="lazy"></iframe></p>
 
 <p><code>primary_key</code> は壊れた時に気づくのが難しく、LookML 開発者が私だけということもあるため、機械的に全ての <code>primary_key</code> をテスト出来るようにしています。ただ、全テストは結構時間がかかるので、日に 1 回くらいの頻度で手動実行しています。CI したい...。</p>
 
@@ -2023,7 +2023,7 @@ constant: table_name2  { value: &#34;`table2.view`&#34; }</pre>
 
 <p>こちらの記事は読んで手も動かしたのですが、巨大なファイルを分割する、Blocks のようなライブラリをカスタマイズする（？）、以外の使い方を見いだせていません。</p>
 
-<p><iframe src="https://hatenablog-parts.com/embed?url=https%3A%2F%2Fcommunity.looker.com%2F%25E3%2582%25B3%25E3%2583%25A9%25E3%2583%25A0-103%2Frefinements%25E3%2582%2592%25E4%25BD%25BF%25E3%2581%25A3%25E3%2581%25A6lookml%25E3%2581%25AE%25E3%2582%25B3%25E3%2583%25BC%25E3%2583%2589%25E3%2582%2592%25E6%2595%25B4%25E7%2590%2586%25E3%2581%2599%25E3%2582%258B-18809" title="Refinementsを使ってLookMLのコードを整理する | Looker Community" class="embed-card embed-webcard" scrolling="no" frameborder="0" style="display: block; width: 100%; height: 155px; max-width: 500px; margin: 10px 0px;"></iframe></p>
+<p><iframe src="https://hatenablog-parts.com/embed?url=https%3A%2F%2Fcommunity.looker.com%2F%25E3%2582%25B3%25E3%2583%25A9%25E3%2583%25A0-103%2Frefinements%25E3%2582%2592%25E4%25BD%25BF%25E3%2581%25A3%25E3%2581%25A6lookml%25E3%2581%25AE%25E3%2582%25B3%25E3%2583%25BC%25E3%2583%2589%25E3%2582%2592%25E6%2595%25B4%25E7%2590%2586%25E3%2581%2599%25E3%2582%258B-18809" title="Refinementsを使ってLookMLのコードを整理する | Looker Community" class="embed-card embed-webcard" scrolling="no" frameborder="0" style="display: block; width: 100%; height: 155px; max-width: 500px; margin: 10px 0px;" loading="lazy"></iframe></p>
 
 <p>皆さんのディレクトリ構造も是非教えて下さい！</p>
 
@@ -2040,11 +2040,11 @@ constant: table_name2  { value: &#34;`table2.view`&#34; }</pre>
 <hr/>
 <ol>
 <li id="fn:1">
-<p>正確に書くと <code>manifest.lkml</code> や <code>.strings.json</code> などもありますが、一旦考えなくて良いと思います。<a href="#fnref:1" rev="footnote">&#8617;</a></p></li>
+正確に書くと <code>manifest.lkml</code> や <code>.strings.json</code> などもありますが、一旦考えなくて良いと思います。<a href="#fnref:1" rev="footnote">&#8617;</a></li>
 <li id="fn:2">
-<p><a href="https://funnel.io/">Funnel.io</a> を使っています。<a href="#fnref:2" rev="footnote">&#8617;</a></p></li>
+<a href="https://funnel.io/">Funnel.io</a> を使っています。<a href="#fnref:2" rev="footnote">&#8617;</a></li>
 <li id="fn:3">
-<p>1 行で書いているのはソートしやすくするためです。<a href="#fnref:3" rev="footnote">&#8617;</a></p></li>
+1 行で書いているのはソートしやすくするためです。<a href="#fnref:3" rev="footnote">&#8617;</a></li>
 </ol>
 </div>
 
