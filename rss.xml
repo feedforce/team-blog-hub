@@ -4,7 +4,7 @@
         <title>Feedforce Engineers' Blogs</title>
         <link>https://engineers.feedforce.jp</link>
         <description>フィードフォースグループに所属するエンジニアのブログ記事をまとめています。</description>
-        <lastBuildDate>Sun, 04 Dec 2022 01:31:11 GMT</lastBuildDate>
+        <lastBuildDate>Mon, 05 Dec 2022 01:31:26 GMT</lastBuildDate>
         <docs>https://validator.w3.org/feed/docs/rss2.html</docs>
         <generator>https://github.com/jpmonette/feed</generator>
         <image>
@@ -13,6 +13,349 @@
             <link>https://engineers.feedforce.jp</link>
         </image>
         <copyright>© Feedforce Inc.</copyright>
+        <item>
+            <title><![CDATA[GitHub の issue をまるっと複製する GitHub Action「Issue Duplicator」を自作した]]></title>
+            <link>https://developer.feedforce.jp/entry/2022/12/04/235514</link>
+            <guid>https://developer.feedforce.jp/entry/2022/12/04/235514</guid>
+            <pubDate>Sun, 04 Dec 2022 14:55:14 GMT</pubDate>
+            <description><![CDATA[<p>こんにちは、<a href="https://socialplus.jp/">ソーシャルPLUS</a> でフロントエンド開発をしている <a href="http://blog.hatena.ne.jp/mashabow/" class="hatena-id-icon"><img src="https://cdn.profile-image.st-hatena.com/users/mashabow/profile.png" width="16" height="16" alt="" class="hatena-id-icon">id:mashabow</a> です。</p>
+
+<p>ここ最近「issue の複製めんどくさいなー。もっと楽にできればいいのに」と思うことが多かったので、issue をまるっと複製してくれる GitHub Action「Issue Duplicator」を個人で作ってみました。というわけで、今回はこの Issue Duplicator の紹介です。</p>
+
+<p><iframe src="https://hatenablog-parts.com/embed?url=https%3A%2F%2Fgithub.com%2Fmarketplace%2Factions%2Fissue-duplicator" title="Issue Duplicator - GitHub Marketplace" class="embed-card embed-webcard" scrolling="no" frameborder="0" style="display: block; width: 100%; height: 155px; max-width: 500px; margin: 10px 0px;" loading="lazy"></iframe><cite class="hatena-citation"><a href="https://github.com/marketplace/actions/issue-duplicator">github.com</a></cite></p>
+
+<p><iframe src="https://hatenablog-parts.com/embed?url=https%3A%2F%2Fgithub.com%2Fmashabow%2Fissue-duplicator-action" title="GitHub - mashabow/issue-duplicator-action: GitHub Action to duplicate an issue with assignees, labels, milestone, and GitHub project custom fields" class="embed-card embed-webcard" scrolling="no" frameborder="0" style="display: block; width: 100%; height: 155px; max-width: 500px; margin: 10px 0px;" loading="lazy"></iframe><cite class="hatena-citation"><a href="https://github.com/mashabow/issue-duplicator-action">github.com</a></cite></p>
+
+<p>ちなみにこの記事は、<a href="https://adventar.org/calendars/7898">Feedforce Group Advent Calendar 2022</a>の 4 日目の記事です。3 日目は、かくさんの『<a href="https://note.com/shigey/n/n359732ae92be">セロペギアボッセリに学ぶ、鈴木さんとの接し方</a>』でした。子育て 1 年目な自分にとっては「変数多すぎな。」がとても印象的でした。わかる。（そういう話じゃない？）</p>
+
+<h2 id="Issue-Duplicator-でできること">Issue Duplicator でできること</h2>
+
+<p>複製したい issue に <code>/duplicate</code> とだけ書いたコメントをつけると、</p>
+
+<p><span itemscope itemtype="http://schema.org/Photograph"><img src="https://cdn-ak.f.st-hatena.com/images/fotolife/m/mashabow/20221204/20221204232213.png" width="2610" height="1760" loading="lazy" title="" class="hatena-fotolife" itemprop="image"></span></p>
+
+<p>その issue を<strong>まるっと複製した新しい issue</strong> を、同じリポジトリに作ってくれます。</p>
+
+<p><span itemscope itemtype="http://schema.org/Photograph"><img src="https://cdn-ak.f.st-hatena.com/images/fotolife/m/mashabow/20221204/20221204232003.png" width="2610" height="1760" loading="lazy" title="" class="hatena-fotolife" itemprop="image"></span></p>
+
+<p>GitHub projects のカスタムフィールドも複製するので、project 上で見るとこんな感じ。</p>
+
+<p><span itemscope itemtype="http://schema.org/Photograph"><img src="https://cdn-ak.f.st-hatena.com/images/fotolife/m/mashabow/20221204/20221204232724.png" width="2632" height="1324" loading="lazy" title="" class="hatena-fotolife" itemprop="image"></span></p>
+
+<p>複製される項目の詳細は、以下のとおりです。</p>
+
+<ul>
+<li>Title（issue のタイトル）</li>
+<li>Body（issue の本文）<sup id="fnref:1"><a href="#fn:1" rel="footnote">1</a></sup></li>
+<li>Assignees</li>
+<li>Labels</li>
+<li>Milestone</li>
+<li>その issue が紐付けられている GitHub projects
+
+<ul>
+<li>project のカスタムフィールドの値も、すべてコピーされます</li>
+</ul>
+</li>
+</ul>
+
+
+<p>なお、以下の項目は複製されません。</p>
+
+<ul>
+<li>issue についているコメント</li>
+<li>Author（アクションに設定する personal access token を発行したユーザーが Author になります）</li>
+<li>issue が open か closed か（常に open で作成されます）</li>
+<li>issue がロックされているか否か（非ロック状態で作成されます）</li>
+</ul>
+
+
+<h2 id="Issue-Duplicator-の使い方">Issue Duplicator の使い方</h2>
+
+<p>Issue Duplicator を動かしたいリポジトリに、以下のワークフローを作成します。</p>
+
+<pre class="code lang-yaml" data-lang="yaml" data-unlink><span class="synComment"># .github/workflows/issue-duplicator.yml</span>
+
+<span class="synIdentifier">name</span><span class="synSpecial">:</span> Issue Duplicator
+
+<span class="synIdentifier">on</span><span class="synSpecial">:</span>
+  <span class="synIdentifier">issue_comment</span><span class="synSpecial">:</span>
+    <span class="synIdentifier">types</span><span class="synSpecial">:</span> <span class="synSpecial">[</span>created, edited<span class="synSpecial">]</span>
+
+<span class="synIdentifier">jobs</span><span class="synSpecial">:</span>
+  <span class="synIdentifier">run</span><span class="synSpecial">:</span>
+    <span class="synIdentifier">runs-on</span><span class="synSpecial">:</span> ubuntu-latest
+    <span class="synIdentifier">steps</span><span class="synSpecial">:</span>
+      <span class="synStatement">- </span><span class="synIdentifier">uses</span><span class="synSpecial">:</span> mashabow/issue-duplicator-action@v1
+        <span class="synIdentifier">with</span><span class="synSpecial">:</span>
+          <span class="synIdentifier">github-token</span><span class="synSpecial">:</span> ${{ secrets.ISSUE_DUPLICATOR_PAT }}
+</pre>
+
+
+<p>次に、<code>repo</code> スコープと <code>project</code> スコープを持つ <a href="https://github.com/settings/tokens/new">personal access token を発行</a>しましょう。そして、その personal access token を、<code>ISSUE_DUPLICATOR_PAT</code> という名前で<a href="https://docs.github.com/ja/actions/security-guides/encrypted-secrets#creating-encrypted-secrets-for-a-repository">リポジトリのシークレットに登録</a>すれば準備完了です。</p>
+
+<p>適当な issue に <code>/duplicate</code> というコメントを付けて、ちゃんと複製されるか確認しましょう！ 複製に成功すると、新しい issue へのリンクが追加されます。</p>
+
+<p><span itemscope itemtype="http://schema.org/Photograph"><img src="https://cdn-ak.f.st-hatena.com/images/fotolife/m/mashabow/20221204/20221204233024.png" width="1842" height="268" loading="lazy" title="" class="hatena-fotolife" itemprop="image"></span></p>
+
+<p>ログを確認したい場合は、リポジトリの Actions タブから。</p>
+
+<p><span itemscope itemtype="http://schema.org/Photograph"><img src="https://cdn-ak.f.st-hatena.com/images/fotolife/m/mashabow/20221204/20221204233238.png" width="2222" height="1314" loading="lazy" title="" class="hatena-fotolife" itemprop="image"></span></p>
+
+<h2 id="Issue-Duplicator-を作った経緯">Issue Duplicator を作った経緯</h2>
+
+<p>わたしの所属するソーシャル PLUS 開発チームでは、メンバーが増えてきたこともあって先月から大規模スクラム <a href="https://less.works/jp/less/rules">Large-Scale Scrum（LeSS）</a> を導入しています。これを機に、今までのスクラムのやり方を見直し、改善することになりました。プロダクトバックログはもともと issue と GitHub projects で管理しており、それは引き続き使っていくんですが、</p>
+
+<ul>
+<li>1 スプリントでプロダクトバックログアイテムを 4 つほど消化できるように、アイテムの粒度をもっと細かくしたい</li>
+<li>リファインメントやプランニングの場で、どんどんプロダクトバックログアイテムを分割したい</li>
+</ul>
+
+
+<p>というのが変化点でした。LeSS を導入するにあたって『大規模スクラム Large-Scale Scrum（LeSS）―アジャイルとスクラムを大規模に実装する方法]』という本を読んだんですが、プロダクトバックログアイテムの分割については、9 章と 11 章で 20 ページほどを割いて、詳しく解説されています。</p>
+
+<p><div class="hatena-asin-detail"><a href="https://www.amazon.co.jp/dp/462130366X?tag=hatena-22&amp;linkCode=osi&amp;th=1&amp;psc=1" class="hatena-asin-detail-image-link" target="_blank" rel="noopener"><img src="https://m.media-amazon.com/images/I/51+igEK3VPL._SL500_.jpg" class="hatena-asin-detail-image" alt="大規模スクラム Large-Scale Scrum(LeSS) アジャイルとスクラムを大規模に実装する方法" title="大規模スクラム Large-Scale Scrum(LeSS) アジャイルとスクラムを大規模に実装する方法"></a><div class="hatena-asin-detail-info"><p class="hatena-asin-detail-title"><a href="https://www.amazon.co.jp/dp/462130366X?tag=hatena-22&amp;linkCode=osi&amp;th=1&amp;psc=1" target="_blank" rel="noopener">大規模スクラム Large-Scale Scrum(LeSS) アジャイルとスクラムを大規模に実装する方法</a></p><ul class="hatena-asin-detail-meta"><li>丸善出版</li></ul><a href="https://www.amazon.co.jp/dp/462130366X?tag=hatena-22&amp;linkCode=osi&amp;th=1&amp;psc=1" class="asin-detail-buy" target="_blank" rel="noopener">Amazon</a></div></div></p>
+
+<p>さて、このプロダクトバックログアイテム（1つのアイテムを1つの issue として管理しています）をいざ分割しようとすると、次の手順を踏むことになります。</p>
+
+<ol>
+<li>分割元の issue とは別に、新しい issue を作る</li>
+<li>元の issue の本文を新しい issue の本文にコピペして、適宜編集する</li>
+<li>新しい issue にラベルやマイルストーンをつける</li>
+<li>新しい issue をプロダクトバックログの project に追加する</li>
+<li>新しい issue の、project のカスタムフィールド（優先度・ポイント・担当チームなど）を埋める</li>
+</ol>
+
+
+<p>……面倒ですよね。実際に何度か分割してみましたが、やっぱり面倒です。</p>
+
+<p><span itemscope itemtype="http://schema.org/Photograph"><img src="https://cdn-ak.f.st-hatena.com/images/fotolife/m/mashabow/20221204/20221204230453.png" width="1218" height="157" loading="lazy" title="" class="hatena-fotolife" itemprop="image"></span></p>
+
+<p>分割元の issue と、新しく作った issue とでは、ラベル・マイルストーン・Project のカスタムフィールドなどはだいたいが共通になるでしょう。もちろん、分割して別々のアイテムになったわけですから、細部は異なりますが。というわけで、「issue をまるっと複製してくれる便利ツールがあれば助かるのでは…？」と考えました。とりあえず複製して、変えたい箇所は手で編集すればいいか、と。</p>
+
+<p>調べてみたら <a href="https://github.com/marketplace/actions/duplicate-issue">Duplicate Issue</a> という GitHub Action がありましたが、残念ながら GitHub projects には対応していません。じゃあいい機会だし作ってみるか、と自作することにしました。</p>
+
+<h2 id="アクションを自作する">アクションを自作する</h2>
+
+<p>アクションの作り方には何種類かありますが、普段 TypeScript を書いている身にとっては、JavaScript アクションというものを開発するのがとっつきやすそうでした。</p>
+
+<ul>
+<li><a href="https://docs.github.com/ja/actions/creating-actions/creating-a-javascript-action">Creating a JavaScript action - GitHub Docs</a></li>
+</ul>
+
+
+<p>TypeScript で開発するためのテンプレートが公式で用意されていたので、今回はこちらを使ってみました。が、README に詳しいことが書かれていなかったり、ビルド済みのファイルをコミットする必要があったり、使い勝手は正直微妙です。</p>
+
+<p><iframe src="https://hatenablog-parts.com/embed?url=https%3A%2F%2Fgithub.com%2Factions%2Ftypescript-action" title="GitHub - actions/typescript-action: Create a TypeScript Action with tests, linting, workflow, publishing, and versioning" class="embed-card embed-webcard" scrolling="no" frameborder="0" style="display: block; width: 100%; height: 155px; max-width: 500px; margin: 10px 0px;" loading="lazy"></iframe><cite class="hatena-citation"><a href="https://github.com/actions/typescript-action">github.com</a></cite></p>
+
+<p>スクリプトの書き方はいたってシンプルで、入出力に <a href="https://github.com/actions/toolkit/tree/main/packages/core"><code>@actions/core</code></a> の関数を使う以外は、基本的には普通の Node.js のスクリプトと同じです。詳しい書き方については、公式のドキュメントもネット上の日本語記事も充実しているので、ここでは割愛します。</p>
+
+<p>今回は issue の複製をしたいので、GitHub の Web API を利用します。<a href="https://github.com/actions/toolkit/tree/main/packages/github"><code>@actions/github</code></a> を使うと、Octokit で簡単に API を叩くことができます。</p>
+
+<pre class="code lang-typescript" data-lang="typescript" data-unlink><span class="synComment">// Octokit を使って issue を複製する</span>
+
+<span class="synStatement">import</span> * <span class="synStatement">as</span> github <span class="synStatement">from</span> <span class="synConstant">&quot;@actions/github&quot;</span><span class="synStatement">;</span>
+
+<span class="synType">const</span> octokit <span class="synStatement">=</span> github.getOctokit<span class="synStatement">(</span>token<span class="synStatement">);</span>
+
+<span class="synComment">// https://docs.github.com/en/rest/issues/issues#create-an-issue</span>
+<span class="synType">const</span> <span class="synIdentifier">{</span> data: createdIssue <span class="synIdentifier">}</span> <span class="synStatement">=</span> <span class="synStatement">await</span> octokit.rest.issues.create<span class="synStatement">(</span><span class="synIdentifier">{</span>
+  owner: repository.owner.login<span class="synStatement">,</span>
+  repo: repository.name<span class="synStatement">,</span>
+  title: originalIssue.title<span class="synStatement">,</span>
+  body: originalIssue.body ?? <span class="synType">undefined</span><span class="synStatement">,</span>
+  milestone: originalIssue.milestone?.<span class="synType">number</span><span class="synStatement">,</span>
+  labels: originalIssue.labels<span class="synStatement">,</span>
+  assignees: originalIssue.assignees.map<span class="synStatement">((</span><span class="synIdentifier">{</span> login <span class="synIdentifier">}</span><span class="synStatement">)</span> <span class="synStatement">=&gt;</span> login<span class="synStatement">),</span>
+<span class="synIdentifier">}</span><span class="synStatement">);</span>
+</pre>
+
+
+<p>次に、新しく作った issue を GitHub project に追加したいわけですが、project 関連の API は REST では提供されていません。そのため、GraphQL の方を使う必要があります。<a href="https://docs.github.com/ja/graphql/reference/objects">オブジェクトの一覧</a>を見ると、<code>Project</code>・<code>ProjectV2</code>・<code>ProjectNext</code> と似たようなオブジェクトが 3 つもありますが、今回使うのは <code>ProjectV2</code> です。ややこしいですね。</p>
+
+<ul>
+<li><code>Project</code>: 古いバージョンの <a href="https://docs.github.com/ja/issues/organizing-your-work-with-project-boards/managing-project-boards/about-project-boards">project (classic)</a></li>
+<li><strong><code>ProjectV2</code>: 新しい高機能な <a href="https://docs.github.com/ja/issues/planning-and-tracking-with-projects/learning-about-projects/about-projects">project</a></strong></li>
+<li><code>ProjectNext</code>: <code>ProjectV2</code> の以前の名前。廃止予定</li>
+</ul>
+
+
+<p>また、<code>ProjectV2</code> の中のそれぞれのアイテム（issue・PR・ドラフト）は、<code>ProjectV2Item</code> という名前になっています。以下は Octokit で GraphQL API を叩く例です。</p>
+
+<pre class="code lang-typescript" data-lang="typescript" data-unlink><span class="synComment">// issue を project に追加する</span>
+<span class="synType">const</span> data <span class="synStatement">=</span> <span class="synStatement">await</span> octokit.graphql<span class="synStatement">(</span>
+  <span class="synConstant">`</span>
+<span class="synConstant">  mutation addIssueToProject($input: AddProjectV2ItemByIdInput!) {</span>
+<span class="synConstant">    addProjectV2ItemById(input: $input) {</span>
+<span class="synConstant">      item {</span>
+<span class="synConstant">        id</span>
+<span class="synConstant">      }</span>
+<span class="synConstant">    }</span>
+<span class="synConstant">  }</span>
+<span class="synConstant">`</span><span class="synStatement">,</span>
+  <span class="synIdentifier">{</span> input: <span class="synIdentifier">{</span> projectId<span class="synStatement">,</span> contentId: issueId <span class="synIdentifier">}</span> <span class="synIdentifier">}</span>
+<span class="synStatement">);</span>
+</pre>
+
+
+<p>特にハマりどころもなく素直に使えますが、残念なことに、そのままでは引数や戻り値の型がつきません。</p>
+
+<h2 id="octokitgraphql-に型をつける"><code>octokit.graphql</code> に型をつける</h2>
+
+<p>せっかく TypeScript で開発しているんですから、やっぱり型が欲しい。ということで、<a href="https://the-guild.dev/graphql/codegen">GraphQL Code Generator</a> を使って型をつけてみました<sup id="fnref:2"><a href="#fn:2" rel="footnote">2</a></sup>。</p>
+
+<p>GraphQL Code Generator を以下のように設定して、</p>
+
+<pre class="code lang-typescript" data-lang="typescript" data-unlink><span class="synComment">// codegen.ts</span>
+
+<span class="synStatement">import</span> <span class="synStatement">type</span> <span class="synIdentifier">{</span>CodegenConfig<span class="synIdentifier">}</span> <span class="synStatement">from</span> <span class="synConstant">'@graphql-codegen/cli'</span>
+
+<span class="synType">const</span> config: CodegenConfig <span class="synStatement">=</span> <span class="synIdentifier">{</span>
+  overwrite: <span class="synConstant">true</span><span class="synStatement">,</span>
+  schema: <span class="synConstant">'https://docs.github.com/public/schema.docs.graphql'</span><span class="synStatement">,</span>
+  documents: <span class="synConstant">'src/**/*.graphql'</span><span class="synStatement">,</span>
+  generates: <span class="synIdentifier">{</span>
+    <span class="synConstant">'src/graphql/index.ts'</span>: <span class="synIdentifier">{</span>
+      plugins: <span class="synIdentifier">[</span>
+        <span class="synConstant">'typescript'</span><span class="synStatement">,</span>
+        <span class="synConstant">'typescript-operations'</span><span class="synStatement">,</span> <span class="synComment">// 各 operation から型を生成する</span>
+        <span class="synConstant">'typescript-generic-sdk'</span> <span class="synComment">// SDK（各 operation を実行する関数群）を生成する</span>
+      <span class="synIdentifier">]</span><span class="synStatement">,</span>
+      config: <span class="synIdentifier">{</span>
+        documentMode: <span class="synConstant">'string'</span> <span class="synComment">// operation の中身を文字列としてリクエスト関数に渡す</span>
+      <span class="synIdentifier">}</span>
+    <span class="synIdentifier">}</span>
+  <span class="synIdentifier">}</span>
+<span class="synIdentifier">}</span>
+
+<span class="synStatement">export</span> <span class="synStatement">default</span> config
+</pre>
+
+
+<p>GraphQL の operation のファイルを用意します。</p>
+
+<pre class="code lang-graphql" data-lang="graphql" data-unlink><span class="synComment"># src/graphql/addIssueToProject.graphql</span>
+
+<span class="synType">mutation</span> <span class="synIdentifier">addIssueToProject</span>($<span class="synType">input</span>: <span class="synType">AddProjectV2ItemByIdInput</span><span class="synStatement">!</span>) <span class="synSpecial">{</span>
+  <span class="synIdentifier">addProjectV2ItemById</span>(<span class="synIdentifier">input</span>: $<span class="synIdentifier">input</span>) <span class="synSpecial">{</span>
+    <span class="synIdentifier">item</span> <span class="synSpecial">{</span>
+      <span class="synIdentifier">id</span>
+    <span class="synSpecial">}</span>
+  <span class="synSpecial">}</span>
+<span class="synSpecial">}</span>
+</pre>
+
+
+<p>そして GraphQL Code Generator を実行。</p>
+
+<pre class="code console" data-lang="console" data-unlink>$ yarn graphql-codegen --config codegen.ts</pre>
+
+
+<p>すると、以下のようなファイルが生成されます。</p>
+
+<pre class="code lang-typescript" data-lang="typescript" data-unlink><span class="synComment">// src/graphql/index.ts</span>
+
+<span class="synComment">// この上にはスキーマから生成された型定義がひたすら書かれている（省略）</span>
+
+<span class="synComment">// operation の変数の型</span>
+<span class="synStatement">export</span> <span class="synStatement">type</span> AddIssueToProjectMutationVariables <span class="synStatement">=</span> Exact<span class="synStatement">&lt;</span><span class="synIdentifier">{</span>
+  input: AddProjectV2ItemByIdInput<span class="synStatement">;</span>
+<span class="synIdentifier">}</span><span class="synStatement">&gt;;</span>
+
+<span class="synComment">// operation の結果の型</span>
+<span class="synStatement">export</span> <span class="synStatement">type</span> AddIssueToProjectMutation <span class="synStatement">=</span> <span class="synIdentifier">{</span> __typename?: <span class="synConstant">'Mutation'</span><span class="synStatement">,</span> addProjectV2ItemById?: <span class="synIdentifier">{</span> __typename?: <span class="synConstant">'AddProjectV2ItemByIdPayload'</span><span class="synStatement">,</span> item?: <span class="synIdentifier">{</span> __typename?: <span class="synConstant">'ProjectV2Item'</span><span class="synStatement">,</span> id: <span class="synType">string</span> <span class="synIdentifier">}</span> | <span class="synType">null</span> <span class="synIdentifier">}</span> | <span class="synType">null</span> <span class="synIdentifier">}</span><span class="synStatement">;</span>
+
+<span class="synComment">// operation の中身そのもの</span>
+<span class="synStatement">export</span> <span class="synType">const</span> AddIssueToProjectDocument <span class="synStatement">=</span> <span class="synConstant">`</span>
+<span class="synConstant">    mutation addIssueToProject($input: AddProjectV2ItemByIdInput!) {</span>
+<span class="synConstant">  addProjectV2ItemById(input: $input) {</span>
+<span class="synConstant">    item {</span>
+<span class="synConstant">      id</span>
+<span class="synConstant">    }</span>
+<span class="synConstant">  }</span>
+<span class="synConstant">}</span>
+<span class="synConstant">    `</span><span class="synStatement">;</span>
+
+<span class="synComment">// リクエスト関数の型</span>
+<span class="synStatement">export</span> <span class="synStatement">type</span> Requester<span class="synStatement">&lt;</span>C <span class="synStatement">=</span> <span class="synIdentifier">{}</span><span class="synStatement">,</span> E <span class="synStatement">=</span> <span class="synType">unknown</span><span class="synStatement">&gt;</span> <span class="synStatement">=</span> <span class="synStatement">&lt;</span>R<span class="synStatement">,</span> V<span class="synStatement">&gt;(</span>doc: <span class="synType">string</span><span class="synStatement">,</span> vars?: V<span class="synStatement">,</span> options?: C<span class="synStatement">)</span> <span class="synStatement">=&gt;</span> <span class="synSpecial">Promise</span><span class="synStatement">&lt;</span>R<span class="synStatement">&gt;</span> | AsyncIterable<span class="synStatement">&lt;</span>R<span class="synStatement">&gt;</span>
+<span class="synComment">// リクエスト関数から SDK（各 operation を実行する関数群）を作る関数</span>
+<span class="synStatement">export</span> <span class="synStatement">function</span> getSdk<span class="synStatement">&lt;</span>C<span class="synStatement">,</span> E<span class="synStatement">&gt;(</span>requester: Requester<span class="synStatement">&lt;</span>C<span class="synStatement">,</span> E<span class="synStatement">&gt;)</span> <span class="synIdentifier">{</span>
+  <span class="synStatement">return</span> <span class="synIdentifier">{</span>
+    addIssueToProject<span class="synStatement">(</span>variables: AddIssueToProjectMutationVariables<span class="synStatement">,</span> options?: C<span class="synStatement">)</span>: <span class="synSpecial">Promise</span><span class="synStatement">&lt;</span>AddIssueToProjectMutation<span class="synStatement">&gt;</span> <span class="synIdentifier">{</span>
+      <span class="synStatement">return</span> requester<span class="synStatement">&lt;</span>AddIssueToProjectMutation<span class="synStatement">,</span> AddIssueToProjectMutationVariables<span class="synStatement">&gt;(</span>AddIssueToProjectDocument<span class="synStatement">,</span> variables<span class="synStatement">,</span> options<span class="synStatement">)</span> <span class="synStatement">as</span> <span class="synSpecial">Promise</span><span class="synStatement">&lt;</span>AddIssueToProjectMutation<span class="synStatement">&gt;;</span>
+    <span class="synIdentifier">}</span>
+    <span class="synComment">// この例では operation が1つだけだが、複数の operation があれば、関数がここに並ぶ</span>
+  <span class="synIdentifier">}</span><span class="synStatement">;</span>
+<span class="synIdentifier">}</span>
+<span class="synComment">// SDK の型</span>
+<span class="synStatement">export</span> <span class="synStatement">type</span> Sdk <span class="synStatement">=</span> ReturnType<span class="synStatement">&lt;typeof</span> getSdk<span class="synStatement">&gt;;</span>
+</pre>
+
+
+<p>これだけだとどう使うのかわかりにくいかもしれませんが、以下の使用例を見ればイメージが付くんじゃないでしょうか。</p>
+
+<pre class="code lang-typescript" data-lang="typescript" data-unlink><span class="synStatement">import</span> <span class="synIdentifier">{</span> getSdk <span class="synIdentifier">}</span> <span class="synStatement">from</span> <span class="synConstant">&quot;./graphql&quot;</span><span class="synStatement">;</span>
+
+<span class="synComment">// octokit.graphql をリクエスト関数として利用する SDK を作る</span>
+<span class="synType">const</span> sdk <span class="synStatement">=</span> getSdk<span class="synStatement">(</span>octokit.graphql<span class="synStatement">);</span>
+
+<span class="synComment">// addIssueToProject を実行</span>
+<span class="synType">const</span> data <span class="synStatement">=</span> <span class="synStatement">await</span> sdk.addIssueToProject<span class="synStatement">(</span><span class="synIdentifier">{</span>
+  input: <span class="synIdentifier">{</span> projectId<span class="synStatement">,</span> contentId: issueId <span class="synIdentifier">}</span><span class="synStatement">,</span>
+<span class="synIdentifier">}</span><span class="synStatement">);</span>
+</pre>
+
+
+<p>もちろん、<code>sdk.addIssueToProject</code> の引数と戻り値にはちゃんと型が付きます！</p>
+
+<h2 id="アクションを公開する">アクションを公開する</h2>
+
+<p>今回は TypeScript で開発したので、公開する前にビルド（JavaScript へのトランスパイル）を行う必要があります。<a href="https://docs.github.com/ja/actions/creating-actions/releasing-and-maintaining-actions#setting-up-github-actions-workflows">公式ドキュメント</a>で紹介されていた <a href="https://github.com/JasonEtco/build-and-tag-action">JasonEtco/build-and-tag-action</a> を使ってみましたが、以下のような少し癖のある動作をします。</p>
+
+<ol>
+<li>GitHub の Web UI から、ビルドしたいコミットを指定してリリースを作成する</li>
+<li>リリースが作成されると、JasonEtco/build-and-tag-action によって以下の処理が実行される
+
+<ol>
+<li>そのコミットのソースコードをビルドする</li>
+<li>ビルドされた <code>dist/index.js</code> と <code>action.yml</code> <strong>だけ</strong> のコミットを、何のブランチにも属していない状態で新しく作る</li>
+<li>1 で作成したリリースを、その<strong>新しいコミットで置き換える</strong></li>
+<li>1 で作成したリリースのバージョンに応じて、<code>v1.2.3</code>, <code>v1.2</code>, <code>v1</code> などのタグを打つ（もしくは移動させる）</li>
+</ol>
+</li>
+</ol>
+
+
+<p>これがドキュメントからは読み取りづらく、最初戸惑いました。ビルド後の新しいコミットに <code>README.md</code> が入っていないのも、いまいちな点です。</p>
+
+<p>作成したアクションは、審査不要で GitHub Merketplace に掲載することができます。こちらについては、ドキュメントと UI 上の案内に従っていけば、とても簡単に公開できました。</p>
+
+<ul>
+<li><a href="https://docs.github.com/ja/actions/creating-actions/publishing-actions-in-github-marketplace">GitHub Marketplaceでのアクションの公開 - GitHub Docs</a></li>
+</ul>
+
+
+<h2 id="おわりに">おわりに</h2>
+
+<p>というわけで、<a href="https://adventar.org/calendars/7898">Feedforce Group Advent Calendar 2022</a>の 4 日目は Issue Duplicator を自作した話でした。</p>
+
+<p><iframe src="https://hatenablog-parts.com/embed?url=https%3A%2F%2Fgithub.com%2Fmarketplace%2Factions%2Fissue-duplicator" title="Issue Duplicator - GitHub Marketplace" class="embed-card embed-webcard" scrolling="no" frameborder="0" style="display: block; width: 100%; height: 155px; max-width: 500px; margin: 10px 0px;" loading="lazy"></iframe><cite class="hatena-citation"><a href="https://github.com/marketplace/actions/issue-duplicator">github.com</a></cite></p>
+
+<p>書いてから気づいたんですが、こんな真面目な記事じゃなくて、3 月に生まれた息子のかわいさをひたすら語る記事にすればよかったですね。</p>
+
+<p>明日はサラリーマン会計士のあの方が、テントサウナについて語ってくださるそうです。楽しみですね！</p>
+<div class="footnotes">
+<hr/>
+<ol>
+<li id="fn:1">
+社内では、issue の本文をなぜか「0 コメ」と呼んでいます。ローカル用語だと思いますが、ニコニコ動画全盛期にできた呼び方なんでしょうか…？<a href="#fnref:1" rev="footnote">&#8617;</a></li>
+<li id="fn:2">
+<code>octokit.graphql</code> に型をつける方法、需要は多いはずなんですが、調べ方が悪かったのか検索してもあまり出てきませんでした。定番の方法をご存じの方がいればぜひご教示ください。<a href="#fnref:2" rev="footnote">&#8617;</a></li>
+</ol>
+</div>
+
+]]></description>
+            <enclosure url="https://cdn-ak.f.st-hatena.com/images/fotolife/m/mashabow/20221205/20221205000946.png" length="0" type="image/png"/>
+        </item>
         <item>
             <title><![CDATA[Looker のキャッシュの仕組みを思い出して実装を整理した]]></title>
             <link>https://developer.feedforce.jp/entry/2022/11/11/111100</link>
