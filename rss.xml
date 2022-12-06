@@ -4,7 +4,7 @@
         <title>Feedforce Engineers' Blogs</title>
         <link>https://engineers.feedforce.jp</link>
         <description>フィードフォースグループに所属するエンジニアのブログ記事をまとめています。</description>
-        <lastBuildDate>Mon, 05 Dec 2022 01:31:26 GMT</lastBuildDate>
+        <lastBuildDate>Tue, 06 Dec 2022 01:30:59 GMT</lastBuildDate>
         <docs>https://validator.w3.org/feed/docs/rss2.html</docs>
         <generator>https://github.com/jpmonette/feed</generator>
         <image>
@@ -13,6 +13,251 @@
             <link>https://engineers.feedforce.jp</link>
         </image>
         <copyright>© Feedforce Inc.</copyright>
+        <item>
+            <title><![CDATA[Looker のレイヤー化を本番環境に導入してみた]]></title>
+            <link>https://developer.feedforce.jp/entry/2022/12/05/110000</link>
+            <guid>https://developer.feedforce.jp/entry/2022/12/05/110000</guid>
+            <pubDate>Mon, 05 Dec 2022 02:00:00 GMT</pubDate>
+            <description><![CDATA[<p>こんにちは。<a href="https://twitter.com/masutaka/status/1550357627779284992">自称 Looker エバンジェリスト</a>の <a href="http://blog.hatena.ne.jp/masutaka26/" class="hatena-id-icon"><img src="https://cdn.profile-image.st-hatena.com/users/masutaka26/profile.png" width="16" height="16" alt="" class="hatena-id-icon">id:masutaka26</a> です。</p>
+
+<p>この記事は Looker Advent Calendar 2022 の 5 日目の記事です。</p>
+
+<p><iframe src="https://hatenablog-parts.com/embed?url=https%3A%2F%2Fqiita.com%2Fadvent-calendar%2F2022%2Flooker" title="Calendar for Looker | Advent Calendar 2022 - Qiita" class="embed-card embed-webcard" scrolling="no" frameborder="0" style="display: block; width: 100%; height: 155px; max-width: 500px; margin: 10px 0px;" loading="lazy"></iframe><cite class="hatena-citation"><a href="https://qiita.com/advent-calendar/2022/looker">qiita.com</a></cite></p>
+
+<p>昨日と一昨日は記事がなくて、その前は BASE 永野さん (<a href="https://twitter.com/glassmonekey">@glassmonekey</a>) の「<a href="https://devblog.thebase.in/entry/2022/12/02/110000">アジリティを保ってデータ基盤を作る取り組み</a>」でした。使用した技術そのものよりも、どのように合意形成してこのような体制に出来たのかが気になりました。👀</p>
+
+<p>今回は奇しくも去年の Advent Calendar その後の話になります。全然狙っていませんでした。たまたまです。</p>
+
+<p><iframe src="https://hatenablog-parts.com/embed?url=https%3A%2F%2Fdeveloper.feedforce.jp%2Fentry%2F2021%2F12%2F13%2F110000" title="LookML 開発で使っているディレクトリ構造を紹介する - Feedforce Developer Blog" class="embed-card embed-blogcard" scrolling="no" frameborder="0" style="display: block; width: 100%; height: 190px; max-width: 500px; margin: 10px 0px;" loading="lazy"></iframe><cite class="hatena-citation"><a href="https://developer.feedforce.jp/entry/2021/12/13/110000">developer.feedforce.jp</a></cite></p>
+
+<ul class="table-of-contents">
+    <li><a href="#LookML-のレイヤー化とは">LookML のレイヤー化とは</a></li>
+    <li><a href="#導入戦略">導入戦略</a></li>
+    <li><a href="#実際の導入方法">実際の導入方法</a><ul>
+            <li><a href="#_baselayerlkml">/_base.layer.lkml</a></li>
+            <li><a href="#_basiclayerlkml">/_basic.layer.lkml</a></li>
+            <li><a href="#layerslayerlkml">/layers/*.layer.lkml</a></li>
+            <li><a href="#modellkml">/*.model.lkml</a></li>
+            <li><a href="#コラム-複数レイヤーで共通するロジックの置き場所">[コラム] 複数レイヤーで共通するロジックの置き場所</a></li>
+        </ul>
+    </li>
+    <li><a href="#まとめ">まとめ</a></li>
+</ul>
+
+<h2 id="LookML-のレイヤー化とは">LookML のレイヤー化とは</h2>
+
+<p>LookML には <a href="https://cloud.google.com/looker/docs/lookml-refinements">Refinements</a> という <a href="https://cloud.google.com/looker/docs/reusing-code-with-extends">Extends</a> に似た機能があり、explore や view の定義を分散させたり、元のコードを変更せずに機能を追加することが出来ます。</p>
+
+<p>この Refinements を応用することで LookML に「レイヤー化」という概念を導入することが出来ます。まずはこちらの記事をどうぞ。</p>
+
+<p><iframe src="https://hatenablog-parts.com/embed?url=https%3A%2F%2Fcommunity.looker.com%2F%25E3%2582%25B3%25E3%2583%25A9%25E3%2583%25A0-103%2Frefinements%25E3%2582%2592%25E4%25BD%25BF%25E3%2581%25A3%25E3%2581%25A6lookml%25E3%2581%25AE%25E3%2582%25B3%25E3%2583%25BC%25E3%2583%2589%25E3%2582%2592%25E6%2595%25B4%25E7%2590%2586%25E3%2581%2599%25E3%2582%258B-18809" title="Refinementsを使ってLookMLのコードを整理する | Looker Community" class="embed-card embed-webcard" scrolling="no" frameborder="0" style="display: block; width: 100%; height: 155px; max-width: 500px; margin: 10px 0px;" loading="lazy"></iframe><cite class="hatena-citation"><a href="https://community.looker.com/%E3%82%B3%E3%83%A9%E3%83%A0-103/refinements%E3%82%92%E4%BD%BF%E3%81%A3%E3%81%A6lookml%E3%81%AE%E3%82%B3%E3%83%BC%E3%83%89%E3%82%92%E6%95%B4%E7%90%86%E3%81%99%E3%82%8B-18809">community.looker.com</a></cite></p>
+
+<p>このような責務だと理解しました。</p>
+
+<ul>
+<li>/_base.layer.lkml
+
+<ul>
+<li>スキーマと Explore の定義に徹する。Join はしない</li>
+</ul>
+</li>
+<li>/_basic.layer.lkml
+
+<ul>
+<li>データ構造に着目した Join と、primary_key の定義に徹する。ビジネスロジックは定義しない</li>
+</ul>
+</li>
+<li>/layers/*.layer.lkml
+
+<ul>
+<li>ビジネスロジックの論理レイヤーをここに定義する</li>
+</ul>
+</li>
+</ul>
+
+
+<p>💭 <code>_base</code> と <code>_basic</code> はもっと良い命名はあるかもしれません。</p>
+
+<h2 id="導入戦略">導入戦略</h2>
+
+<p>既存のプロジェクトを全部書き換えるのはリスクが大きいので、新規で Join する view からレイヤー化を試すことにしました。</p>
+
+<p>ただ、責務はこのように再定義しました。特に <code>/_basic.layer.lkml</code> を変えました。</p>
+
+<ul>
+<li>/_base.layer.lkml
+
+<ul>
+<li>スキーマ定義に徹する</li>
+</ul>
+</li>
+<li>/_basic.layer.lkml
+
+<ul>
+<li>primary_key のテストを書ける定義を書く。Join はしない。ビジネスロジックは知らない</li>
+</ul>
+</li>
+<li>/layers/*.layer.lkml
+
+<ul>
+<li>Join 含めて、ビジネスロジックの論理レイヤーをここに定義する</li>
+</ul>
+</li>
+</ul>
+
+
+<p>というのも、今回は「データ構造に着目した Join」と同じ Join を論理レイヤーにも定義する必要があり、実装が分散するからです。後述します。</p>
+
+<h2 id="実際の導入方法">実際の導入方法</h2>
+
+<h3 id="_baselayerlkml">/_base.layer.lkml</h3>
+
+<p>このようなスキーマ定義を、1 つのファイルに書いていきます。</p>
+
+<pre class="code" data-lang="" data-unlink>view: ad_budget {
+  sql_table_name: @{table_ad_budget} ;;
+
+  dimension: month        { type: string }
+  dimension: client_name  { type: string }
+  dimension: site_name    { type: string }
+  dimension: media        { type: string }
+  dimension: budget_gross { type: number }
+}</pre>
+
+
+<p>💡 <code>sql: ${TABLE}.date ;;</code> 等がなくて違和感があるかも知れませんが、以下のとおり問題ありません。</p>
+
+<p>🔗 <a href="https://cloud.google.com/looker/docs/reference/param-field-sql#sql_for_dimensions">sql (for fields) > Definition > sql for Dimensions</a></p>
+
+<blockquote><p>If <code>sql</code> is left unspecified, then Looker assumes that there is a column in the underlying table with the same name as the field. For example, selecting a field called <code>city</code> without a <code>sql</code> parameter would be equivalent to specifying <code>sql: ${TABLE}.city</code>.</p>
+
+<p><code>sql</code> が指定されていない場合、Looker はそのフィールドと同じ名前のカラムが基礎となるテーブルに存在すると仮定します。例えば、<code>sql</code> パラメータを指定せずに <code>city</code> というフィールドを選択すると、<code>sql: ${TABLE}.city</code> と指定したのと同じことになります。</p></blockquote>
+
+<h3 id="_basiclayerlkml">/_basic.layer.lkml</h3>
+
+<p>このような定義を書きます。</p>
+
+<pre class="code" data-lang="" data-unlink>include: &#34;/_base.layer&#34;
+
+# Define for tests
+explore: ad_budget {
+  required_access_grants: [can_view_explores_for_tests]
+  hidden: yes
+}
+
+view: +ad_budget {
+  dimension: pk {
+    primary_key: yes
+    type: string
+    sql: CONCAT(${month}, ${client_name}, ${site_name}, ${media}) ;;
+    hidden: yes
+  }
+
+  measure: count {
+    type: count
+    description: &#34;Row Count&#34;
+    filters: {
+      field: &#34;pk&#34;
+      value: &#34;-NULL&#34;
+    }
+  }
+}</pre>
+
+
+<p>💡 ad_budget view は直接使われず、他の Explore から Join して使うので、ad_budget explore はテストだけで使うように隠しています。</p>
+
+<p>関連記事です。</p>
+
+<p><iframe src="https://hatenablog-parts.com/embed?url=https%3A%2F%2Fdeveloper.feedforce.jp%2Fentry%2F2021%2F08%2F30%2F150000" title="Looker で Join 先の view の primary_key をいい感じにテストする方法をようやく見つけた - Feedforce Developer Blog" class="embed-card embed-blogcard" scrolling="no" frameborder="0" style="display: block; width: 100%; height: 190px; max-width: 500px; margin: 10px 0px;" loading="lazy"></iframe><cite class="hatena-citation"><a href="https://developer.feedforce.jp/entry/2021/08/30/150000">developer.feedforce.jp</a></cite></p>
+
+<h3 id="layerslayerlkml">/layers/*.layer.lkml</h3>
+
+<p>ad_budget view を 2 つの Explore から Join します。<code>join</code> 内容はほとんど同じで、<code>sql_on</code> の view 名が違うだけです。</p>
+
+<p>似た実装を 1 つにまとめられるメリットがあります。corp_name1 という名前から推測できるとおり、corp_nameN explore は複数存在しており、その数数十にもなります。</p>
+
+<pre class="code" data-lang="" data-unlink>include: &#34;/_basic.layer&#34;
+include: &#34;/explores/all_media.explore&#34;
+
+explore: +all_media {
+  join: ad_budget {
+    view_label: &#34;広告予算&#34;
+    relationship: many_to_many
+    sql_on: ${all_media.date_month} = ${ad_budget.month}
+            AND ${all_media.corporate_name} = ${ad_budget.client_name}
+            AND ${all_media.proposition_name} = ${ad_budget.site_name} ;;
+  }
+}
+
+explore: +corp_name1 {
+  join: ad_budget {
+    view_label: &#34;広告予算&#34;
+    relationship: many_to_many
+    sql_on: ${corp_name1.date_month} = ${ad_budget.month}
+            AND ${corp_name1.corporate_name} = ${ad_budget.client_name}
+            AND ${corp_name1.proposition_name} = ${ad_budget.site_name} ;;
+  }
+}
+
+view: +ad_budget {
+  dimension: budget_gross { hidden: yes }
+
+  measure: total_budget_gross {
+    type: sum
+    sql: ${budget_gross} ;;
+    label: &#34;広告予算 (Gross)&#34;
+    value_format_name: jpy_0
+  }
+}</pre>
+
+
+<h3 id="modellkml">/*.model.lkml</h3>
+
+<p><code>/model_name.model.lkml</code> のようなファイルに、レイヤーファイルの include を追加しました。</p>
+
+<pre class="code" data-lang="" data-unlink>include: &#34;/layers/**/*.layer&#34;</pre>
+
+
+<h3 id="コラム-複数レイヤーで共通するロジックの置き場所">[コラム] 複数レイヤーで共通するロジックの置き場所</h3>
+
+<p>少し脱線。複数レイヤーで共通するロジックをどう書けばよいか？の話はあると思います。</p>
+
+<p>今まで通り <code>extends</code> パラメーターを使えば良いです。Refinements と Extends は共存できます。詳しくは <a href="https://help.looker.com/hc/en-us/articles/5043112335891-Lookml-refinements-compared-to-extends">Lookml refinements compared to extends</a> をどうぞ。</p>
+
+<p>まだ試行錯誤中ですが、私は <code>/modules/*.module.lkml</code> に共通ロジックをまとめています。</p>
+
+<h2 id="まとめ">まとめ</h2>
+
+<p>LookML のレイヤー化を紹介しました。今回の例以外にもガッツリと使っています。</p>
+
+<p>記事を書いていて、具体的な例を出してもピンと来ないだろうし、抽象的な例にするとボンヤリするしで、いろんな意味で難易度が高かったです。どなたか 1 人にでも参考になれば十分です。</p>
+
+<p>レイヤー化は LookML の到達点ではなく、1 つの選択肢に過ぎません。素朴なデータ構造であれば、<code>/views</code> や <code>/explores</code> で実装したほうが良いと思います。</p>
+
+<p>というのも、レイヤー化を導入すると、スキーマ定義と Dimension&amp;Measure 定義の距離が離れるので、その view で何が使えるのか、コードから理解するのが難しくなるからです。</p>
+
+<p>今回紹介した例も、記事を書いていてもっと良い方法があるような気がしました。Explore をうまいこと Extends して Join を 1 つにまとめれば、レイヤー化を使わなくてよいのでは？とか。でも以前検討した時はうまくいかなかったんですよね...。</p>
+
+<p>正解はないと思うので、他の試行錯誤も是非教えて下さい。</p>
+
+<p>🔗 <a href="https://community.looker.com/lookml-5/what-is-the-looker-recommended-folder-structure-for-lookml-development-28826">What is the looker recommended folder structure for LookML development ? | Looker Community</a></p>
+
+<blockquote><p>I used different approaches in the last few years and found it that I always have to have some kind of a hybrid system.
+(snip)
+But to be honest, I am still experimenting with what’s the best physical split versus logical</p>
+
+<p>私は過去数年間、さまざまなアプローチを使用し、私は常にいくつかの種類のハイブリッドシステムを持たなければならないことを発見した。
+（省略）
+しかし、正直なところ、物理的な分割と論理的な分割のどちらが良いのか、まだ試行錯誤の段階です。</p></blockquote>
+
+<p>以前、Looker Community のこちらのコメントを紹介したことがあります。<a href="https://community.looker.com/members/dawid-5902">Dawid</a> さんはよくお見かけする方で、かなりの熟練者のはずです。そんな彼も、未だに試行錯誤しているようです。</p>
+
+<p>始めは <code>/views</code> や <code>/explores</code> のような素朴な実装から始めて、必要に応じてレイヤー化を取り入れれば良いと思います。いつか公式から、データの複雑度に応じたベストプラクティスが出てくることを期待します。🙃</p>
+
+<p><a href="https://qiita.com/advent-calendar/2022/looker">Looker Advent Calendar 2022</a> の明日、明後日は書く人はまだいなくて、その次は @saenakano さんの「System Activity入門」です。お楽しみに。</p>
+]]></description>
+            <enclosure url="https://cdn-ak.f.st-hatena.com/images/fotolife/m/masutaka26/20201023/20201023184859.png" length="0" type="image/png"/>
+        </item>
         <item>
             <title><![CDATA[GitHub の issue をまるっと複製する GitHub Action「Issue Duplicator」を自作した]]></title>
             <link>https://developer.feedforce.jp/entry/2022/12/04/235514</link>
@@ -113,7 +358,7 @@
 
 <p>というのが変化点でした。LeSS を導入するにあたって『大規模スクラム Large-Scale Scrum（LeSS）―アジャイルとスクラムを大規模に実装する方法]』という本を読んだんですが、プロダクトバックログアイテムの分割については、9 章と 11 章で 20 ページほどを割いて、詳しく解説されています。</p>
 
-<p><div class="hatena-asin-detail"><a href="https://www.amazon.co.jp/dp/462130366X?tag=hatena-22&amp;linkCode=osi&amp;th=1&amp;psc=1" class="hatena-asin-detail-image-link" target="_blank" rel="noopener"><img src="https://m.media-amazon.com/images/I/51+igEK3VPL._SL500_.jpg" class="hatena-asin-detail-image" alt="大規模スクラム Large-Scale Scrum(LeSS) アジャイルとスクラムを大規模に実装する方法" title="大規模スクラム Large-Scale Scrum(LeSS) アジャイルとスクラムを大規模に実装する方法"></a><div class="hatena-asin-detail-info"><p class="hatena-asin-detail-title"><a href="https://www.amazon.co.jp/dp/462130366X?tag=hatena-22&amp;linkCode=osi&amp;th=1&amp;psc=1" target="_blank" rel="noopener">大規模スクラム Large-Scale Scrum(LeSS) アジャイルとスクラムを大規模に実装する方法</a></p><ul class="hatena-asin-detail-meta"><li>丸善出版</li></ul><a href="https://www.amazon.co.jp/dp/462130366X?tag=hatena-22&amp;linkCode=osi&amp;th=1&amp;psc=1" class="asin-detail-buy" target="_blank" rel="noopener">Amazon</a></div></div></p>
+<p><div class="hatena-asin-detail"><a href="https://www.amazon.co.jp/dp/462130366X?tag=hatena-22&amp;linkCode=ogi&amp;th=1&amp;psc=1" class="hatena-asin-detail-image-link" target="_blank" rel="noopener"><img src="https://m.media-amazon.com/images/I/51+igEK3VPL._SL500_.jpg" class="hatena-asin-detail-image" alt="大規模スクラム Large-Scale Scrum(LeSS) アジャイルとスクラムを大規模に実装する方法" title="大規模スクラム Large-Scale Scrum(LeSS) アジャイルとスクラムを大規模に実装する方法"></a><div class="hatena-asin-detail-info"><p class="hatena-asin-detail-title"><a href="https://www.amazon.co.jp/dp/462130366X?tag=hatena-22&amp;linkCode=ogi&amp;th=1&amp;psc=1" target="_blank" rel="noopener">大規模スクラム Large-Scale Scrum(LeSS) アジャイルとスクラムを大規模に実装する方法</a></p><ul class="hatena-asin-detail-meta"><li>丸善出版</li></ul><a href="https://www.amazon.co.jp/dp/462130366X?tag=hatena-22&amp;linkCode=ogi&amp;th=1&amp;psc=1" class="asin-detail-buy" target="_blank" rel="noopener">Amazon</a></div></div></p>
 
 <p>さて、このプロダクトバックログアイテム（1つのアイテムを1つの issue として管理しています）をいざ分割しようとすると、次の手順を踏むことになります。</p>
 
@@ -343,6 +588,8 @@
 <p>書いてから気づいたんですが、こんな真面目な記事じゃなくて、3 月に生まれた息子のかわいさをひたすら語る記事にすればよかったですね。</p>
 
 <p>明日はサラリーマン会計士のあの方が、テントサウナについて語ってくださるそうです。楽しみですね！</p>
+
+<p><iframe src="https://hatenablog-parts.com/embed?url=https%3A%2F%2Fnote.com%2Fshigi1230%2Fn%2Fn64082e0f47cc" title="足柄のテントサウナに行ってきた話。｜サラリーマン会計士｜note" class="embed-card embed-webcard" scrolling="no" frameborder="0" style="display: block; width: 100%; height: 155px; max-width: 500px; margin: 10px 0px;" loading="lazy"></iframe><cite class="hatena-citation"><a href="https://note.com/shigi1230/n/n64082e0f47cc">note.com</a></cite></p>
 <div class="footnotes">
 <hr/>
 <ol>
