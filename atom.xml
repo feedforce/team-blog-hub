@@ -2,7 +2,7 @@
 <feed xmlns="http://www.w3.org/2005/Atom">
     <id>https://engineers.feedforce.jp</id>
     <title>Feedforce Engineers' Blogs</title>
-    <updated>2022-12-09T01:31:52.660Z</updated>
+    <updated>2022-12-10T01:31:14.899Z</updated>
     <generator>https://github.com/jpmonette/feed</generator>
     <link rel="alternate" href="https://engineers.feedforce.jp"/>
     <subtitle>フィードフォースグループに所属するエンジニアのブログ記事をまとめています。</subtitle>
@@ -566,7 +566,7 @@ But to be honest, I am still experimenting with what’s the best physical split
 
 <p>これがドキュメントからは読み取りづらく、最初戸惑いました。ビルド後の新しいコミットに <code>README.md</code> が入っていないのも、いまいちな点です。</p>
 
-<p>作成したアクションは、審査不要で GitHub Merketplace に掲載することができます。こちらについては、ドキュメントと UI 上の案内に従っていけば、とても簡単に公開できました。</p>
+<p>作成したアクションは、審査不要で GitHub Marketplace に掲載することができます。こちらについては、ドキュメントと UI 上の案内に従っていけば、とても簡単に公開できました。</p>
 
 <ul>
 <li><a href="https://docs.github.com/ja/actions/creating-actions/publishing-actions-in-github-marketplace">GitHub Marketplaceでのアクションの公開 - GitHub Docs</a></li>
