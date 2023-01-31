@@ -28,19 +28,6 @@ export const members: Member[] = [
     ],
   },
   {
-    name: "masutaka",
-    role: "LookML Developer",
-    bio: "カレー大好き！",
-    avatarSrc: "https://www.gravatar.com/avatar/d6c5403c0b6ef2f9fd51910ea38323a3?size=256",
-    sources: [
-      "https://developer.feedforce.jp/rss/author/masutaka26",
-      "https://masutaka.net/tags/feedforce/index.xml",
-    ],
-    twitterUsername: "masutaka",
-    githubUsername: "masutaka",
-    websiteUrl: "https://masutaka.net",
-  },
-  {
     name: "mashabow",
     bio: "フロントエンドエンジニア。文字が好き。",
     avatarSrc: "https://www.gravatar.com/avatar/6afbe110d33ef7e859fb8649b86bae55?size=256",
