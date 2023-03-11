@@ -4,7 +4,7 @@
         <title>Feedforce Engineers' Blogs</title>
         <link>https://engineers.feedforce.jp</link>
         <description>フィードフォースグループに所属するエンジニアのブログ記事をまとめています。</description>
-        <lastBuildDate>Fri, 10 Mar 2023 01:32:45 GMT</lastBuildDate>
+        <lastBuildDate>Sat, 11 Mar 2023 01:31:50 GMT</lastBuildDate>
         <docs>https://validator.w3.org/feed/docs/rss2.html</docs>
         <generator>https://github.com/jpmonette/feed</generator>
         <image>
@@ -6889,8 +6889,8 @@ quit       Close any open TELNET session and exit telnet.  An end of file (in co
         </item>
         <item>
             <title><![CDATA[2020年 買ってよかったもの]]></title>
-            <link>https://blog.tmd45.jp/entry/2020/12/14/133631</link>
-            <guid>https://blog.tmd45.jp/entry/2020/12/14/133631</guid>
+            <link>https://blog.betaful.life/entry/2020/12/14/133631</link>
+            <guid>https://blog.betaful.life/entry/2020/12/14/133631</guid>
             <pubDate>Mon, 14 Dec 2020 04:36:31 GMT</pubDate>
             <description><![CDATA[<p>この記事は <a href="https://adventar.org/calendars/5560">feedforce Advent Calendar 2020</a> の 14 日目の記事です。</p>
 
@@ -8386,8 +8386,8 @@ Web 開発はインターネット特有の課題が多いですが、 gem の�
         </item>
         <item>
             <title><![CDATA[シングルサインオンのひとことで片付けない]]></title>
-            <link>https://blog.tmd45.jp/entry/2019/12/09/090000</link>
-            <guid>https://blog.tmd45.jp/entry/2019/12/09/090000</guid>
+            <link>https://blog.betaful.life/entry/2019/12/09/090000</link>
+            <guid>https://blog.betaful.life/entry/2019/12/09/090000</guid>
             <pubDate>Mon, 09 Dec 2019 00:00:00 GMT</pubDate>
             <description><![CDATA[<p>この記事は <a href="https://qiita.com/advent-calendar/2019/identity">認証認可技術 Advent Calendar 2019</a> の 9 日目の記事です。</p>
 
@@ -9804,8 +9804,8 @@ require: false
         </item>
         <item>
             <title><![CDATA[沼 Advent Calendar 2018 総括]]></title>
-            <link>https://blog.tmd45.jp/entry/2018/12/25/143619</link>
-            <guid>https://blog.tmd45.jp/entry/2018/12/25/143619</guid>
+            <link>https://blog.betaful.life/entry/2018/12/25/143619</link>
+            <guid>https://blog.betaful.life/entry/2018/12/25/143619</guid>
             <pubDate>Tue, 25 Dec 2018 05:36:19 GMT</pubDate>
             <description><![CDATA[<p>メリークリスマス、皆様。各 Advent Calendar も最終日、クリスマスでございます。</p>
 
@@ -10359,8 +10359,8 @@ Ignore リストに追加されたルールは次回以降、 RubocopChallenger 
         </item>
         <item>
             <title><![CDATA[インク沼に足首らへん？まで浸かっている話]]></title>
-            <link>https://blog.tmd45.jp/entry/2018/12/01/000000</link>
-            <guid>https://blog.tmd45.jp/entry/2018/12/01/000000</guid>
+            <link>https://blog.betaful.life/entry/2018/12/01/000000</link>
+            <guid>https://blog.betaful.life/entry/2018/12/01/000000</guid>
             <pubDate>Fri, 30 Nov 2018 15:00:00 GMT</pubDate>
             <description><![CDATA[<p>この記事は <a href="https://adventar.org/calendars/2946">沼 Advent Calendar 2018</a> の 1 日目の記事です。ご参加予定の皆さまありがとうございます。</p>
 
@@ -13671,8 +13671,8 @@ $ <span class="synStatement">less</span> out.ttx
         </item>
         <item>
             <title><![CDATA[フトらない話]]></title>
-            <link>https://blog.tmd45.jp/entry/2016/12/10/135046</link>
-            <guid>https://blog.tmd45.jp/entry/2016/12/10/135046</guid>
+            <link>https://blog.betaful.life/entry/2016/12/10/135046</link>
+            <guid>https://blog.betaful.life/entry/2016/12/10/135046</guid>
             <pubDate>Sat, 10 Dec 2016 04:50:46 GMT</pubDate>
             <description><![CDATA[<p>この記事は <a href="http://www.adventar.org/calendars/1427">feedforce Advent Calendar 2016</a> の 10 日目の記事です。</p>
 
@@ -14059,8 +14059,8 @@ $ <span class="synStatement">less</span> out.ttx
         </item>
         <item>
             <title><![CDATA[goshiTKG]]></title>
-            <link>https://blog.tmd45.jp/entry/2015/12/23/153236</link>
-            <guid>https://blog.tmd45.jp/entry/2015/12/23/153236</guid>
+            <link>https://blog.betaful.life/entry/2015/12/23/153236</link>
+            <guid>https://blog.betaful.life/entry/2015/12/23/153236</guid>
             <pubDate>Wed, 23 Dec 2015 06:32:36 GMT</pubDate>
             <description><![CDATA[<p>本日3本目の更新になります。この記事は <a href="http://www.adventar.org/calendars/720">TKG Advent Calendar 2015</a> の 23 日目です。昨日は <a href="http://www.adventar.org/users/2729">daruyanagi</a> さんの『<a href="http://daruyanagi.jp/entry/2015/12/22/000000">文明の利器をフル活用して oTKG に挑戦する</a>』でした。</p>
 
@@ -14132,8 +14132,8 @@ $ <span class="synStatement">less</span> out.ttx
         </item>
         <item>
             <title><![CDATA[さらに3ヶ月経過]]></title>
-            <link>https://blog.tmd45.jp/entry/2015/12/23/130639</link>
-            <guid>https://blog.tmd45.jp/entry/2015/12/23/130639</guid>
+            <link>https://blog.betaful.life/entry/2015/12/23/130639</link>
+            <guid>https://blog.betaful.life/entry/2015/12/23/130639</guid>
             <pubDate>Wed, 23 Dec 2015 04:06:39 GMT</pubDate>
             <description><![CDATA[<p>本日2本目の更新。この記事は <a href="http://www.adventar.org/calendars/740">糖質制限 Advent Calendar 2015</a> の 23 日目です。前の回は <a href="http://www.adventar.org/users/6667">Miki Shoji</a> さんのはずですが、その前の記事は <a href="http://www.adventar.org/users/1795">yancya</a> さんの『<a href="http://upec.jp/archives/705">yancya の糖質制限日記</a>』でした。</p>
 
@@ -14209,8 +14209,8 @@ $ <span class="synStatement">less</span> out.ttx
         </item>
         <item>
             <title><![CDATA[受付システムつくってみた（仮）]]></title>
-            <link>https://blog.tmd45.jp/entry/2015/12/23/112220</link>
-            <guid>https://blog.tmd45.jp/entry/2015/12/23/112220</guid>
+            <link>https://blog.betaful.life/entry/2015/12/23/112220</link>
+            <guid>https://blog.betaful.life/entry/2015/12/23/112220</guid>
             <pubDate>Wed, 23 Dec 2015 02:22:20 GMT</pubDate>
             <description><![CDATA[<p>この記事は <a href="http://www.adventar.org/calendars/906">フィードフォースエンジニア Advent Calendar 2015</a> の 23 日目の記事です。昨日は <a href="http://www.adventar.org/users/1332">kano-e </a> さんの３本目の記事で『<a href="https://gist.github.com/kano-e/f80ab651aa31f60a49c4">自分が文章を書く時と、開発してる時って、実は同じようなこと考えて作業を進めてる</a>』というお話でした！わかる（迫真）</p>
 
@@ -14293,8 +14293,8 @@ $ <span class="synStatement">less</span> out.ttx
         </item>
         <item>
             <title><![CDATA[ドラ娘論]]></title>
-            <link>https://blog.tmd45.jp/entry/2015/12/13/000000</link>
-            <guid>https://blog.tmd45.jp/entry/2015/12/13/000000</guid>
+            <link>https://blog.betaful.life/entry/2015/12/13/000000</link>
+            <guid>https://blog.betaful.life/entry/2015/12/13/000000</guid>
             <pubDate>Sat, 12 Dec 2015 15:00:00 GMT</pubDate>
             <description><![CDATA[<p>この記事は <a href="http://www.adventar.org/calendars/1248">Kosen Advent Calendar 2015 - Adventar</a> の 13 日目の記事です。昨日のカレンダーは空白だったようですが、前回の記事は <a href="http://www.adventar.org/users/7773">Kosuke Ohmura</a> さんの『<a href="http://bnpb.hatenablog.com/entry/2015/12/12/001714">高専をだらだら堕落しながら６年かけて卒業した話</a>』でした。</p>
 
@@ -14485,8 +14485,8 @@ $ <span class="synStatement">less</span> out.ttx
         </item>
         <item>
             <title><![CDATA[Sphero と遊ぼう！にゃんこ編～僕にペットはいないけど #sphero #gosphero]]></title>
-            <link>https://blog.tmd45.jp/entry/2013/12/08/135230</link>
-            <guid>https://blog.tmd45.jp/entry/2013/12/08/135230</guid>
+            <link>https://blog.betaful.life/entry/2013/12/08/135230</link>
+            <guid>https://blog.betaful.life/entry/2013/12/08/135230</guid>
             <pubDate>Sun, 08 Dec 2013 04:52:30 GMT</pubDate>
             <description><![CDATA[<p>この記事は <a href="http://www.adventar.org/calendars/142">Sphero Advent Calendar 2013</a> のエントリーです。前回は 12 月 5 日、<a href="http://blog.champierre.com/1031">jishiha &#x3055;&#x3093;&#x306E;&#x300E;Sphero&#x306E;&#x30A4;&#x30B1;&#x3066;&#x308B;PV&#x52D5;&#x753B;7&#x9023;&#x767A;&#x300F;</a> でした。</p>
 
@@ -14570,8 +14570,8 @@ $ <span class="synStatement">less</span> out.ttx
         </item>
         <item>
             <title><![CDATA[ころころ可愛い♡なのに高性能！Orbotix Sphero 2.0 が面白い #sphero #gosphero]]></title>
-            <link>https://blog.tmd45.jp/entry/2013/12/01/001418</link>
-            <guid>https://blog.tmd45.jp/entry/2013/12/01/001418</guid>
+            <link>https://blog.betaful.life/entry/2013/12/01/001418</link>
+            <guid>https://blog.betaful.life/entry/2013/12/01/001418</guid>
             <pubDate>Sat, 30 Nov 2013 15:14:18 GMT</pubDate>
             <description><![CDATA[<p>この記事は <a href="http://www.adventar.org/calendars/142">Sphero Advent Calendar 2013</a> の1日目のエントリーです！</p>
 
@@ -15042,8 +15042,8 @@ $ cp /usr/share/applications/<a class="keyword" href="http://d.hatena.ne.jp/keyw
         </item>
         <item>
             <title><![CDATA[超速！『FuelPHP Advent Calender 2012』が電子書籍化されました！ #FuelPHP]]></title>
-            <link>https://blog.tmd45.jp/entry/2012/12/26/152345</link>
-            <guid>https://blog.tmd45.jp/entry/2012/12/26/152345</guid>
+            <link>https://blog.betaful.life/entry/2012/12/26/152345</link>
+            <guid>https://blog.betaful.life/entry/2012/12/26/152345</guid>
             <pubDate>Wed, 26 Dec 2012 06:23:45 GMT</pubDate>
             <description><![CDATA[<p><a href="https://blog.tmd45.jp/entry/2012/12/18/101053">前回の記事</a>で参加させていただいた『<a href="http://atnd.org/events/33753">FuelPHP Advent Calender 2012</a>』が昨日、12月25日に無事完走しました！参加されたみなさまお疲れさまでした。</p>
 <p>そんな昨日の今日というすごいスピードで、達人出版会から電子書籍化までしていただきました！</p>
@@ -15086,8 +15086,8 @@ $ cp /usr/share/applications/<a class="keyword" href="http://d.hatena.ne.jp/keyw
         </item>
         <item>
             <title><![CDATA[さくらのレンタルサーバで FuelPHP を使ってはてなハイクブログを作る－ViewModel を使ってみる編 #FuelPHPAdvent2012]]></title>
-            <link>https://blog.tmd45.jp/entry/2012/12/18/101053</link>
-            <guid>https://blog.tmd45.jp/entry/2012/12/18/101053</guid>
+            <link>https://blog.betaful.life/entry/2012/12/18/101053</link>
+            <guid>https://blog.betaful.life/entry/2012/12/18/101053</guid>
             <pubDate>Tue, 18 Dec 2012 01:10:53 GMT</pubDate>
             <description><![CDATA[<p>この記事は <a href="http://atnd.org/events/33753">FuelPHP Advent Calendar 2012</a> の 18 日目の記事です。昨日は @<a class="twitter-user-screen-name" href="http://twitter.com/ootatter">ootatter</a> さんによる『<a href="http://blog.milds.net/2012/12/fuelphpdb.html">fuelphp&#x3067;&#x65E2;&#x5B58;DB&#x3092;&#x3042;&#x3064;&#x304B;&#x3046;&#x3068;&#x304B;</a>』でした。</p><p>本日の担当は、毎年クリスマスには仕事で問題が起こりクルシミマス恒例になりつつあります、@<a class="twitter-user-screen-name" href="http://twitter.com/tmd45">tmd45</a> です。</p><p>FuelPHP 標準のサーバキャッシュと「<a href="http://developer.hatena.ne.jp/ja/documents/haiku/apis/rest">&#x306F;&#x3066;&#x306A;&#x30CF;&#x30A4;&#x30AF;API</a>」、ViewModel を利用したブログのようなものを作ってみましたので、その全貌を公開したいと思います。</p>
 
